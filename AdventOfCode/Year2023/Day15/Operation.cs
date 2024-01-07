@@ -1,0 +1,61 @@
+﻿using System.Text.RegularExpressions;
+
+namespace AdventOfCode.Year2023.Day15;
+
+internal abstract partial class Operation
+{
+    public string Label { get; private set; }
+
+    protected Operation(string label)
+    {
+        Label = label;
+    }
+
+    public int GetLabelHash() => GetHash(Label);
+
+    public int GetHash() => GetHash(ToString()!);
+
+    public static Operation Parse(string input)
+    {
+        var matches = InputLineRegex().Matches(input);
+        if (matches.Count != 1)
+        {
+            throw new InvalidOperationException();
+        }
+
+        if (matches[0].Groups[2].Value == "=")
+        {
+            var label = matches[0].Groups[1].Value;
+            var focalLength = int.Parse(matches[0].Groups[3].Value);
+
+            return new ReplaceLensOperation(label, focalLength);
+        }
+        else if (matches[0].Groups[2].Value == "-")
+        {
+            var label = matches[0].Groups[1].Value;
+
+            return new RemoveLensOperation(label);
+        }
+        else
+        {
+            throw new InvalidOperationException();
+        }
+    }
+
+    private static int GetHash(string input)
+    {
+        int hash = 0;
+
+        foreach (var character in input)
+        {
+            hash += character;
+            hash *= 17;
+            hash %= 256;
+        }
+
+        return hash;
+    }
+
+    [GeneratedRegex("([a-z]+)([=-])([\\d]?)")]
+    private static partial Regex InputLineRegex();
+}
