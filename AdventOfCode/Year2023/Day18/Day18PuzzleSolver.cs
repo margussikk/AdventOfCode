@@ -9,7 +9,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
     private List<Instruction> _part1Instructions = [];
     private List<Instruction> _part2Instructions = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _part1Instructions = inputLines
             .Select(Instruction.Part1Parse)
@@ -42,7 +42,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
         var lagoonWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
         foreach (var instruction in instructions)
         {
-            lagoonWalker.MoveTo(instruction.Direction, instruction.Distance);
+            lagoonWalker.Move(instruction.Direction, instruction.Distance);
             coordinates.Add(lagoonWalker.CurrentCoordinate);
         }
 

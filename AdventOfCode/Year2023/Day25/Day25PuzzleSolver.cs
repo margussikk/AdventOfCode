@@ -9,7 +9,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
     private IReadOnlyList<GraphVertex> _components = [];
     //private IReadOnlyList<GraphEdge> _wires = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         var graphBuilder = new GraphBuilder();
 
@@ -96,7 +96,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
                         var nextQueueItem = new ComponentVisitor(nextComponent, [.. componentVisitor.WireIds, wire.Id]);
                         componentVisitors.Enqueue(nextQueueItem);
                     }
-                }                
+                }
             } while (found);
 
             if (pathsFound == numberOfWiresToCut)

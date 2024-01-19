@@ -5,70 +5,22 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>96f9e4ef-2872-482b-836d-25d9fd0b4e6f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Year2023\Day01\input.txt" />
-    <None Remove="Year2023\Day02\input.txt" />
-    <None Remove="Year2023\Day03\input.txt" />
-    <None Remove="Year2023\Day04\input.txt" />
-    <None Remove="Year2023\Day05\input.txt" />
-    <None Remove="Year2023\Day06\input.txt" />
-    <None Remove="Year2023\Day07\input.txt" />
-    <None Remove="Year2023\Day08\input.txt" />
-    <None Remove="Year2023\Day09\input.txt" />
-    <None Remove="Year2023\Day10\input.txt" />
-    <None Remove="Year2023\Day11\input.txt" />
-    <None Remove="Year2023\Day12\input.txt" />
-    <None Remove="Year2023\Day13\input.txt" />
-    <None Remove="Year2023\Day14\input.txt" />
-    <None Remove="Year2023\Day15\input.txt" />
-    <None Remove="Year2023\Day16\input.txt" />
-    <None Remove="Year2023\Day17\input.txt" />
-    <None Remove="Year2023\Day18\input.txt" />
-    <None Remove="Year2023\Day19\input.txt" />
-    <None Remove="Year2023\Day20\input.txt" />
-    <None Remove="Year2023\Day21\input.txt" />
-    <None Remove="Year2023\Day22\input.txt" />
-    <None Remove="Year2023\Day23\input.txt" />
-    <None Remove="Year2023\Day24\input.txt" />
-    <None Remove="Year2023\Day25\input.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Spectre.Console" Version="0.48.1-preview.0.7" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.48.1-preview.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Year2023\Day01\input.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Year2023\Day02\input.txt" />
-    <EmbeddedResource Include="Year2023\Day03\input.txt" />
-    <EmbeddedResource Include="Year2023\Day04\input.txt" />
-    <EmbeddedResource Include="Year2023\Day05\input.txt" />
-    <EmbeddedResource Include="Year2023\Day06\input.txt" />
-    <EmbeddedResource Include="Year2023\Day07\input.txt" />
-    <EmbeddedResource Include="Year2023\Day08\input.txt" />
-    <EmbeddedResource Include="Year2023\Day09\input.txt" />
-    <EmbeddedResource Include="Year2023\Day10\input.txt" />
-    <EmbeddedResource Include="Year2023\Day11\input.txt" />
-    <EmbeddedResource Include="Year2023\Day12\input.txt" />
-    <EmbeddedResource Include="Year2023\Day13\input.txt" />
-    <EmbeddedResource Include="Year2023\Day14\input.txt" />
-    <EmbeddedResource Include="Year2023\Day15\input.txt" />
-    <EmbeddedResource Include="Year2023\Day16\input.txt" />
-    <EmbeddedResource Include="Year2023\Day17\input.txt" />
-    <EmbeddedResource Include="Year2023\Day18\input.txt" />
-    <EmbeddedResource Include="Year2023\Day19\input.txt" />
-    <EmbeddedResource Include="Year2023\Day20\input.txt" />
-    <EmbeddedResource Include="Year2023\Day21\input.txt" />
-    <EmbeddedResource Include="Year2023\Day22\input.txt" />
-    <EmbeddedResource Include="Year2023\Day23\input.txt" />
-    <EmbeddedResource Include="Year2023\Day24\input.txt" />
-    <EmbeddedResource Include="Year2023\Day25\input.txt" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

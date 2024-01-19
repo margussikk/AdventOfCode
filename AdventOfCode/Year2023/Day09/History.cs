@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2023.Day09;
 
 internal class History
 {
-    public List<long> Sequence { get; private set; } = [];    
+    public List<long> Sequence { get; private set; } = [];
 
     public long GetNextValue()
     {

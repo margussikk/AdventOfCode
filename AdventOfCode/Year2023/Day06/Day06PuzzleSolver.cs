@@ -9,7 +9,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
     private List<Race> _part1Races = [];
     private Race _part2Race = new(0, 0);
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         var times = inputLines[0]["Time:".Length..].SelectToLongs(' ');
 

@@ -15,7 +15,7 @@ internal class HandComparer(string cardSequence) : IComparer<Hand>
             return compareResult;
         }
 
-        foreach(var (firstHandCard, secondHandCard) in firstHand.Cards.Zip(secondHand.Cards))
+        foreach (var (firstHandCard, secondHandCard) in firstHand.Cards.Zip(secondHand.Cards))
         {
             var firstHandCardStrength = _cardSequence.IndexOf(firstHandCard);
             var secondHandCardStrength = _cardSequence.IndexOf(secondHandCard);

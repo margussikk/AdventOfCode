@@ -12,7 +12,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
     private GraphVertex? _endVertex = null;
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         var tiles = inputLines.SelectToGrid(character => character switch
         {
@@ -135,7 +135,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         var vertexCoordinates = tiles
             .Where(cell => cell.Coordinate == startCoordinate ||
                         cell.Coordinate == endCoordinate ||
-                        (cell.Object != Tile.Forest && tiles.Sides(cell.Coordinate).Count(c => c.Object != Tile.Forest) > 2))
+                        (cell.Object != Tile.Forest && tiles.SideNeighbors(cell.Coordinate).Count(c => c.Object != Tile.Forest) > 2))
             .Select(x => x.Coordinate)
             .ToHashSet();
 
@@ -145,11 +145,11 @@ public class Day23PuzzleSolver : IPuzzleSolver
         foreach (var vertexCoordinate in vertexCoordinates)
         {
             var hikers = new Stack<GridWalker>();
-            
+
             // Add neighbors
-            foreach (var neighborCell in tiles.Sides(vertexCoordinate).Where(cell => cell.Object != Tile.Forest))
+            foreach (var neighborCell in tiles.SideNeighbors(vertexCoordinate).Where(cell => cell.Object != Tile.Forest))
             {
-                var direction = neighborCell.Coordinate.RelativeDirection(vertexCoordinate);
+                var direction = vertexCoordinate.DirectionToward(neighborCell.Coordinate);
 
                 var newHiker = new GridWalker(vertexCoordinate, vertexCoordinate, direction, 0);
                 hikers.Push(newHiker);
@@ -159,7 +159,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             {
                 if (vertexCoordinates.Contains(hiker.CurrentCoordinate) && hiker.CurrentCoordinate != hiker.StartCoordinate)
                 {
-                    var entranceTileType = tiles[hiker.CurrentCoordinate.MoveTo(hiker.Direction.Flip())];
+                    var entranceTileType = tiles[hiker.CurrentCoordinate.Move(hiker.Direction.Flip())];
 
                     if (entranceTileType is Tile.Path ||
                         (hiker.Direction == GridDirection.Down && entranceTileType is Tile.SlopeDown) ||
@@ -174,11 +174,11 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     {
                         // Source and destination are reversed. Swap coordinates.
                         hikeGraphBuilder.AddConnection(hiker.CurrentCoordinate.ToString(), GraphVertexPort.Any, hiker.StartCoordinate.ToString(), GraphVertexPort.Any, hiker.Steps);
-                    }                   
+                    }
 
-                    foreach (var neighborCell in tiles.Sides(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
+                    foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
                     {
-                        var direction = neighborCell.Coordinate.RelativeDirection(hiker.CurrentCoordinate);
+                        var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
                         if (direction != hiker.Direction.Flip())
                         {
                             var newHiker = new GridWalker(hiker.CurrentCoordinate, neighborCell.Coordinate, direction, 1);
@@ -198,13 +198,13 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 visitedGrid[hiker.CurrentCoordinate] = true;
 
                 // Find neighbors
-                foreach (var neighborCell in tiles.Sides(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
+                foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
                 {
-                    var direction = neighborCell.Coordinate.RelativeDirection(hiker.CurrentCoordinate);
+                    var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
                     if (direction != hiker.Direction.Flip())
                     {
                         var newHiker = hiker.Clone();
-                        newHiker.MoveTo(direction);
+                        newHiker.Move(direction);
 
                         hikers.Push(newHiker);
                     }

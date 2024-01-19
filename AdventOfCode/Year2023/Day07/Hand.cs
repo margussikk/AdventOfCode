@@ -3,7 +3,7 @@
 internal class Hand
 {
     public char[] Cards { get; private set; } = [];
-    
+
     public long Bid { get; private set; }
 
     public HandStrength HandStrength { get; private set; }

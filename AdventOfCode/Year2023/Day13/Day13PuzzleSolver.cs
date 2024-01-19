@@ -9,7 +9,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
 {
     private List<Grid<Terrain>> _terrainGrids = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _terrainGrids = inputLines.SelectToChunks()
                                   .Select(list => list.SelectToGrid(character => character switch
@@ -70,7 +70,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
     private static int CountReflectedRows(Grid<Terrain> grid, int smudgeCount)
     {
-        return CountReflectedColumns(grid.RotateCounterClockwise(), smudgeCount);        
+        return CountReflectedColumns(grid.RotateCounterClockwise(), smudgeCount);
     }
 
     private static int CountColumnDifferences(Grid<Terrain> grid, int column1, int column2)

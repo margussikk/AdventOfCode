@@ -7,7 +7,7 @@ public class Day07PuzzleSolver : IPuzzleSolver
 {
     private List<Hand> _hands = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _hands = inputLines.Select(Hand.Parse)
                            .ToList();

@@ -10,12 +10,17 @@ public class Day19PuzzleSolver : IPuzzleSolver
     private Dictionary<string, Workflow> _workflows = [];
     private List<Part> _parts = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
-        var chunks = inputLines.SelectToChunks().ToList();
+        var chunks = inputLines.SelectToChunks();
 
-        _workflows = chunks[0].Select(Workflow.Parse).ToDictionary(w => w.Name);
-        _parts = chunks[1].Select(Part.Parse).ToList();
+        _workflows = chunks[0]
+            .Select(Workflow.Parse)
+            .ToDictionary(w => w.Name);
+
+        _parts = chunks[1]
+            .Select(Part.Parse)
+            .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -72,7 +77,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 if (rule is LessThanRule lessThanRule)
                 {
                     var ranges = currentWorkItem.RatingNumberRanges[lessThanRule.Rating].SplitBefore(lessThanRule.Number);
-                    
+
                     nextWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[0];
                     currentWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[1];
                 }

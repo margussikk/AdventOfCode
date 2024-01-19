@@ -9,7 +9,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 {
     private Grid<int> _cityBlockHeatLosses = new(0, 0);
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _cityBlockHeatLosses = inputLines.SelectToGrid(character => character - '0');
     }
@@ -54,10 +54,10 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
             visited.Add(crucible.State);
 
-            var directions = crucible.Direction.Flip() ^ (GridDirection.Up | GridDirection.Down | GridDirection.Left | GridDirection.Right);
-            foreach (var neighborCell in _cityBlockHeatLosses.Sides(crucible.Coordinate, directions))
+            var directions = crucible.Direction.Flip() ^ GridDirection.AllSides;
+            foreach (var neighborCell in _cityBlockHeatLosses.SideNeighbors(crucible.Coordinate, directions))
             {
-                var newDirection = neighborCell.Coordinate.RelativeDirection(crucible.Coordinate);
+                var newDirection = crucible.Coordinate.DirectionToward(neighborCell.Coordinate);
 
                 if ((newDirection != crucible.Direction && crucible.Steps >= minSteps) ||
                     ((newDirection == crucible.Direction || crucible.Direction == GridDirection.None) && crucible.Steps < maxSteps))

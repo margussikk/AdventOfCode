@@ -7,9 +7,10 @@ public class Day04PuzzleSolver : IPuzzleSolver
 {
     private IReadOnlyList<Card> _cards = new List<Card>();
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
-        _cards = inputLines.Select(Card.Parse).ToList();
+        _cards = inputLines.Select(Card.Parse)
+                           .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()

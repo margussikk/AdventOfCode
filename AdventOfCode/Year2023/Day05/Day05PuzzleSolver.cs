@@ -10,14 +10,14 @@ public class Day05PuzzleSolver : IPuzzleSolver
     private List<long> _seeds = [];
     private readonly List<Map> _maps = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _seeds = inputLines[0]["seeds: ".Length..]
             .Split(' ', StringSplitOptions.RemoveEmptyEntries)
             .Select(long.Parse)
             .ToList();
 
-        foreach(var chunk in inputLines.Skip(2).SelectToChunks()) // Skip "seeds: " line and also assume that the maps are in the correct order
+        foreach (var chunk in inputLines.Skip(2).SelectToChunks()) // Skip "seeds: " line and also assume that the maps are in the correct order
         {
             var mappings = chunk.Skip(1) // Skip name
                                 .Select(Mapping.Parse)

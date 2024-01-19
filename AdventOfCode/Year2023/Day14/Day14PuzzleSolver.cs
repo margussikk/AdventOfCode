@@ -9,7 +9,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
 {
     private Grid<Item> _platform = new(0, 0);
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _platform = inputLines.SelectToGrid(character => character switch
         {
@@ -92,7 +92,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
     private static void TiltToNorth(Grid<Item> platform)
     {
-        foreach(var cell in platform.Where(c => c.Object == Item.RoundedRock))
+        foreach (var cell in platform.Where(c => c.Object == Item.RoundedRock))
         {
             var rolledToRow = cell.Coordinate.Row;
             while (rolledToRow > 0 && platform[rolledToRow - 1, cell.Coordinate.Column] == Item.EmptySpace)

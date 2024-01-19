@@ -53,7 +53,7 @@ internal class Record(List<Spring> springs, List<int> groups)
             // Check if reached the end of springs
             if (springIndex == Springs.Count)
             {
-                if (groupIndex == Groups.Count && currentGroupLength == 0)             
+                if (groupIndex == Groups.Count && currentGroupLength == 0)
                 {
                     // Reached the end groups and no group is open.
                     return 1;

@@ -2,7 +2,7 @@
 
 public interface IPuzzleSolver
 {
-    void ParseInput(List<string> inputLines);
+    void ParseInput(string[] inputLines);
 
     PuzzleAnswer GetPartOneAnswer();
 

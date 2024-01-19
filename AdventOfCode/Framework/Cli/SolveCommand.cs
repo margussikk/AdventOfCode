@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 
 namespace AdventOfCode.Framework.Cli;
 
-public class SolveCommand: Command<SolveSettings>
+public class SolveCommand : Command<SolveSettings>
 {
     public override int Execute(CommandContext context, SolveSettings settings)
     {

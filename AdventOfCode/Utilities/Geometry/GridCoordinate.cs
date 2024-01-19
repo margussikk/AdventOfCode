@@ -1,24 +1,85 @@
 ﻿namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct GridCoordinate(int row, int column)
+internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCoordinate>
 {
     public readonly int Row { get; } = row;
 
     public readonly int Column { get; } = column;
 
-    public GridDirection RelativeDirection(GridCoordinate other)
+    public IEnumerable<GridCoordinate> UpNeighbors()
     {
-        if (Row == other.Row)
-        {
-            return Column > other.Column ? GridDirection.Right : GridDirection.Left;
-        }
-        else
-        {
-            return Row > other.Row ? GridDirection.Down : GridDirection.Up;
-        }
+        yield return new GridCoordinate(Row - 1, Column - 1);
+        yield return new GridCoordinate(Row - 1, Column);
+        yield return new GridCoordinate(Row - 1, Column + 1);
     }
 
-    public GridCoordinate MoveTo(GridDirection direction, int steps = 1)
+    public IEnumerable<GridCoordinate> DownNeighbors()
+    {
+        yield return new GridCoordinate(Row + 1, Column - 1);
+        yield return new GridCoordinate(Row + 1, Column);
+        yield return new GridCoordinate(Row + 1, Column + 1);
+    }
+
+    public IEnumerable<GridCoordinate> LeftNeighbors()
+    {
+        yield return new GridCoordinate(Row - 1, Column - 1);
+        yield return new GridCoordinate(Row, Column - 1);
+        yield return new GridCoordinate(Row + 1, Column - 1);
+    }
+
+    public IEnumerable<GridCoordinate> RightNeighbors()
+    {
+        yield return new GridCoordinate(Row - 1, Column + 1);
+        yield return new GridCoordinate(Row, Column + 1);
+        yield return new GridCoordinate(Row + 1, Column + 1);
+    }
+
+    public IEnumerable<GridCoordinate> AroundNeighbors()
+    {
+        yield return new GridCoordinate(Row - 1, Column - 1);
+        yield return new GridCoordinate(Row - 1, Column);
+        yield return new GridCoordinate(Row - 1, Column + 1);
+        yield return new GridCoordinate(Row, Column + 1);
+        yield return new GridCoordinate(Row + 1, Column + 1);
+        yield return new GridCoordinate(Row + 1, Column);
+        yield return new GridCoordinate(Row + 1, Column - 1);
+        yield return new GridCoordinate(Row, Column - 1);
+    }
+
+    public IEnumerable<GridCoordinate> SideNeighbors()
+    {
+        yield return new GridCoordinate(Row - 1, Column);
+        yield return new GridCoordinate(Row + 1, Column);
+        yield return new GridCoordinate(Row, Column - 1);
+        yield return new GridCoordinate(Row, Column + 1);
+    }
+
+    public GridDirection DirectionToward(GridCoordinate other)
+    {
+        var direction = GridDirection.None;
+
+        if (other.Column > Column)
+        {
+            direction |= GridDirection.Right;
+        }
+        else if (other.Column < Column)
+        {
+            direction |= GridDirection.Left;
+        }
+
+        if (other.Row < Row)
+        {
+            direction |= GridDirection.Up;
+        }
+        else if (other.Row > Row)
+        {
+            direction |= GridDirection.Down;
+        }
+
+        return direction;
+    }
+
+    public GridCoordinate Move(GridDirection direction, int steps = 1)
     {
         return direction switch
         {
@@ -26,33 +87,16 @@ internal readonly struct GridCoordinate(int row, int column)
             GridDirection.Down => new GridCoordinate(Row + steps, Column),
             GridDirection.Left => new GridCoordinate(Row, Column - steps),
             GridDirection.Right => new GridCoordinate(Row, Column + steps),
+
+            GridDirection.UpLeft => new GridCoordinate(Row - steps, Column - 1),
+            GridDirection.UpRight => new GridCoordinate(Row - steps, Column + 1),
+            GridDirection.DownLeft => new GridCoordinate(Row + steps, Column - 1),
+            GridDirection.DownRight => new GridCoordinate(Row + steps, Column + 1),
+
             GridDirection.None => this,
             _ => throw new InvalidOperationException("Unexpected direction")
         };
     }
-
-    //public IEnumerable<GridCoordinate> Sides(GridDirection direction)
-    //{
-    //    if ((direction & GridDirection.Up) != GridDirection.None)
-    //    {
-    //        yield return new GridCoordinate(Row - 1, Column);
-    //    }
-
-    //    if ((direction & GridDirection.Down) != GridDirection.None)
-    //    {
-    //        yield return new GridCoordinate(Row + 1, Column);
-    //    }
-
-    //    if ((direction & GridDirection.Left) != GridDirection.None)
-    //    {
-    //        yield return new GridCoordinate(Row, Column - 1);
-    //    }
-
-    //    if ((direction & GridDirection.Right) != GridDirection.None)
-    //    {
-    //        yield return new GridCoordinate(Row, Column + 1);
-    //    }
-    //}
 
     public static bool operator ==(GridCoordinate coordinate1, GridCoordinate coordinate2)
     {
@@ -69,11 +113,14 @@ internal readonly struct GridCoordinate(int row, int column)
         return HashCode.Combine(Row, Column);
     }
 
+    public bool Equals(GridCoordinate other)
+    {
+        return Row == other.Row && Column == other.Column;
+    }
+
     public override bool Equals(object? obj)
     {
-        return obj is GridCoordinate coordinate
-            && Row == coordinate.Row
-            && Column == coordinate.Column;
+        return obj is GridCoordinate coordinate && Equals(coordinate);
     }
 
     public override string ToString()

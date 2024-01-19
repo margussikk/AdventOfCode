@@ -21,7 +21,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     private GridCoordinate _startCoordinate;
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _pipeDirections = inputLines.SelectToGrid(character => character switch
         {
@@ -107,7 +107,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
         void CollectTurnCoordinates(GridCoordinate coordinate)
         {
-            foreach(var direction in _turnPipeDirections)
+            foreach (var direction in _turnPipeDirections)
             {
                 if (_pipeDirections[coordinate].HasFlag(direction))
                 {
@@ -131,7 +131,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             // Remove entrance direction, this leaves only the exit direction
             direction = _pipeDirections[currentCoordinate] & ~(GridDirection.Start | direction.Flip());
 
-            currentCoordinate = currentCoordinate.MoveTo(direction);
+            currentCoordinate = currentCoordinate.Move(direction);
         }
         while (currentCoordinate != _startCoordinate);
     }
@@ -140,12 +140,12 @@ public class Day10PuzzleSolver : IPuzzleSolver
     {
         var startPipeDirections = GridDirection.None;
 
-        foreach(var sideCell in _pipeDirections.Sides(_startCoordinate))
+        foreach (var sideCell in _pipeDirections.SideNeighbors(_startCoordinate))
         {
-            var relativeDirection = _startCoordinate.RelativeDirection(sideCell.Coordinate);
-            if (sideCell.Object.HasFlag(relativeDirection))
+            var direction = _startCoordinate.DirectionToward(sideCell.Coordinate);
+            if (sideCell.Object.HasFlag(direction.Flip()))
             {
-                startPipeDirections |= relativeDirection.Flip();
+                startPipeDirections |= direction;
             }
         }
 

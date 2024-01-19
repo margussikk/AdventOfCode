@@ -7,7 +7,7 @@ public class Day09PuzzleSolver : IPuzzleSolver
 {
     private List<History> _histories = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _histories = inputLines.Select(History.Parse)
                                .ToList();

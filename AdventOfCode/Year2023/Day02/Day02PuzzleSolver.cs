@@ -7,7 +7,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
 {
     private IReadOnlyList<Game> _games = new List<Game>();
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _games = inputLines.Select(Game.Parse).ToList();
     }

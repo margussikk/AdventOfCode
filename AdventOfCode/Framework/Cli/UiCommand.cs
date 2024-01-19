@@ -60,7 +60,7 @@ public class UiCommand : Command<UiSettings>
         var selectedPuzzleChoices = AnsiConsole.Prompt(
             new MultiSelectionPrompt<PuzzleChoice>()
                 .Title("Which [green]day[/] do you want to execute?")
-                .PageSize(20)
+                .PageSize(28)
                 .MoreChoicesText("[grey](Move up and down to reveal more days)[/]")
                 .InstructionsText(
                     "[grey](Press [blue]<space>[/] to toggle a day, " +

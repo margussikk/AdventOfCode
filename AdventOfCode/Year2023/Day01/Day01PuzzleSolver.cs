@@ -18,9 +18,9 @@ public class Day01PuzzleSolver : IPuzzleSolver
         new SpelledDigit("nine", 9)
     ];
 
-    private List<string> _inputLines = [];
+    private string[] _inputLines = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _inputLines = inputLines;
     }

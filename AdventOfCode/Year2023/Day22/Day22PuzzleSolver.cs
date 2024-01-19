@@ -7,7 +7,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
 {
     private List<Brick> _bricks = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _bricks = inputLines
             .Select((line, index) => Brick.Parse(index + 1, line)) // "real" brick ids start at 1, 0 means ground

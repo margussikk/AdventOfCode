@@ -4,15 +4,21 @@ namespace AdventOfCode.Utilities.Extensions;
 
 internal static class CollectionExtensions
 {
-    public static IEnumerable<List<string>> SelectToChunks(this IEnumerable<string> source)
+    public static List<string[]> SelectToChunks(this IEnumerable<string> source)
     {
+        var chunksList = new List<string[]>();
+
         var items = new List<string>();
 
         foreach (var item in source)
         {
             if (string.IsNullOrWhiteSpace(item))
             {
-                yield return items;
+                if (items.Count > 0)
+                {
+                    chunksList.Add([.. items]);
+                }
+
                 items = [];
             }
             else
@@ -23,28 +29,15 @@ internal static class CollectionExtensions
 
         if (items.Count > 0)
         {
-            yield return items;
-        }
-    }
-
-    public static Grid<T> SelectToGrid<T>(this List<string> lines, Func<int, int, char, T> func)
-    {
-        var grid = new Grid<T>(lines.Count, lines[0].Length);
-
-        for (var row = 0; row < grid.Height; row++)
-        {
-            for (var column = 0; column < grid.Width; column++)
-            {
-                grid[row, column] = func(row, column, lines[row][column]);
-            }
+            chunksList.Add([.. items]);
         }
 
-        return grid;
+        return chunksList;
     }
 
-    public static Grid<T> SelectToGrid<T>(this List<string> lines, Func<char, T> func)
+    public static Grid<T> SelectToGrid<T>(this string[] lines, Func<char, T> func)
     {
-        var grid = new Grid<T>(lines.Count, lines[0].Length);
+        var grid = new Grid<T>(lines.Length, lines[0].Length);
 
         for (var row = 0; row < grid.Height; row++)
         {

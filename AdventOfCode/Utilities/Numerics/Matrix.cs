@@ -27,7 +27,7 @@ internal class Matrix<T>(int rows, int columns) where T : INumber<T>
             throw new InvalidOperationException("Element count and matrix column mismatch");
         }
 
-        for (var i =  0; i < Width; i++)
+        for (var i = 0; i < Width; i++)
         {
             _array[row, i] = elements[i];
         }

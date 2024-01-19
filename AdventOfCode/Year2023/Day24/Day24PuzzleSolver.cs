@@ -9,7 +9,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 {
     private List<Hailstone> _hailstones = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _hailstones = inputLines.Select(Hailstone.Parse)
                                 .ToList();
@@ -32,8 +32,8 @@ public class Day24PuzzleSolver : IPuzzleSolver
                 var vector1 = new Vector2D(hailstone1.X, hailstone1.Y, hailstone1.DX, hailstone1.DY);
                 var vector2 = new Vector2D(hailstone2.X, hailstone2.Y, hailstone2.DX, hailstone2.DY);
 
-                var line1 = new StraightLine2D(vector1);
-                var line2 = new StraightLine2D(vector2);
+                var line1 = new Line2D(vector1);
+                var line2 = new Line2D(vector2);
 
                 if (line1.TryFindIntersectionCoordinate(line2, out var coordinate) &&
                     coordinate.X >= minCoordinateValue && coordinate.X <= maxCoordinateValue &&

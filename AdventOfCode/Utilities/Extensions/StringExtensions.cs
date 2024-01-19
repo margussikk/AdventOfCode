@@ -10,7 +10,7 @@ internal static class StringExtensions
 
         var span = source.AsSpan();
 
-        while(span.Length > 0)
+        while (span.Length > 0)
         {
             if (span[0] == '-')
             {

@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class Grid<T>(int rows, int columns): IEnumerable<GridCell<T>>
+internal class Grid<T>(int rows, int columns) : IEnumerable<GridCell<T>>
 {
     private readonly T[,] _array = new T[rows, columns];
 
@@ -22,8 +22,8 @@ internal class Grid<T>(int rows, int columns): IEnumerable<GridCell<T>>
 
     public T this[GridCoordinate coordinate]
     {
-        get => this[coordinate.Row, coordinate.Column];
-        set => this[coordinate.Row, coordinate.Column] = value;
+        get => _array[coordinate.Row, coordinate.Column];
+        set => _array[coordinate.Row, coordinate.Column] = value;
     }
 
     public bool InBounds(int row, int column)
@@ -87,7 +87,7 @@ internal class Grid<T>(int rows, int columns): IEnumerable<GridCell<T>>
         }
     }
 
-    public IEnumerable<GridCell<T>> Sides(GridCoordinate coordinate, GridDirection direction = GridDirection.Up | GridDirection.Down | GridDirection.Left | GridDirection.Right)
+    public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
     {
         var sideCoordinates = new List<GridCoordinate>();
 
@@ -111,7 +111,7 @@ internal class Grid<T>(int rows, int columns): IEnumerable<GridCell<T>>
             sideCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column + 1));
         }
 
-        foreach(var sideCoordinate in sideCoordinates)
+        foreach (var sideCoordinate in sideCoordinates)
         {
             if (InBounds(sideCoordinate))
             {

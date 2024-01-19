@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Framework.Cli;
 
-public class UiSettings: CommandSettings
+public class UiSettings : CommandSettings
 {
     // Nothing here
 }

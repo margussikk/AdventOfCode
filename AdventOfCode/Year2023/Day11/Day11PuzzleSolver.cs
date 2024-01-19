@@ -10,7 +10,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
     private List<int> _expandingRows = [];
     private List<int> _expandingColumns = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _galaxyCoordinates = inputLines
             .SelectMany((line, row) => line
@@ -20,7 +20,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 .ToList())
             .ToList();
 
-        _expandingRows = Enumerable.Range(0, inputLines.Count)
+        _expandingRows = Enumerable.Range(0, inputLines.Length)
             .Where(row => _galaxyCoordinates.TrueForAll(g => g.Row != row))
             .ToList();
 

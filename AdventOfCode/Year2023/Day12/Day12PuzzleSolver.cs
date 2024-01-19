@@ -7,7 +7,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
 {
     private List<Record> _records = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _records = inputLines
             .Select(Record.Parse)

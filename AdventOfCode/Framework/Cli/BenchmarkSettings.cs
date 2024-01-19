@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace AdventOfCode.Framework.Cli;
 
-public class BenchmarkSettings: CommandSettings
+public class BenchmarkSettings : CommandSettings
 {
     [Description("Year of the Advent of Code")]
     [CommandArgument(0, "<YEAR>")]

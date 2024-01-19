@@ -34,6 +34,12 @@ internal static class MeasurementFunctions
                Math.Abs(coordinate2.Column - coordinate1.Column);
     }
 
+    public static long ManhattanDistance(Coordinate2D coordinate1, Coordinate2D coordinate2)
+    {
+        return Math.Abs(coordinate2.X - coordinate1.X) +
+               Math.Abs(coordinate2.Y - coordinate1.Y);
+    }
+
     public static int ManhattanDistanceLoop(IReadOnlyList<GridCoordinate> coordinates)
     {
         var distance = 0;

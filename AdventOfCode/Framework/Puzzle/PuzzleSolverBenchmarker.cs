@@ -5,12 +5,12 @@ namespace AdventOfCode.Framework.Puzzle;
 [MemoryDiagnoser(displayGenColumns: false)]
 public class PuzzleSolverBenchmarker<T> where T : IPuzzleSolver, new()
 {
-    private List<string> _inputLines = [];
+    private string[] _inputLines = [];
 
     [GlobalSetup]
     public void Setup()
     {
-        PuzzleInputProvider.TryGetInputLines(typeof(T), out _inputLines);
+        _inputLines = PuzzleInputProvider.Instance.GetInputLines(typeof(T));
     }
 
     [Benchmark]

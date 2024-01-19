@@ -1,29 +1,75 @@
-﻿using System.Text;
+﻿using Microsoft.Diagnostics.Tracing.Parsers.ClrPrivate;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using System.Reflection;
+using System.Text;
 
 namespace AdventOfCode.Framework.Puzzle;
 
-public static class PuzzleInputProvider
+public sealed class PuzzleInputProvider
 {
-    public static bool TryGetInputLines(Type solverType, out List<string> lines)
+    public static PuzzleInputProvider Instance { get; } = new();
+
+    private readonly HttpClient _httpClient;
+
+    private PuzzleInputProvider()
     {
-        lines = [];
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .AddUserSecrets(typeof(Program).Assembly)
+            .Build();
+        var session = configuration["session"];
 
-        using var stream = solverType.Assembly.GetManifestResourceStream(solverType.Namespace + ".input.txt");
-        if (stream != null)
-        {
-            string? line;
+        var baseAddress = new Uri($"https://adventofcode.com");
+        var cookieContainer = new CookieContainer();
+        cookieContainer.Add(baseAddress, new Cookie("session", session));
 
-            using var reader = new StreamReader(stream, Encoding.UTF8);
-            while ((line = reader.ReadLine()) != null)
+        _httpClient = new HttpClient(
+            new HttpClientHandler
             {
-                lines.Add(line);
-            }
-
-            return true;
-        }
-        else
+                CookieContainer = cookieContainer,
+                AutomaticDecompression = DecompressionMethods.All,
+            })
         {
-            return false;
+            BaseAddress = baseAddress,
+            DefaultRequestHeaders =
+                {
+                    { "User-Agent", ".NET/8.0 (https://github.com/margussikk/AdventOfCode)" },
+                },
+        };
+    }
+
+    public string[] GetInputLines(Type solverType)
+    {
+        var puzzleAttribute = solverType.GetCustomAttribute<PuzzleAttribute>() ?? throw new InvalidOperationException("Puzzle attribute not found");
+
+        var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var inputFile = Path.Combine(assemblyPath!, "Inputs", $"{puzzleAttribute.Year}", $"Day{puzzleAttribute.Day:00}.txt");
+        Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
+        if (!File.Exists(inputFile))
+        {
+            try
+            {
+                var response = _httpClient.GetAsync($"{puzzleAttribute.Year}/day/{puzzleAttribute.Day}/input")
+                    .GetAwaiter()
+                    .GetResult();
+
+                var text = response
+                    .EnsureSuccessStatusCode()
+                    .Content.ReadAsStringAsync()
+                    .GetAwaiter()
+                    .GetResult();
+                File.WriteAllText(inputFile, text);
+            }
+            catch
+            {
+                Console.WriteLine("Failed to download puzzle input, make sure you have set correct session cookie value");
+                throw;
+            }
         }
+
+        return File.ReadAllLines(inputFile);
     }
 }

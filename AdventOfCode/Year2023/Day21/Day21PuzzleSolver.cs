@@ -44,7 +44,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
     private Grid<Tile> _tiles = new(0, 0);
     private GridCoordinate _startCoordinate = new(0, 0);
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _tiles = inputLines.SelectToGrid(characher => characher switch
         {
@@ -135,12 +135,12 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
             visited[gardener.Steps % 2].Add(gardener.CurrentCoordinate);
 
-            foreach (var neighborCell in _tiles.Sides(gardener.CurrentCoordinate).Where(c => c.Object != Tile.Rock))
+            foreach (var neighborCell in _tiles.SideNeighbors(gardener.CurrentCoordinate).Where(c => c.Object != Tile.Rock))
             {
                 var newGardener = gardener.Clone();
 
-                var direction = neighborCell.Coordinate.RelativeDirection(gardener.CurrentCoordinate);
-                newGardener.MoveTo(direction);
+                var direction = gardener.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
+                newGardener.Move(direction);
 
                 gardeners.Enqueue(newGardener);
             }

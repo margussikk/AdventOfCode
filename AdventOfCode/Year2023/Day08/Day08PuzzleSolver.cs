@@ -18,7 +18,7 @@ public partial class Day08PuzzleSolver : IPuzzleSolver
     private List<Instruction> _instructions = [];
     private IReadOnlyList<GraphVertex> _graphVertices = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         // Instructions
         _instructions = inputLines[0]
@@ -40,14 +40,14 @@ public partial class Day08PuzzleSolver : IPuzzleSolver
             {
                 throw new InvalidOperationException("Failed to parse input");
             }
-            
+
             var currentNodeName = matches[0].Groups[1].Value;
 
             var leftNodeName = matches[0].Groups[2].Value;
             graphBuilder.AddConnection(currentNodeName, GraphVertexPort.Left, leftNodeName, GraphVertexPort.Any, 1);
 
             var rightNodeName = matches[0].Groups[3].Value;
-            graphBuilder.AddConnection(currentNodeName, GraphVertexPort.Right, rightNodeName, GraphVertexPort.Any, 1);            
+            graphBuilder.AddConnection(currentNodeName, GraphVertexPort.Right, rightNodeName, GraphVertexPort.Any, 1);
         }
 
         _graphVertices = graphBuilder.GetVertices();

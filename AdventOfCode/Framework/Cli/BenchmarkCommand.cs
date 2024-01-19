@@ -3,7 +3,7 @@ using Spectre.Console.Cli;
 
 namespace AdventOfCode.Framework.Cli;
 
-public class BenchmarkCommand: Command<BenchmarkSettings>
+public class BenchmarkCommand : Command<BenchmarkSettings>
 {
     public override int Execute(CommandContext context, BenchmarkSettings settings)
     {

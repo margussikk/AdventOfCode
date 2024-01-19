@@ -7,9 +7,9 @@ public class Day03PuzzleSolver : IPuzzleSolver
 {
     private readonly List<EnginePart> _engineParts = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
-        for (var row = 0; row < inputLines.Count; row++)
+        for (var row = 0; row < inputLines.Length; row++)
         {
             var rowSpan = inputLines[row].AsSpan();
             var startColumn = 0;
@@ -49,7 +49,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
                     var symbolPart = new SymbolPart(row, startColumn, 1, rowSpan[startColumn]);
                     _engineParts.Add(symbolPart);
-                }                
+                }
 
                 startColumn = endColumn;
             }
@@ -61,7 +61,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
         var numberParts = _engineParts
             .OfType<NumberPart>()
             .ToList();
-        
+
         var symbolParts = _engineParts
             .OfType<SymbolPart>()
             .ToList();
@@ -79,7 +79,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
         var numberParts = _engineParts
             .OfType<NumberPart>()
             .ToList();
-                
+
         var gearParts = _engineParts
             .OfType<SymbolPart>()
             .Where(symbolPart => symbolPart.IsGearPart)

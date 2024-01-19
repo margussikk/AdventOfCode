@@ -38,4 +38,28 @@ internal static class GridDirectionExtensions
 
         return newGridDirection;
     }
+
+    public static GridDirection TurnLeft(this GridDirection gridDirection)
+    {
+        return gridDirection switch
+        {
+            GridDirection.Right => GridDirection.Up,
+            GridDirection.Down => GridDirection.Right,
+            GridDirection.Left => GridDirection.Down,
+            GridDirection.Up => GridDirection.Left,
+            _ => throw new InvalidOperationException("Invalid direction")
+        };
+    }
+
+    public static GridDirection TurnRight(this GridDirection gridDirection)
+    {
+        return gridDirection switch
+        {
+            GridDirection.Right => GridDirection.Down,
+            GridDirection.Down => GridDirection.Left,
+            GridDirection.Left => GridDirection.Up,
+            GridDirection.Up => GridDirection.Right,
+            _ => throw new InvalidOperationException("Invalid direction")
+        };
+    }
 }

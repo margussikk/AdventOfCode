@@ -46,10 +46,10 @@ public static class PuzzleSolverManager
         AnsiConsole.Live(table)
                    .Start(ctx =>
                    {
-                       foreach(var puzzleDetail in puzzleDetails)
+                       foreach (var puzzleDetail in puzzleDetails)
                        {
-                           var success = PuzzleInputProvider.TryGetInputLines(puzzleDetail.SolverType, out var inputLines);
-                           if (success && Activator.CreateInstance(puzzleDetail.SolverType) is IPuzzleSolver solver)
+                           var inputLines = PuzzleInputProvider.Instance.GetInputLines(puzzleDetail.SolverType);
+                           if (Activator.CreateInstance(puzzleDetail.SolverType) is IPuzzleSolver solver)
                            {
                                try
                                {
@@ -82,7 +82,7 @@ public static class PuzzleSolverManager
                            }
                            else
                            {
-                               AnsiConsole.Write("Failed to read input");
+                               AnsiConsole.Write("Failed to create solver");
                            }
                        }
                    });

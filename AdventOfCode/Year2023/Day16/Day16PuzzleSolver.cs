@@ -9,7 +9,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 {
     private Grid<Tile> _tiles = new(0, 0);
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _tiles = inputLines.SelectToGrid(character => character switch
         {

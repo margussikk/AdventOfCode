@@ -7,7 +7,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 {
     private List<Operation> _operations = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _operations = inputLines[0]
             .Split(',')

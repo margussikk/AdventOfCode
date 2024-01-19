@@ -8,7 +8,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
 {
     private Dictionary<string, Module> _modules = [];
 
-    public void ParseInput(List<string> inputLines)
+    public void ParseInput(string[] inputLines)
     {
         _modules = inputLines.Select(Module.Parse)
                              .ToDictionary(x => x.Name);
