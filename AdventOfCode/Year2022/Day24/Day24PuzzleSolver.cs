@@ -81,7 +81,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var trip = 0;
         var startLocation = _startLocation;
         var endLocation = _endLocation;
-        var queue = new Queue<State>();
+        var queue = new PriorityQueue<GridWalker, int>();
         var visited = new HashSet<State>();
         var valleys = new List<Grid<ValleyTile>>();
 
@@ -100,41 +100,42 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var valley = BuildValley(blizzardLocations);
         valleys.Add(valley);
 
-        var currentState = new State(0, expeditionLocation);
-        queue.Enqueue(currentState);
+        var walker = new GridWalker(expeditionLocation, expeditionLocation, GridDirection.None, 0);
+        var distance = MeasurementFunctions.ManhattanDistance(walker.CurrentCoordinate, endLocation);
+        queue.Enqueue(walker, distance);
 
-        while (queue.TryDequeue(out currentState))
+        while (queue.TryDequeue(out walker, out _))
         {
-            if (currentState.ExpeditionLocation == endLocation)
+            if (walker.CurrentCoordinate == endLocation)
             {
                 trip++;
-
-                if (trip < trips)
+                if (trip == trips)
                 {
-                    visited.Clear();
-
-                    (endLocation, startLocation) = (startLocation, endLocation);
-
-                    queue.Clear();
-                    queue.Enqueue(currentState);
-
-                    continue;
+                    return walker.Steps;
                 }
 
-                return currentState.Minute;
+                (endLocation, startLocation) = (startLocation, endLocation);
+
+                visited.Clear();
+
+                queue.Clear();
+
+                distance = MeasurementFunctions.ManhattanDistance(walker.CurrentCoordinate, endLocation);
+                queue.Enqueue(walker, walker.Steps + distance);
+
+                continue;
             }
 
-            if (visited.Contains(currentState))
+            var state = new State(walker.Steps, walker.CurrentCoordinate);
+            if (visited.Contains(state))
             {
                 continue;
             }
 
-            visited.Add(currentState);
+            visited.Add(state);
 
             // Next state
-            var nextMinute = currentState.Minute + 1;
-            var valleyIndex = nextMinute % lcm;
-
+            var valleyIndex = (walker.Steps + 1) % lcm;
             if (valleys.Count <= valleyIndex)
             {
                 blizzardLocations = BuildNextBlizzardLocations(blizzardLocations);
@@ -144,13 +145,18 @@ public class Day24PuzzleSolver : IPuzzleSolver
             }
 
             valley = valleys[valleyIndex];
-            var nextLocations = GetNeighboringEmptyLocations(valley, currentState.ExpeditionLocation);
-            foreach (var location in nextLocations)
+            var movementLocations = GetEmptyMovementLocations(valley, walker.CurrentCoordinate);
+            foreach (var movementLocation in movementLocations)
             {
-                if (currentState.ExpeditionLocation == startLocation || location != startLocation) // Allow staying at the start, but not come back
+                if (walker.CurrentCoordinate == startLocation || movementLocation != startLocation) // Allow staying at the start, but not come back
                 {
-                    var nextState = new State(nextMinute, location);
-                    queue.Enqueue(nextState);
+                    var nextWalker = walker.Clone();
+
+                    var direction = walker.CurrentCoordinate.DirectionToward(movementLocation);
+                    nextWalker.Move(direction);
+
+                    distance = MeasurementFunctions.ManhattanDistance(nextWalker.CurrentCoordinate, endLocation);
+                    queue.Enqueue(nextWalker, nextWalker.Steps + distance);
                 }
             }
         }
@@ -270,23 +276,18 @@ public class Day24PuzzleSolver : IPuzzleSolver
         }
     }
 
-    private static IEnumerable<GridCoordinate> GetNeighboringEmptyLocations(Grid<ValleyTile> valley, GridCoordinate expeditionLocation)
+    private static IEnumerable<GridCoordinate> GetEmptyMovementLocations(Grid<ValleyTile> valley, GridCoordinate expeditionLocation)
     {
-        var moveDirections = new GridDirection[]
+        if (valley[expeditionLocation] == ValleyTile.Empty)
         {
-            GridDirection.None,
-            GridDirection.Up,
-            GridDirection.Down,
-            GridDirection.Left,
-            GridDirection.Right,
-        };
+            yield return expeditionLocation;
+        }
 
-        foreach (var direction in moveDirections)
+        foreach (var neighbor in valley.SideNeighbors(expeditionLocation))
         {
-            var testLocation = expeditionLocation.Move(direction);
-            if (valley.InBounds(testLocation) && valley[testLocation] == ValleyTile.Empty)
+            if (neighbor.Object == ValleyTile.Empty)
             {
-                yield return testLocation;
+                yield return neighbor.Coordinate;
             }
         }
     }
