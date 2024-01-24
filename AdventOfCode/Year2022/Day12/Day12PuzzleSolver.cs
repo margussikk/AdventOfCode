@@ -49,38 +49,34 @@ public class Day12PuzzleSolver : IPuzzleSolver
     {
         var shortestDistancesGrid = new Grid<int?>(_grid.Height, _grid.Width);
 
-        var gridWalkers = new PriorityQueue<GridWalker, int>();
+        var hillClimbers = new PriorityQueue<HillClimber, int>();
 
-        var gridWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
-        gridWalkers.Enqueue(gridWalker, gridWalker.Steps);
+        var hillclimber = new HillClimber(startCoordinate, 0);
+        hillClimbers.Enqueue(hillclimber, hillclimber.Steps);
 
-        while (gridWalkers.TryDequeue(out gridWalker, out _))
+        while (hillClimbers.TryDequeue(out hillclimber, out _))
         {
-            if (endCondition(gridWalker.CurrentCoordinate))
+            if (endCondition(hillclimber.Coordinate))
             {
-                return gridWalker.Steps;
+                return hillclimber.Steps;
             }
-            else if (shortestDistancesGrid[gridWalker.CurrentCoordinate].HasValue)
+            else if (shortestDistancesGrid[hillclimber.Coordinate].HasValue)
             {
                 continue;
             }
 
-            shortestDistancesGrid[gridWalker.CurrentCoordinate] = gridWalker.Steps;
+            shortestDistancesGrid[hillclimber.Coordinate] = hillclimber.Steps;
 
-            foreach (var neighborCell in _grid.SideNeighbors(gridWalker.CurrentCoordinate))
+            foreach (var neighborCell in _grid.SideNeighbors(hillclimber.Coordinate))
             {
-                var elevationDifference = directionMultiplier * (neighborCell.Object - _grid[gridWalker.CurrentCoordinate]);
+                var elevationDifference = directionMultiplier * (neighborCell.Object - _grid[hillclimber.Coordinate]);
                 if (elevationDifference <= 1)
                 {
                     var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
-                    if (gridWalker.Steps + 1 < currentDistance)
+                    if (hillclimber.Steps + 1 < currentDistance)
                     {
-                        var newGridWalker = gridWalker.Clone();
-
-                        var direction = gridWalker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
-                        newGridWalker.Move(direction);
-
-                        gridWalkers.Enqueue(newGridWalker, newGridWalker.Steps);
+                        var newHillClimber = new HillClimber(neighborCell.Coordinate, hillclimber.Steps + 1);
+                        hillClimbers.Enqueue(newHillClimber, newHillClimber.Steps);
                     }
                 }
             }

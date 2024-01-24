@@ -5,7 +5,7 @@ namespace AdventOfCode.Year2022.Day25;
 [Puzzle(2022, 25, "Full of Hot Air")]
 public class Day25PuzzleSolver : IPuzzleSolver
 {
-    private List<Snafu> Snafus = new List<Snafu>();
+    private List<Snafu> Snafus = [];
 
     public void ParseInput(string[] inputLines)
     {

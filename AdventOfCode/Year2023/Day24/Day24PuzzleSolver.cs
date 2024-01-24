@@ -29,11 +29,13 @@ public class Day24PuzzleSolver : IPuzzleSolver
                 var hailstone1 = _hailstones[i];
                 var hailstone2 = _hailstones[j];
 
-                var vector1 = new Vector2D(hailstone1.X, hailstone1.Y, hailstone1.DX, hailstone1.DY);
-                var vector2 = new Vector2D(hailstone2.X, hailstone2.Y, hailstone2.DX, hailstone2.DY);
+                var coordinate1 = new Coordinate2D(hailstone1.X, hailstone1.Y);
+                var vector1 = new Vector2D(hailstone1.DX, hailstone1.DY);
+                var line1 = new Line2D(coordinate1, vector1);
 
-                var line1 = new Line2D(vector1);
-                var line2 = new Line2D(vector2);
+                var coordinate2 = new Coordinate2D(hailstone2.X, hailstone2.Y);
+                var vector2 = new Vector2D(hailstone2.DX, hailstone2.DY);               
+                var line2 = new Line2D(coordinate2, vector2);
 
                 if (line1.TryFindIntersectionCoordinate(line2, out var coordinate) &&
                     coordinate.X >= minCoordinateValue && coordinate.X <= maxCoordinateValue &&

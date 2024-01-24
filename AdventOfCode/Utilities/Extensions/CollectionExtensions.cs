@@ -49,4 +49,19 @@ internal static class CollectionExtensions
 
         return grid;
     }
+
+    public static BitGrid SelectToBitGrid(this string[] lines, Func<char, bool> func)
+    {
+        var grid = new BitGrid(lines.Length, lines[0].Length);
+
+        for (var row = 0; row < grid.Height; row++)
+        {
+            for (var column = 0; column < grid.Width; column++)
+            {
+                grid[row, column] = func(lines[row][column]);
+            }
+        }
+
+        return grid;
+    }
 }

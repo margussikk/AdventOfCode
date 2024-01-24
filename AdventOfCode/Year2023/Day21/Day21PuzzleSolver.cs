@@ -119,28 +119,25 @@ public class Day21PuzzleSolver : IPuzzleSolver
             [], // Even
             [], // Odd
         };
-        var gardeners = new Queue<GridWalker>();
+        var gardeners = new Queue<Gardener>();
 
         var startCoordinate = new GridCoordinate(startRow, startColumn);
 
-        var gardener = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
+        var gardener = new Gardener(startCoordinate, 0);
         gardeners.Enqueue(gardener);
 
         while (gardeners.TryDequeue(out gardener))
         {
-            if (gardener.Steps > steps || visited[gardener.Steps % 2].Contains(gardener.CurrentCoordinate))
+            if (gardener.Steps > steps || visited[gardener.Steps % 2].Contains(gardener.Coordinate))
             {
                 continue;
             }
 
-            visited[gardener.Steps % 2].Add(gardener.CurrentCoordinate);
+            visited[gardener.Steps % 2].Add(gardener.Coordinate);
 
-            foreach (var neighborCell in _tiles.SideNeighbors(gardener.CurrentCoordinate).Where(c => c.Object != Tile.Rock))
+            foreach (var neighborCell in _tiles.SideNeighbors(gardener.Coordinate).Where(c => c.Object != Tile.Rock))
             {
-                var newGardener = gardener.Clone();
-
-                var direction = gardener.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
-                newGardener.Move(direction);
+                var newGardener = new Gardener(neighborCell.Coordinate, gardener.Steps + 1);
 
                 gardeners.Enqueue(newGardener);
             }

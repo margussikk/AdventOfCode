@@ -81,8 +81,8 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var trip = 0;
         var startLocation = _startLocation;
         var endLocation = _endLocation;
-        var queue = new PriorityQueue<GridWalker, int>();
-        var visited = new HashSet<State>();
+        var queue = new PriorityQueue<ValleyWalker, int>();
+        var visited = new HashSet<ValleyWalker>();
         var valleys = new List<Grid<ValleyTile>>();
 
         var expeditionLocation = startLocation;
@@ -100,18 +100,18 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var valley = BuildValley(blizzardLocations);
         valleys.Add(valley);
 
-        var walker = new GridWalker(expeditionLocation, expeditionLocation, GridDirection.None, 0);
-        var distance = MeasurementFunctions.ManhattanDistance(walker.CurrentCoordinate, endLocation);
-        queue.Enqueue(walker, distance);
+        var valleyWalker = new ValleyWalker(expeditionLocation, 0);
+        var distance = MeasurementFunctions.ManhattanDistance(valleyWalker.Coordinate, endLocation);
+        queue.Enqueue(valleyWalker, distance);
 
-        while (queue.TryDequeue(out walker, out _))
+        while (queue.TryDequeue(out valleyWalker, out _))
         {
-            if (walker.CurrentCoordinate == endLocation)
+            if (valleyWalker.Coordinate == endLocation)
             {
                 trip++;
                 if (trip == trips)
                 {
-                    return walker.Steps;
+                    return valleyWalker.Minute;
                 }
 
                 (endLocation, startLocation) = (startLocation, endLocation);
@@ -120,22 +120,21 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
                 queue.Clear();
 
-                distance = MeasurementFunctions.ManhattanDistance(walker.CurrentCoordinate, endLocation);
-                queue.Enqueue(walker, walker.Steps + distance);
+                distance = MeasurementFunctions.ManhattanDistance(valleyWalker.Coordinate, endLocation);
+                queue.Enqueue(valleyWalker, valleyWalker.Minute + distance);
 
                 continue;
             }
 
-            var state = new State(walker.Steps, walker.CurrentCoordinate);
-            if (visited.Contains(state))
+            if (visited.Contains(valleyWalker))
             {
                 continue;
             }
 
-            visited.Add(state);
+            visited.Add(valleyWalker);
 
             // Next state
-            var valleyIndex = (walker.Steps + 1) % lcm;
+            var valleyIndex = (valleyWalker.Minute + 1) % lcm;
             if (valleys.Count <= valleyIndex)
             {
                 blizzardLocations = BuildNextBlizzardLocations(blizzardLocations);
@@ -145,18 +144,15 @@ public class Day24PuzzleSolver : IPuzzleSolver
             }
 
             valley = valleys[valleyIndex];
-            var movementLocations = GetEmptyMovementLocations(valley, walker.CurrentCoordinate);
+            var movementLocations = GetEmptyMovementLocations(valley, valleyWalker.Coordinate);
             foreach (var movementLocation in movementLocations)
             {
-                if (walker.CurrentCoordinate == startLocation || movementLocation != startLocation) // Allow staying at the start, but not come back
+                if (valleyWalker.Coordinate == startLocation || movementLocation != startLocation) // Allow staying at the start, but not come back
                 {
-                    var nextWalker = walker.Clone();
+                    var newValleyWalker = new ValleyWalker(movementLocation, valleyWalker.Minute + 1);
 
-                    var direction = walker.CurrentCoordinate.DirectionToward(movementLocation);
-                    nextWalker.Move(direction);
-
-                    distance = MeasurementFunctions.ManhattanDistance(nextWalker.CurrentCoordinate, endLocation);
-                    queue.Enqueue(nextWalker, nextWalker.Steps + distance);
+                    distance = MeasurementFunctions.ManhattanDistance(newValleyWalker.Coordinate, endLocation);
+                    queue.Enqueue(newValleyWalker, newValleyWalker.Minute + distance);
                 }
             }
         }
@@ -291,6 +287,4 @@ public class Day24PuzzleSolver : IPuzzleSolver
             }
         }
     }
-
-    private sealed record State(int Minute, GridCoordinate ExpeditionLocation);
 }

@@ -2,9 +2,9 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class Grid<T>(int rows, int columns) : IEnumerable<GridCell<T>>
+internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
 {
-    private readonly T[,] _array = new T[rows, columns];
+    private readonly T[,] _array = new T[height, width];
 
     public int Width => _array.GetLength(1);
 
@@ -13,6 +13,8 @@ internal class Grid<T>(int rows, int columns) : IEnumerable<GridCell<T>>
     public int LastRowIndex => Height - 1;
 
     public int LastColumnIndex => Width - 1;
+
+    public int Area => Width * Height;
 
     public T this[int row, int column]
     {
@@ -116,6 +118,17 @@ internal class Grid<T>(int rows, int columns) : IEnumerable<GridCell<T>>
             if (InBounds(sideCoordinate))
             {
                 yield return new GridCell<T>(_array[sideCoordinate.Row, sideCoordinate.Column], sideCoordinate);
+            }
+        }
+    }
+
+    public IEnumerable<GridCell<T>> AroundNeighbors(GridCoordinate coordinate)
+    {
+        foreach (var neighborCoordinate in coordinate.AroundNeighbors())
+        {
+            if (InBounds(neighborCoordinate))
+            {
+                yield return new GridCell<T>(_array[neighborCoordinate.Row, neighborCoordinate.Column], neighborCoordinate);
             }
         }
     }

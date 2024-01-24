@@ -14,10 +14,10 @@ internal class BitGrid
 
     public int LastColumnIndex => Width - 1;
 
-    public BitGrid(int rows, int columns)
+    public BitGrid(int height, int width)
     {
-        Height = rows;
-        Width = columns;
+        Height = height;
+        Width = width;
 
         _bitArray = new BitArray(Height * Width);
     }
@@ -32,6 +32,17 @@ internal class BitGrid
     {
         get => this[gridCoordinate.Row, gridCoordinate.Column];
         set => this[gridCoordinate.Row, gridCoordinate.Column] = value;
+    }
+
+    public bool InBounds(int row, int column)
+    {
+        return row >= 0 && row < Height &&
+               column >= 0 && column < Width;
+    }
+
+    public bool InBounds(GridCoordinate coordinate)
+    {
+        return InBounds(coordinate.Row, coordinate.Column);
     }
 }
 

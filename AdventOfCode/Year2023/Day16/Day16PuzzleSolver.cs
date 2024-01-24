@@ -71,7 +71,6 @@ public class Day16PuzzleSolver : IPuzzleSolver
         var beams = new Stack<GridWalker>();
 
         beams.Push(beam);
-
         while (beams.Count > 0)
         {
             beam = beams.Pop();

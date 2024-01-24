@@ -40,6 +40,13 @@ internal static class MeasurementFunctions
                Math.Abs(coordinate2.Y - coordinate1.Y);
     }
 
+    public static long ManhattanDistance(Coordinate3D coordinate1, Coordinate3D coordinate2)
+    {
+        return Math.Abs(coordinate2.X - coordinate1.X) +
+               Math.Abs(coordinate2.Y - coordinate1.Y) +
+               Math.Abs(coordinate2.Z - coordinate1.Z);
+    }
+
     public static int ManhattanDistanceLoop(IReadOnlyList<GridCoordinate> coordinates)
     {
         var distance = 0;

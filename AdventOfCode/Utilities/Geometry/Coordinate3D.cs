@@ -36,7 +36,7 @@ internal readonly struct Coordinate3D(long x, long y, long z)
 
     public IEnumerable<Coordinate3D> Sides()
     {
-        var vectors = new Coordinate3D[]
+        var vectors = new Vector3D[]
         {
             new(1, 0, 0),
             new(-1, 0, 0),
@@ -54,6 +54,42 @@ internal readonly struct Coordinate3D(long x, long y, long z)
         }
     }
 
+    public List<Coordinate3D> Orientations()
+    {
+        // Guide https://www.euclideanspace.com/maths/algebra/matrix/transforms/examples/index.htm
+        //             | 0   0   1|
+        // |X, Y, Z| * | 0   1   0| = |-Z, Y, X|
+        //             |-1   0   0|
+
+        return
+        [
+            new(X, Y, Z),
+            new(-Z, Y, X),
+            new(-X, Y, -Z),
+            new(Z, Y, -X),
+            new(Y, -X, Z),
+            new(Y, Z, X),
+            new(Y, X, -Z),
+            new(Y, -Z, -X),
+            new(-Y, X, Z),
+            new(-Y, -Z, X),
+            new(-Y, -X, -Z),
+            new(-Y, Z, -X),
+            new(X, Z, -Y),
+            new(-Z, X, -Y),
+            new(-X, -Z, -Y),
+            new(Z, -X, -Y),
+            new(X, -Y, -Z),
+            new(-Z, -Y, -X),
+            new(-X, -Y, Z),
+            new(Z, -Y, X),
+            new(X, -Z, Y),
+            new(-Z, -X, Y),
+            new(-X, Z, Y),
+            new(Z, X, Y),
+        ];
+    }
+
     public static bool operator ==(Coordinate3D left, Coordinate3D right)
     {
         return left.Equals(right);
@@ -64,8 +100,18 @@ internal readonly struct Coordinate3D(long x, long y, long z)
         return !(left == right);
     }
 
-    public static Coordinate3D operator +(Coordinate3D left, Coordinate3D right)
+    public static Coordinate3D operator +(Coordinate3D coordinate, Vector3D vector)
     {
-        return new Coordinate3D(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+        return new Coordinate3D(coordinate.X + vector.DX, coordinate.Y + vector.DY, coordinate.Z + vector.DZ);
+    }
+
+    public static Coordinate3D operator -(Coordinate3D coordinate, Vector3D vector)
+    {
+        return new Coordinate3D(coordinate.X - vector.DX, coordinate.Y - vector.DY, coordinate.Z - vector.DZ);
+    }
+
+    public static Vector3D operator -(Coordinate3D coordinate1, Coordinate3D coordinate2)
+    {
+        return new Vector3D(coordinate1.X - coordinate2.X, coordinate1.Y - coordinate2.Y, coordinate1.Z - coordinate2.Z);
     }
 }

@@ -45,13 +45,13 @@ internal readonly struct Line2D
         }
     }
 
-    public Line2D(Vector2D vector)
+    public Line2D(Coordinate2D coordinate, Vector2D vector)
     {
         A = -vector.DY;
         B = vector.DX;
 
-        var bigC = new BigInteger(vector.DY) * new BigInteger(vector.X) -
-                   new BigInteger(vector.Y) * new BigInteger(vector.DX);
+        var bigC = new BigInteger(vector.DY) * new BigInteger(coordinate.X) -
+                   new BigInteger(coordinate.Y) * new BigInteger(vector.DX);
         C = (long)bigC;
 
         if (A < 0)
