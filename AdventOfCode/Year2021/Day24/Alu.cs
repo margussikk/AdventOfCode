@@ -99,7 +99,7 @@ internal class Alu
                 {
                     if (instruction.ParameterB is VariableParameter variableParameterB)
                     {
-                        Variables[variableParameterA.Variable] = Variables[variableParameterA.Variable] == Variables[variableParameterB.Variable] ? 1: 0;
+                        Variables[variableParameterA.Variable] = Variables[variableParameterA.Variable] == Variables[variableParameterB.Variable] ? 1 : 0;
                     }
                     else if (instruction.ParameterB is NumberParameter numberParameterB)
                     {

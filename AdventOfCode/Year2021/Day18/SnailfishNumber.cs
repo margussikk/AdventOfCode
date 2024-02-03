@@ -7,7 +7,7 @@ internal class SnailfishNumber
     public SnailfishNumber? Left { get; set; }
     public SnailfishNumber? Right { get; set; }
 
-    public int Level => Parent != null ? Parent.Level + 1: 0;
+    public int Level => Parent != null ? Parent.Level + 1 : 0;
 
     public SnailfishNumber AddAndReduce(SnailfishNumber snailfishNumber)
     {
@@ -58,7 +58,7 @@ internal class SnailfishNumber
             var child = this;
             var parent = Parent;
             var explodedLeft = false;
-            
+
             while (!explodedLeft && parent != null)
             {
                 if (parent.Left == child)

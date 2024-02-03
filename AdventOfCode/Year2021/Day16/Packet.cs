@@ -53,7 +53,7 @@ internal class Packet
             }
         }
 
-        return packet;     
+        return packet;
     }
 
     public int SumVersions()

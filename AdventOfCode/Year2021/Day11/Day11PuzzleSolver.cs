@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2021.Day11;
 [Puzzle(2021, 11, "Dumbo Octopus")]
 public class Day11PuzzleSolver : IPuzzleSolver
 {
-    private Grid<int> _grid = new (0, 0);
+    private Grid<int> _grid = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
@@ -66,7 +66,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
     {
         var count = 0;
 
-        foreach(var gridCell in grid.Where(c => c.Object > 9))
+        foreach (var gridCell in grid.Where(c => c.Object > 9))
         {
             grid[gridCell.Coordinate] = 0;
             count++;

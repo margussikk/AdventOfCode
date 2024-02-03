@@ -26,7 +26,7 @@ internal readonly struct Coordinate3D(long x, long y, long z)
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(X, Y);
+        return HashCode.Combine(X, Y, Z);
     }
 
     public override string ToString()
@@ -34,7 +34,7 @@ internal readonly struct Coordinate3D(long x, long y, long z)
         return $"{X},{Y},{Z}";
     }
 
-    public IEnumerable<Coordinate3D> Sides()
+    public IEnumerable<Coordinate3D> SideNeighbors()
     {
         var vectors = new Vector3D[]
         {
@@ -51,6 +51,23 @@ internal readonly struct Coordinate3D(long x, long y, long z)
         foreach (var vector in vectors)
         {
             yield return this + vector;
+        }
+    }
+
+    public IEnumerable<Coordinate3D> AroundNeighbors()
+    {
+        for (var dz = -1; dz <= 1; dz++)
+        {
+            for (var dy = -1; dy <= 1; dy++)
+            {
+                for (var dx = -1; dx <= 1; dx++)
+                {
+                    if (dx != 0 || dy != 0 || dz != 0)
+                    {
+                        yield return new Coordinate3D(X + dx, Y + dy, Z + dz);
+                    }
+                }
+            }
         }
     }
 

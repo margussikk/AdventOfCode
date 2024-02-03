@@ -43,7 +43,7 @@ internal class Snafu(long decimalValue)
         return stringBuilder.ToString();
     }
 
-    public static Snafu Parse (string line)
+    public static Snafu Parse(string line)
     {
         var value = 0L;
 

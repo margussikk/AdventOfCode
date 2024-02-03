@@ -77,7 +77,7 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
     {
         for (var column = 0; column < Width; column++)
         {
-            yield return new GridCell<T>(_array[row, column], new GridCoordinate(row, column));
+            yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
         }
     }
 
@@ -85,39 +85,39 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
     {
         for (var row = 0; row < Height; row++)
         {
-            yield return new GridCell<T>(_array[row, column], new GridCoordinate(row, column));
+            yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
         }
     }
 
     public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
     {
-        var sideCoordinates = new List<GridCoordinate>();
+        var neighborCoordinates = new List<GridCoordinate>();
 
         if ((direction & GridDirection.Up) != GridDirection.None)
         {
-            sideCoordinates.Add(new GridCoordinate(coordinate.Row - 1, coordinate.Column));
+            neighborCoordinates.Add(new GridCoordinate(coordinate.Row - 1, coordinate.Column));
         }
 
         if ((direction & GridDirection.Down) != GridDirection.None)
         {
-            sideCoordinates.Add(new GridCoordinate(coordinate.Row + 1, coordinate.Column));
+            neighborCoordinates.Add(new GridCoordinate(coordinate.Row + 1, coordinate.Column));
         }
 
         if ((direction & GridDirection.Left) != GridDirection.None)
         {
-            sideCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column - 1));
+            neighborCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column - 1));
         }
 
         if ((direction & GridDirection.Right) != GridDirection.None)
         {
-            sideCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column + 1));
+            neighborCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column + 1));
         }
 
-        foreach (var sideCoordinate in sideCoordinates)
+        foreach (var neighborCoordinate in neighborCoordinates)
         {
-            if (InBounds(sideCoordinate))
+            if (InBounds(neighborCoordinate))
             {
-                yield return new GridCell<T>(_array[sideCoordinate.Row, sideCoordinate.Column], sideCoordinate);
+                yield return new GridCell<T>(neighborCoordinate, _array[neighborCoordinate.Row, neighborCoordinate.Column]);
             }
         }
     }
@@ -128,7 +128,7 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
         {
             if (InBounds(neighborCoordinate))
             {
-                yield return new GridCell<T>(_array[neighborCoordinate.Row, neighborCoordinate.Column], neighborCoordinate);
+                yield return new GridCell<T>(neighborCoordinate, _array[neighborCoordinate.Row, neighborCoordinate.Column]);
             }
         }
     }
@@ -206,7 +206,7 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
         {
             for (var column = 0; column < Width; column++)
             {
-                yield return new GridCell<T>(_array[row, column], new GridCoordinate(row, column));
+                yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
             }
         }
     }

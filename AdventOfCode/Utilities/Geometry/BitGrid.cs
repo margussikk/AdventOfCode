@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class BitGrid
+internal class BitGrid : IEnumerable<GridCell<bool>>
 {
     private readonly BitArray _bitArray;
 
@@ -43,6 +43,22 @@ internal class BitGrid
     public bool InBounds(GridCoordinate coordinate)
     {
         return InBounds(coordinate.Row, coordinate.Column);
+    }
+
+    public IEnumerator<GridCell<bool>> GetEnumerator()
+    {
+        for (var row = 0; row < Height; row++)
+        {
+            for (var column = 0; column < Width; column++)
+            {
+                yield return new GridCell<bool>(new GridCoordinate(row, column), _bitArray.Get(row * Width + column));
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
 

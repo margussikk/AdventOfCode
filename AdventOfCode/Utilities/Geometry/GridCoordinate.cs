@@ -36,14 +36,16 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
 
     public IEnumerable<GridCoordinate> AroundNeighbors()
     {
-        yield return new GridCoordinate(Row - 1, Column - 1);
-        yield return new GridCoordinate(Row - 1, Column);
-        yield return new GridCoordinate(Row - 1, Column + 1);
-        yield return new GridCoordinate(Row, Column + 1);
-        yield return new GridCoordinate(Row + 1, Column + 1);
-        yield return new GridCoordinate(Row + 1, Column);
-        yield return new GridCoordinate(Row + 1, Column - 1);
-        yield return new GridCoordinate(Row, Column - 1);
+        for (var drow = -1; drow <= 1; drow++)
+        {
+            for (var dcolumn = -1; dcolumn <= 1; dcolumn++)
+            {
+                if (drow != 0 || dcolumn != 0)
+                {
+                    yield return new GridCoordinate(Row + drow, Column + dcolumn);
+                }
+            }
+        }
     }
 
     public IEnumerable<GridCoordinate> SideNeighbors()
@@ -96,6 +98,16 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
             GridDirection.None => this,
             _ => throw new InvalidOperationException("Unexpected direction")
         };
+    }
+
+    public GridCoordinate RotateClockwise()
+    {
+        return new GridCoordinate(Column, -Row);
+    }
+
+    public GridCoordinate RotateCounterClockwise()
+    {
+        return new GridCoordinate(-Column, Row);
     }
 
     public static bool operator ==(GridCoordinate coordinate1, GridCoordinate coordinate2)

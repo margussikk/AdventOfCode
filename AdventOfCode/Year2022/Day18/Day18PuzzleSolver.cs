@@ -19,7 +19,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
         var cubeLocations = new HashSet<Coordinate3D>(_cubeCoordinates);
 
         var answer = _cubeCoordinates
-            .Sum(x => x.Sides()
+            .Sum(x => x.SideNeighbors()
                        .Count(c => !cubeLocations.Contains(c)));
 
         return new PuzzleAnswer(answer, 4580);
@@ -67,7 +67,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
             visited.Add(currentCoordinate);
 
             // Count connected to cubes
-            answer += currentCoordinate.Sides()
+            answer += currentCoordinate.SideNeighbors()
                                        .Count(cubeLocations.Contains);
 
             foreach (var location in GetSideLocations(currentCoordinate))
@@ -83,7 +83,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
         IEnumerable<Coordinate3D> GetSideLocations(Coordinate3D currentCoordinate)
         {
-            foreach (var coordinate in currentCoordinate.Sides())
+            foreach (var coordinate in currentCoordinate.SideNeighbors())
             {
                 if (coordinate.X < scanMinLocation.X || coordinate.X > scanMaxLocation.X ||
                     coordinate.Y < scanMinLocation.Y || coordinate.Y > scanMaxLocation.Y ||

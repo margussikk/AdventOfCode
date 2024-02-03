@@ -39,7 +39,7 @@ internal class Scanner
         {
             clone.AddBeaconMeasurement(beaconLocation);
         }
-        
+
         return clone;
     }
 

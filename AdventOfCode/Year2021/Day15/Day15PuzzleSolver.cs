@@ -60,7 +60,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
             {
                 return currentCaveWalker.Distance;
             }
-            
+
             if (totalRiskGrid[currentCaveWalker.Coordinate].HasValue)
             {
                 continue;

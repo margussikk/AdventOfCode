@@ -20,7 +20,7 @@ public class Day04PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartOneAnswer()
     {
         var boards = new List<Board>(_boards);
-        
+
         foreach (var number in _numbers)
         {
             foreach (var board in boards)

@@ -187,7 +187,7 @@ internal class Board
 
                         boards.Add(newBoard);
                     }
-                }                    
+                }
             }
         }
 
@@ -328,7 +328,7 @@ internal class Board
         var boards = new List<Board>();
 
         var currentBoard = this;
-        while(currentBoard != null)
+        while (currentBoard != null)
         {
             boards.Add(currentBoard);
             currentBoard = currentBoard.PreviousBoard;
@@ -336,7 +336,7 @@ internal class Board
 
         boards.Reverse();
 
-        foreach(var board in boards)
+        foreach (var board in boards)
         {
             board.Print();
         }

@@ -72,7 +72,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
     private bool MoveDown()
     {
         var updatedDirections = new List<(GridCoordinate coordinate, GridDirection direction)>();
-        
+
         foreach (var gridCell in _grid)
         {
             if (gridCell.Object == GridDirection.Down)

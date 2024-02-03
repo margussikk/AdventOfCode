@@ -23,7 +23,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
             }
 
             var scanner = new Scanner(scannerIndex + 1);
-            foreach(var beaconMeasurementLine in chunk.Skip(1))
+            foreach (var beaconMeasurementLine in chunk.Skip(1))
             {
                 var measurement = Coordinate3D.Parse(beaconMeasurementLine);
                 scanner.AddBeaconMeasurement(measurement);
@@ -72,7 +72,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
         scanners[0].Aligned = true;
 
         var processedScanners = 0UL;
-        while(BitOperations.PopCount(processedScanners) != scanners.Count)
+        while (BitOperations.PopCount(processedScanners) != scanners.Count)
         {
             foreach (var alignedScanner in scanners.Where(s => s.Aligned))
             {
