@@ -120,7 +120,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             }
         }
 
-        return tileVisits.Count(x => x != GridDirection.None);
+        return tileVisits.Count(cell => cell.Object != GridDirection.None);
     }
 
     private static GridDirection GetVisitedDirection(Tile tile, GridDirection beamDirection)

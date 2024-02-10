@@ -55,24 +55,6 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
         return null;
     }
 
-    public int Count(Func<T, bool> predicate)
-    {
-        var count = 0;
-
-        for (var row = 0; row < Height; row++)
-        {
-            for (var column = 0; column < Width; column++)
-            {
-                if (predicate(_array[row, column]))
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count;
-    }
-
     public IEnumerable<GridCell<T>> Row(int row)
     {
         for (var column = 0; column < Width; column++)

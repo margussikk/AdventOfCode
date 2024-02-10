@@ -32,33 +32,28 @@ public class Day17PuzzleSolver : IPuzzleSolver
         // Simulate cycles
         for (var cycle = 1; cycle <= totalCycles; cycle++)
         {
-            var windowSize = totalCycles - cycle;
             var updatedCells = new List<Aabb3DCell>();
 
-            for (var z = aabb.MinCoordinate.Z + windowSize; z <= aabb.MaxCoordinate.Z - windowSize; z++)
+            var windowMinCoordinate = new Coordinate3D(-cycle, -cycle, -cycle);
+            var windowMaxCoordinate = new Coordinate3D(_bitGrid.LastColumnIndex + cycle, _bitGrid.LastRowIndex + cycle, cycle);
+
+            foreach (var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
             {
-                for (var y = aabb.MinCoordinate.Y + windowSize; y <= aabb.MaxCoordinate.Y - windowSize; y++)
+                var activeNeighborsCount = aabb.AroundNeighbors(cell.Coordinate)
+                                               .Count(c => c.Active);
+
+                if (cell.Active)
                 {
-                    for (var x = aabb.MinCoordinate.X + windowSize; x <= aabb.MaxCoordinate.X - windowSize; x++)
+                    if (activeNeighborsCount != 2 && activeNeighborsCount != 3)
                     {
-                        var coordinate = new Coordinate3D(x, y, z);
-                        var activeNeighborsCount = aabb.AroundNeighbors(coordinate)
-                                                       .Count(c => c.Active);
-                        var active = aabb[coordinate];
-                        if (active)
-                        {
-                            if (activeNeighborsCount != 2 && activeNeighborsCount != 3)
-                            {
-                                updatedCells.Add(new Aabb3DCell(coordinate, false));
-                            }
-                        }
-                        else
-                        {
-                            if (activeNeighborsCount == 3)
-                            {
-                                updatedCells.Add(new Aabb3DCell(coordinate, true));
-                            }
-                        }
+                        updatedCells.Add(new Aabb3DCell(cell.Coordinate, false));
+                    }
+                }
+                else
+                {
+                    if (activeNeighborsCount == 3)
+                    {
+                        updatedCells.Add(new Aabb3DCell(cell.Coordinate, true));
                     }
                 }
             }
@@ -91,36 +86,28 @@ public class Day17PuzzleSolver : IPuzzleSolver
         // Simulate cycles
         for (var cycle = 1; cycle <= totalCycles; cycle++)
         {
-            var windowSize = totalCycles - cycle;
             var updatedCells = new List<Aabb4DCell>();
 
-            for (var w = aabb.MinCoordinate.W + windowSize; w <= aabb.MaxCoordinate.W - windowSize; w++)
+            var windowMinCoordinate = new Coordinate4D(-cycle, -cycle, -cycle, -cycle);
+            var windowMaxCoordinate = new Coordinate4D(_bitGrid.LastColumnIndex + cycle, _bitGrid.LastRowIndex + cycle, cycle, cycle);
+
+            foreach(var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
             {
-                for (var z = aabb.MinCoordinate.Z + windowSize; z <= aabb.MaxCoordinate.Z - windowSize; z++)
+                var activeNeighborsCount = aabb.AroundNeighbors(cell.Coordinate)
+                                                .Count(c => c.Active);
+
+                if (cell.Active)
                 {
-                    for (var y = aabb.MinCoordinate.Y + windowSize; y <= aabb.MaxCoordinate.Y - windowSize; y++)
+                    if (activeNeighborsCount != 2 && activeNeighborsCount != 3)
                     {
-                        for (var x = aabb.MinCoordinate.X + windowSize; x <= aabb.MaxCoordinate.X - windowSize; x++)
-                        {
-                            var coordinate = new Coordinate4D(x, y, z, w);
-                            var activeNeighborsCount = aabb.AroundNeighbors(coordinate)
-                                                           .Count(c => c.Active);
-                            var active = aabb[coordinate];
-                            if (active)
-                            {
-                                if (activeNeighborsCount != 2 && activeNeighborsCount != 3)
-                                {
-                                    updatedCells.Add(new Aabb4DCell(coordinate, false));
-                                }
-                            }
-                            else
-                            {
-                                if (activeNeighborsCount == 3)
-                                {
-                                    updatedCells.Add(new Aabb4DCell(coordinate, true));
-                                }
-                            }
-                        }
+                        updatedCells.Add(new Aabb4DCell(cell.Coordinate, false));
+                    }
+                }
+                else
+                {
+                    if (activeNeighborsCount == 3)
+                    {
+                        updatedCells.Add(new Aabb4DCell(cell.Coordinate, true));
                     }
                 }
             }

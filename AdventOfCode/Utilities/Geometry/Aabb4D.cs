@@ -64,21 +64,26 @@ internal class Aabb4D: IEnumerable<Aabb4DCell>
         }
     }
 
-    public IEnumerator<Aabb4DCell> GetEnumerator()
+    public IEnumerable<Aabb4DCell> Window(Coordinate4D minCoordinate, Coordinate4D maxCoordinate)
     {
-        for (var w = MinCoordinate.W; w <= MaxCoordinate.W; w++)
+        for (var w = minCoordinate.W; w <= maxCoordinate.W; w++)
         {
-            for (var z = MinCoordinate.Z; z <= MaxCoordinate.Z; z++)
+            for (var z = minCoordinate.Z; z <= maxCoordinate.Z; z++)
             {
-                for (var y = MinCoordinate.Y; y <= MaxCoordinate.Y; y++)
+                for (var y = minCoordinate.Y; y <= maxCoordinate.Y; y++)
                 {
-                    for (var x = MinCoordinate.X; x <= MaxCoordinate.X; x++)
+                    for (var x = minCoordinate.X; x <= maxCoordinate.X; x++)
                     {
                         yield return new Aabb4DCell(new Coordinate4D(x, y, z, w), _bitArray.Get(GetIndex(x, y, z, w)));
                     }
                 }
             }
         }
+    }
+
+    public IEnumerator<Aabb4DCell> GetEnumerator()
+    {
+        return Window(MinCoordinate, MaxCoordinate).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

@@ -60,18 +60,23 @@ internal class Aabb3D: IEnumerable<Aabb3DCell>
         }
     }
 
-    public IEnumerator<Aabb3DCell> GetEnumerator()
+    public IEnumerable<Aabb3DCell> Window(Coordinate3D minCoordinate, Coordinate3D maxCoordinate)
     {
-        for (var z = MinCoordinate.Z; z <= MaxCoordinate.Z; z++)
+        for (var z = minCoordinate.Z; z <= maxCoordinate.Z; z++)
         {
-            for (var y = MinCoordinate.Y; y <= MaxCoordinate.Y; y++)
+            for (var y = minCoordinate.Y; y <= maxCoordinate.Y; y++)
             {
-                for (var x = MinCoordinate.X; x <= MaxCoordinate.X; x++)
+                for (var x = minCoordinate.X; x <= maxCoordinate.X; x++)
                 {
                     yield return new Aabb3DCell(new Coordinate3D(x, y, z), _bitArray.Get(GetIndex(x, y, z)));
                 }
             }
         }
+    }
+
+    public IEnumerator<Aabb3DCell> GetEnumerator()
+    {
+        return Window(MinCoordinate, MaxCoordinate).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
