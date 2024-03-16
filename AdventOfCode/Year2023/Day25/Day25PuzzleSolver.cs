@@ -26,7 +26,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
             }
         }
 
-        _components = graphBuilder.GetVertices();
+        _components = graphBuilder.Vertices.Values.ToList();
         //_wires = graphBuilder.GetEdges();
     }
 

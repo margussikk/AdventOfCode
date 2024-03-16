@@ -3,7 +3,7 @@
 internal class Game
 {
     public long Id { get; private set; }
-    public IReadOnlyList<CubeSet> CubeSets { get; private set; } = new List<CubeSet>();
+    public IReadOnlyList<CubeSet> CubeSets { get; private set; } = [];
 
     public long Power
     {

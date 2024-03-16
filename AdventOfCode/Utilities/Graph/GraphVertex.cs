@@ -6,5 +6,7 @@ internal class GraphVertex(int id, string name)
 
     public string Name { get; } = name;
 
+    public object? Object { get; set; }
+
     public List<GraphEdge> Edges { get; } = [];
 }

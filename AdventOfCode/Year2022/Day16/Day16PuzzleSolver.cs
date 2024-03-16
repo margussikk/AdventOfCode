@@ -43,7 +43,7 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
             }
         }
 
-        Collapse(valves, graphBuilder.GetVertices());
+        Collapse(valves, graphBuilder.Vertices.Values.ToList());
         _valves = valves.ToDictionary(x => x.Name);
     }
 

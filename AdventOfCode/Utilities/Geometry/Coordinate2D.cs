@@ -2,11 +2,35 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct Coordinate2D(long x, long y)
+internal readonly struct Coordinate2D
 {
-    public long X { get; } = x;
+    public static readonly Coordinate2D Zero = new(0, 0);
 
-    public long Y { get; } = y;
+    public long X { get; }
+
+    public long Y { get; }
+
+    public Coordinate2D(long x, long y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public Coordinate2D (GridCoordinate gridCoordinate)
+    {
+        X = -gridCoordinate.Row;
+        Y = gridCoordinate.Column;
+    }
+
+    public static bool operator ==(Coordinate2D coordinate1, Coordinate2D coordinate2)
+    {
+        return coordinate1.Equals(coordinate2);
+    }
+
+    public static bool operator !=(Coordinate2D coordinate1, Coordinate2D coordinate2)
+    {
+        return !coordinate1.Equals(coordinate2);
+    }
 
     public static Coordinate2D operator +(Coordinate2D coordinate, Vector2D vector)
     {
@@ -31,6 +55,11 @@ internal readonly struct Coordinate2D(long x, long y)
     public override int GetHashCode()
     {
         return HashCode.Combine(X, Y);
+    }
+
+    public override string ToString()
+    {
+        return $"{X},{Y}";
     }
 
     public static Coordinate2D Parse(string input)

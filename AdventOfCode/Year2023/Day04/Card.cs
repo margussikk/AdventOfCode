@@ -4,9 +4,9 @@ internal class Card
 {
     public int Id { get; private set; }
 
-    public IReadOnlyList<int> WinningNumbers { get; private set; } = new List<int>();
+    public IReadOnlyList<int> WinningNumbers { get; private set; } = [];
 
-    public IReadOnlyList<int> YourNumbers { get; private set; } = new List<int>();
+    public IReadOnlyList<int> YourNumbers { get; private set; } = [];
 
     internal static readonly string[] _splitSeparator = [": ", "|"];
 

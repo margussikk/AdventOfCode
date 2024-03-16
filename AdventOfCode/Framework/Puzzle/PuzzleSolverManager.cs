@@ -5,6 +5,7 @@ using BenchmarkDotNet.Running;
 using Spectre.Console;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace AdventOfCode.Framework.Puzzle;
 
@@ -108,11 +109,11 @@ public static class PuzzleSolverManager
         }
         else if (timeSpan.TotalMilliseconds > 1)
         {
-            return $"{timeSpan.TotalMilliseconds} ms";
+            return string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMilliseconds:0.##} ms");
         }
         else
         {
-            return $"{timeSpan.TotalMicroseconds} us";
+            return string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMicroseconds:0.##} us");
         }
     }
 

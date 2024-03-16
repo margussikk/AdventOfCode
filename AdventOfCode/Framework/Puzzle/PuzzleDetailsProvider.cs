@@ -6,27 +6,24 @@ public static class PuzzleDetailsProvider
 {
     public static IReadOnlyList<int> GetYears()
     {
-        return BuildQuery()
+        return [.. BuildQuery()
             .Select(x => x.Year)
             .Distinct()
-            .Order()
-            .ToList();
+            .Order()];
     }
 
     public static IReadOnlyList<PuzzleDetails> GetByYear(int year)
     {
-        return BuildQuery()
+        return [.. BuildQuery()
             .Where(x => x.Year == year)
-            .OrderBy(x => x.Day)
-            .ToList();
+            .OrderBy(x => x.Day)];
     }
 
     public static IReadOnlyList<PuzzleDetails> GetByYearAndDays(int year, int[] days)
     {
-        return BuildQuery()
+        return [.. BuildQuery()
             .Where(x => x.Year == year && days.Contains(x.Day))
-            .OrderBy(x => x.Day)
-            .ToList();
+            .OrderBy(x => x.Day)];
     }
 
 

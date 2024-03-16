@@ -2,14 +2,9 @@
 
 namespace AdventOfCode.Year2023.Day15;
 
-internal abstract partial class Operation
+internal abstract partial class Operation(string label)
 {
-    public string Label { get; private set; }
-
-    protected Operation(string label)
-    {
-        Label = label;
-    }
+    public string Label { get; private set; } = label;
 
     public int GetLabelHash() => GetHash(Label);
 
@@ -25,16 +20,16 @@ internal abstract partial class Operation
 
         if (matches[0].Groups[2].Value == "=")
         {
-            var label = matches[0].Groups[1].Value;
+            var label1 = matches[0].Groups[1].Value;
             var focalLength = int.Parse(matches[0].Groups[3].Value);
 
-            return new ReplaceLensOperation(label, focalLength);
+            return new ReplaceLensOperation(label1, focalLength);
         }
         else if (matches[0].Groups[2].Value == "-")
         {
-            var label = matches[0].Groups[1].Value;
+            var label1 = matches[0].Groups[1].Value;
 
-            return new RemoveLensOperation(label);
+            return new RemoveLensOperation(label1);
         }
         else
         {

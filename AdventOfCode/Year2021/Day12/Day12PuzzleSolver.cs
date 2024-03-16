@@ -19,8 +19,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             graphBuilder.AddConnection(splits[0], GraphVertexPort.Any, splits[1], GraphVertexPort.Any, 0);
         }
 
-        _startVertex = graphBuilder.GetVertices().FirstOrDefault(v => v.Name == "start")
-            ?? throw new InvalidOperationException("Start cave not found");
+        _startVertex = graphBuilder.Vertices["start"];
     }
 
     public PuzzleAnswer GetPartOneAnswer()

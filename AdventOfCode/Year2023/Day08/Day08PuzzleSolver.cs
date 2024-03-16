@@ -50,7 +50,7 @@ public partial class Day08PuzzleSolver : IPuzzleSolver
             graphBuilder.AddConnection(currentNodeName, GraphVertexPort.Right, rightNodeName, GraphVertexPort.Any, 1);
         }
 
-        _graphVertices = graphBuilder.GetVertices();
+        _graphVertices = graphBuilder.Vertices.Values.ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()

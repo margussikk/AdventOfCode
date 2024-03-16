@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -119,13 +120,7 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
     {
         var grid = new Grid<T>(Height, Width);
 
-        for (var row = 0; row < grid.Height; row++)
-        {
-            for (var column = 0; column < grid.Width; column++)
-            {
-                grid[row, column] = _array[row, column];
-            }
-        }
+        Array.Copy(_array, grid._array, _array.Length);
 
         return grid;
     }
@@ -196,5 +191,22 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public void Print(Func<T, char> mapper)
+    {
+        var stringBuilder = new StringBuilder();
+
+        for (var row = 0; row <= LastRowIndex; row++)
+        {
+            for (var column = 0; column <= LastColumnIndex; column++)
+            {
+                var character = mapper(_array[row, column]);
+                stringBuilder.Append(character);
+            }
+            stringBuilder.AppendLine();
+        }
+
+        Console.WriteLine(stringBuilder.ToString());
     }
 }

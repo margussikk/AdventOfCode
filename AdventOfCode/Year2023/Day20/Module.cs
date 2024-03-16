@@ -1,16 +1,10 @@
 ﻿namespace AdventOfCode.Year2023.Day20;
 
-internal abstract class Module
+internal abstract class Module(string name, string[] destinationModules)
 {
-    public string Name { get; }
+    public string Name { get; } = name;
 
-    public string[] DestinationModules { get; }
-
-    protected Module(string name, string[] destinationModules)
-    {
-        Name = name;
-        DestinationModules = destinationModules;
-    }
+    public string[] DestinationModules { get; } = destinationModules;
 
     public abstract List<Signal> ProcessSignal(Signal signal);
 
@@ -19,13 +13,13 @@ internal abstract class Module
     public static Module Parse(string input)
     {
         var splits = input.Split(" -> ");
-        var destinationModules = splits[1].Split(',', StringSplitOptions.TrimEntries);
+        var destinationModules1 = splits[1].Split(',', StringSplitOptions.TrimEntries);
 
         return splits[0][0] switch
         {
-            '%' => new FlipFlopModule(splits[0][1..], destinationModules),
-            '&' => new ConjunctionModule(splits[0][1..], destinationModules),
-            _ => new RepeatModule(splits[0], destinationModules),
+            '%' => new FlipFlopModule(splits[0][1..], destinationModules1),
+            '&' => new ConjunctionModule(splits[0][1..], destinationModules1),
+            _ => new RepeatModule(splits[0], destinationModules1),
         };
     }
 }

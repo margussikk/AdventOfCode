@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using BenchmarkDotNet.Columns;
+using System.Collections;
+using System.Linq;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -43,6 +45,53 @@ internal class BitGrid : IEnumerable<GridCell<bool>>
     public bool InBounds(GridCoordinate coordinate)
     {
         return InBounds(coordinate.Row, coordinate.Column);
+    }
+
+    public IEnumerable<GridCell<bool>> Row(int row)
+    {
+        for (var column = 0; column <= LastColumnIndex; column++)
+        {
+            yield return new GridCell<bool>(new GridCoordinate(row, column), _bitArray.Get(row * Width + column));
+        }
+    }
+
+    public IEnumerable<GridCell<bool>> Column(int column)
+    {
+        for (var row = 0; row <= LastRowIndex; row++)
+        {
+            yield return new GridCell<bool>(new GridCoordinate(row, column), _bitArray.Get(row * Width + column));
+        }
+    }
+
+    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate)
+    {
+        var neighborCoordinates = new GridCoordinate[]
+        {
+            new(coordinate.Row - 1, coordinate.Column),
+            new(coordinate.Row + 1, coordinate.Column),
+            new(coordinate.Row, coordinate.Column - 1),
+            new(coordinate.Row, coordinate.Column + 1)
+        };
+
+        foreach (var neighborCoordinate in neighborCoordinates)
+        {
+            if (InBounds(neighborCoordinate))
+            {
+                yield return new GridCell<bool>(neighborCoordinate, _bitArray.Get(neighborCoordinate.Row * Width + neighborCoordinate.Column));
+            }
+        }
+    }
+
+    public BitGrid Clone()
+    {
+        var grid = new BitGrid(Height, Width);
+
+        for (var index = 0; index < _bitArray.Length; index++)
+        {
+            grid._bitArray.Set(index, _bitArray.Get(index));
+        }
+
+        return grid;
     }
 
     public BitGrid RotateClockwise()

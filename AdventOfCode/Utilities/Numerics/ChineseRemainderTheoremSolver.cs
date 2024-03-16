@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Utilities.Numerics;
+﻿using AdventOfCode.Utilities.Mathematics;
+
+namespace AdventOfCode.Utilities.Numerics;
 
 // Adapted from https://rosettacode.org/wiki/Chinese_remainder_theorem#C.23
 internal static class ChineseRemainderTheoremSolver
@@ -11,24 +13,9 @@ internal static class ChineseRemainderTheoremSolver
         foreach(var congruence in congruences)
         {
             var p = prod / congruence.Modulus;
-            sum += congruence.Reminder * ModularMultiplicativeInverse(p, congruence.Modulus) * p;
+            sum += congruence.Reminder * (long)MathFunctions.ModularMultiplicativeInverse(p, congruence.Modulus) * p;
         }
 
         return sum % prod;
-    }
-
-    private static long ModularMultiplicativeInverse(long a, long mod)
-    {
-        var b = a % mod;
-
-        for (var x = 1L; x < mod; x++)
-        {
-            if ((b * x) % mod == 1L)
-            {
-                return x;
-            }
-        }
-
-        return 1;
     }
 }

@@ -15,6 +15,9 @@ dotnet_diagnostic.S2346.severity = none
 # S2583: Conditionally executed code should be reachable
 dotnet_diagnostic.S2583.severity = none
 
+# S2589: Boolean expressions should not be gratuitous
+dotnet_diagnostic.S2589.severity = none
+
 # S3267: Loops should be simplified with "LINQ" expressions
 dotnet_diagnostic.S3267.severity = none
 

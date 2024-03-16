@@ -60,8 +60,8 @@ public class Day23PuzzleSolver : IPuzzleSolver
         // Build graph
         var graphBuilder = BuildGraph(tiles, startCoordinate.Value, endCoordinate.Value);
 
-        _startVertex = graphBuilder.GetVertices().FirstOrDefault(vertex => vertex.Name == startCoordinate.ToString());
-        _endVertex = graphBuilder.GetVertices().FirstOrDefault(vertex => vertex.Name == endCoordinate.ToString());
+        _startVertex = graphBuilder.Vertices[startCoordinate.Value.ToString()];
+        _endVertex = graphBuilder.Vertices[endCoordinate.Value.ToString()];
     }
 
     public PuzzleAnswer GetPartOneAnswer()

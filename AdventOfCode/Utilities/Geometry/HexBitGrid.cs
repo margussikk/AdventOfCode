@@ -1,5 +1,4 @@
 ﻿using AdventOfCode.Utilities.Numerics;
-using Microsoft.Diagnostics.Runtime.Utilities;
 using System.Collections;
 
 namespace AdventOfCode.Utilities.Geometry;

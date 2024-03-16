@@ -1,13 +1,8 @@
 ﻿namespace AdventOfCode.Year2023.Day19;
 
-internal abstract class Rule
+internal abstract class Rule(string workflowName)
 {
-    public string WorkflowName { get; private set; }
-
-    protected Rule(string workflowName)
-    {
-        WorkflowName = workflowName;
-    }
+    public string WorkflowName { get; private set; } = workflowName;
 
     public abstract bool Matches(Part part);
 

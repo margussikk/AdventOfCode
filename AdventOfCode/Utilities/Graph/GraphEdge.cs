@@ -13,4 +13,13 @@ internal class GraphEdge(int id, GraphVertex sourceVertex, GraphVertexPort sourc
     public GraphVertexPort DestinationVertexPort { get; } = destinationVertexPort;
 
     public int Weight { get; } = weight;
+
+    public bool Matches(GraphVertex sourceVertex, GraphVertexPort sourceVertexPort, GraphVertex destinationVertex, GraphVertexPort destinationVertexPort, int weight)
+    {
+        return SourceVertex == sourceVertex &&
+               SourceVertexPort == sourceVertexPort &&
+               DestinationVertex == destinationVertex &&
+               DestinationVertexPort == destinationVertexPort &&
+               Weight == weight;
+    }
 }

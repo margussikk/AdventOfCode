@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2022.Day10;
 [Puzzle(2022, 10, "Cathode-Ray Tube")]
 public class Day10PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<Instruction> _instructions = Array.Empty<Instruction>();
+    private IReadOnlyList<Instruction> _instructions = [];
 
     public void ParseInput(string[] inputLines)
     {

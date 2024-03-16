@@ -6,7 +6,7 @@ namespace AdventOfCode.Year2022.Day09;
 [Puzzle(2022, 9, "Rope Bridge")]
 public class Day09PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<Instruction> _instructions = Array.Empty<Instruction>();
+    private IReadOnlyList<Instruction> _instructions = [];
 
     public void ParseInput(string[] inputLines)
     {

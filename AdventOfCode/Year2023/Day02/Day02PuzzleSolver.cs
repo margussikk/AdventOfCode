@@ -5,7 +5,7 @@ namespace AdventOfCode.Year2023.Day02;
 [Puzzle(2023, 2, "Cube Conundrum")]
 public class Day02PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<Game> _games = new List<Game>();
+    private IReadOnlyList<Game> _games = [];
 
     public void ParseInput(string[] inputLines)
     {

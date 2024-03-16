@@ -1,19 +1,12 @@
 ﻿namespace AdventOfCode.Year2023.Day03;
 
-internal abstract class EnginePart
+internal abstract class EnginePart(int row, int column, int length)
 {
-    public int Row { get; }
+    public int Row { get; } = row;
 
-    public int Column { get; }
+    public int Column { get; } = column;
 
-    public int Length { get; }
-
-    protected EnginePart(int row, int column, int length)
-    {
-        Row = row;
-        Column = column;
-        Length = length;
-    }
+    public int Length { get; } = length;
 
     public bool IsAdjacentTo(EnginePart other)
     {

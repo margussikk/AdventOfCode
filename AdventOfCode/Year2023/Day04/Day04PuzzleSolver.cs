@@ -5,7 +5,7 @@ namespace AdventOfCode.Year2023.Day04;
 [Puzzle(2023, 4, "Scratchcards")]
 public class Day04PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<Card> _cards = new List<Card>();
+    private IReadOnlyList<Card> _cards = [];
 
     public void ParseInput(string[] inputLines)
     {
