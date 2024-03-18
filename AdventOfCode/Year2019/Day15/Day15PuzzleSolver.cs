@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Year2019.IntCode;
 
@@ -7,13 +8,12 @@ namespace AdventOfCode.Year2019.Day15;
 [Puzzle(2019, 15, "Oxygen System")]
 public class Day15PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
-
 
     public PuzzleAnswer GetPartOneAnswer()
     {
@@ -146,8 +146,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var minColumn = int.MaxValue / 2;
         var maxColumn = int.MinValue / 2;
 
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
+        var computer = new IntCodeComputer(_program);
 
         var map = new Dictionary<GridCoordinate, Tile>();
 
@@ -168,10 +167,9 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var direction = currentCoordinate.DirectionToward(nextCoordinate.Value);
                 var robotDirection = GetRobotDirection(direction);
 
-                computer.Inputs.Enqueue(robotDirection);
-                computer.Run();
+                var result = computer.Run(robotDirection);
 
-                var output = (Tile)computer.Outputs.Dequeue();
+                var output = (Tile)result.Outputs[0];
                 if (output is Tile.Empty or Tile.OxygenSystem)
                 {
                     currentCoordinate = nextCoordinate.Value;
@@ -194,10 +192,9 @@ public class Day15PuzzleSolver : IPuzzleSolver
                     var backDirection = direction.Flip();
                     var robotDirection = GetRobotDirection(backDirection);
 
-                    computer.Inputs.Enqueue(robotDirection);
-                    computer.Run();
+                    var result = computer.Run(robotDirection);
 
-                    var output = (Tile)computer.Outputs.Dequeue();
+                    var output = (Tile)result.Outputs[0];
                     if (output == Tile.Wall)
                     {
                         throw new InvalidOperationException("Shouldn't hit the wall");

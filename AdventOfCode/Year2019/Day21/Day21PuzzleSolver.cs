@@ -1,81 +1,75 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Year2019.IntCode;
-using Microsoft.Diagnostics.Runtime.Utilities;
-using System.Text;
 
 namespace AdventOfCode.Year2019.Day21;
 
 [Puzzle(2019, 21, "Springdroid Adventure")]
 public class Day21PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
+        var computer = new IntCodeComputer(_program);
 
-        var stringBuilder = new StringBuilder();
-        stringBuilder.Append("OR A J\n");  // J = A is ground
-        stringBuilder.Append("AND B J\n"); // J = A and B is ground
-        stringBuilder.Append("AND C J\n"); // J = A, B and C are ground
-        stringBuilder.Append("NOT J J\n"); // J = If A, B and C are all ground then do not jump
-        stringBuilder.Append("AND D J\n"); // J = D is ground and need to jump
-        stringBuilder.Append("WALK\n");
-
-        foreach (var character in stringBuilder.ToString())
+        var inputs = new string[]
         {
-            computer.Inputs.Enqueue(Convert.ToInt64(character));
-        }
+            "OR A J",  // J = A is ground
+            "AND B J", // J = A and B is ground
+            "AND C J", // J = A, B and C are ground
+            "NOT J J", // J = If A, B and C are all ground then do not jump
+            "AND D J", // J = D is ground and need to jump
+            "WALK"
+        };
 
-        computer.Run();
+        var result = computer.Run(inputs);
 
-        var answer = computer.Outputs.Last();      
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 19361332);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
+        var computer = new IntCodeComputer(_program);
 
-        var stringBuilder = new StringBuilder();
-        stringBuilder.Append("OR A J\n");  // J = A is ground
-        stringBuilder.Append("AND B J\n"); // J = A and B is ground
-        stringBuilder.Append("AND C J\n"); // J = A, B and C are ground
-        stringBuilder.Append("NOT J J\n"); // J = If A, B and C are all ground then do not jump.
-        stringBuilder.Append("AND D J\n"); // J = D is ground and need to jump
-
-        stringBuilder.Append("OR E T\n");  // T = E is ground
-        stringBuilder.Append("OR H T\n");  // T = E or H is ground
-
-        stringBuilder.Append("AND T J\n"); // J = (A or B or C is a hole) and D is ground and (E or H is ground)
-        stringBuilder.Append("RUN\n");
-
-
-        //Shorter, doesn't use T
-        //stringBuilder.Append("NOT H J\n");
-        //stringBuilder.Append("OR C J\n");
-        //stringBuilder.Append("AND B J\n");
-        //stringBuilder.Append("AND A J\n");
-        //stringBuilder.Append("NOT J J\n");
-        //stringBuilder.Append("AND D J\n");
-        //stringBuilder.Append("RUN\n");
-
-        foreach (var character in stringBuilder.ToString())
+        var inputs = new string[]
         {
-            computer.Inputs.Enqueue(Convert.ToInt64(character));
-        }
+            "OR A J",  // J = A is ground
+            "AND B J", // J = A and B is ground
+            "AND C J", // J = A, B and C are ground
+            "NOT J J", // J = If A, B and C are all ground then do not jump.
+            "AND D J", // J = D is ground and need to jump
 
-        computer.Run();
+            "OR E T",  // T = E is ground
+            "OR H T",  // T = E or H is ground
 
-        var answer = computer.Outputs.Last();
+            "AND T J", // J = (A or B or C is a hole) and D is ground and (E or H is ground)
+            "RUN"
+        };
+
+
+        //Shorter and doesn't use T
+        //var inputs = new string[]
+        //{
+        //    "NOT H J",
+        //    "OR C J",
+        //    "AND B J",
+        //    "AND A J",
+        //    "NOT J J",
+        //    "AND D J",
+        //    "RUN",
+        //};
+
+        var result = computer.Run(inputs);
+
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 1143351187L);
     }

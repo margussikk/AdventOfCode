@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Year2019.IntCode;
 
 namespace AdventOfCode.Year2019.Day09;
@@ -6,35 +7,31 @@ namespace AdventOfCode.Year2019.Day09;
 [Puzzle(2019, 9, "Sensor Boost")]
 public class Day09PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.Inputs.Enqueue(1);
+        var computer = new IntCodeComputer(_program);
 
-        computer.Run();
+        var result = computer.Run(1);
 
-        var answer = computer.Outputs.Dequeue();
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 2465411646L);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.Inputs.Enqueue(2);
+        var computer = new IntCodeComputer(_program);
 
-        computer.Run();
+        var result = computer.Run(2);
 
-        var answer = computer.Outputs.Dequeue();
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 69781);
     }

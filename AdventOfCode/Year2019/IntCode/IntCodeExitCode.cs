@@ -2,7 +2,6 @@
 
 internal enum IntCodeExitCode
 {
-    Completed,
     Halted,
     WaitingForInput
 }

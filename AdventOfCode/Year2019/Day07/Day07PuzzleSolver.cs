@@ -7,11 +7,11 @@ namespace AdventOfCode.Year2019.Day07;
 [Puzzle(2019, 7, "Amplification Circuit")]
 public class Day07PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new ();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -26,15 +26,11 @@ public class Day07PuzzleSolver : IPuzzleSolver
 
             foreach (var phaseSetting in phaseSettingSequence)
             {
-                var computer = new IntCodeComputer();
+                var computer = new IntCodeComputer(_program);
 
-                computer.Load(_program);
-                computer.Inputs.Enqueue(phaseSetting);
-                computer.Inputs.Enqueue(inputSignal);
+                var result = computer.Run([phaseSetting, inputSignal]);
 
-                computer.Run();
-
-                inputSignal = computer.Outputs.Dequeue();
+                inputSignal = result.Outputs[^1];
             }
 
             answer = long.Max(inputSignal, answer);
@@ -52,38 +48,41 @@ public class Day07PuzzleSolver : IPuzzleSolver
         foreach (var phaseSettingSequence in phaseSettingsOptions.GetPermutations())
         {
             var computers = new List<IntCodeComputer>();
+            var computerInputs = new List<List<long>>();
 
             foreach (var phaseSetting in phaseSettingSequence)
             {
-                var computer = new IntCodeComputer();
-                computer.Load(_program);
-                computer.Inputs.Enqueue(phaseSetting);
+                var computer = new IntCodeComputer(_program);
+                computer.Run(phaseSetting);
 
                 computers.Add(computer);
+                computerInputs.Add([]);
             }
 
-            computers[0].Inputs.Enqueue(0);
+            computerInputs[0].Add(0);
 
             var halted = false;
+            var lastComputerOutput = long.MinValue;
             while (!halted)
             {
                 for (var computerIndex = 0; computerIndex < computers.Count; computerIndex++)
                 {
-                    var exitCode = computers[computerIndex].Run();
-                    if (exitCode == IntCodeExitCode.Halted && computerIndex == computers.Count - 1)
+                    var result = computers[computerIndex].Run(computerInputs[computerIndex]);
+                    computerInputs[computerIndex].Clear();
+
+                    if (result.ExitCode == IntCodeExitCode.Halted && computerIndex == computers.Count - 1)
                     {
+                        lastComputerOutput = result.Outputs[^1];
                         halted = true;
                         break;
                     }
 
-                    while(computers[computerIndex].Outputs.TryDequeue(out var output))
-                    {
-                        computers[(computerIndex + 1) % computers.Count].Inputs.Enqueue(output);
-                    }                   
+                    var nextComputerIndex = (computerIndex + 1) % computers.Count;
+                    computerInputs[nextComputerIndex].AddRange(result.Outputs);
                 }
             }
 
-            answer = long.Max(computers[^1].Outputs.Dequeue(), answer);
+            answer = long.Max(lastComputerOutput, answer);
         }
 
         return new PuzzleAnswer(answer, 21596786);

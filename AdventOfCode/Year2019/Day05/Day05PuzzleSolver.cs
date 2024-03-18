@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Year2019.IntCode;
 
 namespace AdventOfCode.Year2019.Day05;
@@ -6,39 +7,31 @@ namespace AdventOfCode.Year2019.Day05;
 [Puzzle(2019, 5, "Sunny with a Chance of Asteroids")]
 public class Day05PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var computer = new IntCodeComputer();
+        var computer = new IntCodeComputer(_program);
 
-        computer.Load(_program);
+        var result = computer.Run(1);
 
-        computer.Inputs.Enqueue(1);
-
-        computer.Run();
-
-        var answer = computer.Outputs.Last();
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 9025675);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var computer = new IntCodeComputer();
+        var computer = new IntCodeComputer(_program);
 
-        computer.Load(_program);
+        var result = computer.Run(5);
 
-        computer.Inputs.Enqueue(5);
-
-        computer.Run();
-
-        var answer = computer.Outputs.Last();
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 11981754);
     }

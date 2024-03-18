@@ -4,186 +4,159 @@ namespace AdventOfCode.Year2019.IntCode;
 
 internal class IntCodeComputer
 {
-    private readonly Dictionary<IntCodeOpCode, InstructionDetails> _instructionDetails = new()
+    private readonly int[] _parameterModeDivisors = [100, 1_000, 10_000];
+
+    public long[] Memory { get; }
+
+    private int _instructionPointer = 0;
+
+    private int _relativeBase = 0;
+
+    public IntCodeComputer(IReadOnlyList<long> program)
     {
-        [IntCodeOpCode.Add] = new(3, true),
-        [IntCodeOpCode.Multiply] = new(3, true),
-        [IntCodeOpCode.Input] = new(1, true),
-        [IntCodeOpCode.Output] = new(1, false),
-        [IntCodeOpCode.JumpIfTrue] = new(2, false),
-        [IntCodeOpCode.JumpIfFalse] = new(2, false),
-        [IntCodeOpCode.LessThan] = new(3, true),
-        [IntCodeOpCode.Equals] = new(3, true),
-        [IntCodeOpCode.AdjustRelativeBase] = new(1, false),
-        [IntCodeOpCode.Halt] = new(0, false),
-    };
+        Memory = new long[10_000];
 
-    private long[] _memory = [];
-
-    private long _instructionPointer = 0L;
-
-    private long _relativeBase = 0L;
-
-    public Queue<long> Inputs { get; } = new();
-
-    public Queue<long> Outputs { get; } = new();
-
-    public void Load(IntCodeProgram program)
-    {
-        _memory = new long[10_000];
-
-        for (var i = 0; i < program.Code.Count; i++)
+        for (var i = 0; i < program.Count; i++)
         {
-            _memory[i] = program.Code[i];
+            Memory[i] = program[i];
         }
     }
 
-    public void WriteMemory(long address, long value)
+    public IntCodeResult Run()
     {
-        _memory[(int)address] = value;
+        return Run(Array.Empty<long>());
     }
 
-    public long ReadMemory(long address)
+    public IntCodeResult Run(string input)
     {
-        return _memory[(int)address];
+        return Run([input]);
     }
 
-    public IntCodeExitCode Run()
+    public IntCodeResult Run(IEnumerable<string> inputs)
     {
-        while(_instructionPointer < _memory.Length)
+        var stringBuilder = new StringBuilder();
+
+        foreach(var input in inputs)
+        {
+            stringBuilder.Append($"{input}\n");
+        }
+
+        var longInputs = new List<long>();
+
+        foreach (var character in stringBuilder.ToString())
+        {
+            longInputs.Add(Convert.ToInt64(character));
+        }
+
+        return Run(longInputs);
+    }
+
+    public IntCodeResult Run(long input)
+    {
+        return Run([input]);
+    }
+
+    public IntCodeResult Run(IReadOnlyList<long> inputs)
+    {
+        int inputIndex = 0;
+        var outputs = new List<long>();
+
+        while(true)
         {
             var instruction = PrepareInstruction(_instructionPointer);
-
             switch (instruction.OpCode)
             {
                 case IntCodeOpCode.Add: // 1
-                    _memory[(int)instruction.Arguments[2]] = instruction.Arguments[0] + instruction.Arguments[1];
+                    Memory[instruction.Addresses[2]] = Memory[instruction.Addresses[0]] + Memory[instruction.Addresses[1]];
 
-                    _instructionPointer += 4;
+                    _instructionPointer += instruction.Length;
                     break;
                 case IntCodeOpCode.Multiply: // 2
-                    _memory[(int)instruction.Arguments[2]] = instruction.Arguments[0] * instruction.Arguments[1];
+                    Memory[instruction.Addresses[2]] = Memory[instruction.Addresses[0]] * Memory[instruction.Addresses[1]];
 
-                    _instructionPointer += 4;
+                    _instructionPointer += instruction.Length;
                     break;
                 case IntCodeOpCode.Input: // 3
-                    if (Inputs.TryDequeue(out var inputValue))
+                    if (inputIndex >= inputs.Count)
                     {
-                        _memory[(int)instruction.Arguments[0]] = inputValue;
-                        _instructionPointer += 2;
+                        return new IntCodeResult(IntCodeExitCode.WaitingForInput, outputs);
+                    }
 
-                        break;
-                    }
-                    else
-                    {
-                        return IntCodeExitCode.WaitingForInput;
-                    }
+                    Memory[instruction.Addresses[0]] = inputs[inputIndex++];
+
+                    _instructionPointer += instruction.Length;
+                    break;
                 case IntCodeOpCode.Output: // 4
-                    Outputs.Enqueue(instruction.Arguments[0]);
+                    outputs.Add(Memory[instruction.Addresses[0]]);
 
-                    _instructionPointer += 2;
+                    _instructionPointer += instruction.Length;
                     break;
                 case IntCodeOpCode.JumpIfTrue: // 5
-                    _instructionPointer = instruction.Arguments[0] != 0
-                        ? instruction.Arguments[1]
-                        : _instructionPointer + 3;
-
+                    _instructionPointer = Memory[instruction.Addresses[0]] != 0
+                        ? (int)Memory[instruction.Addresses[1]]
+                        : _instructionPointer + instruction.Length;
                     break;
                 case IntCodeOpCode.JumpIfFalse: // 6
-                    _instructionPointer = instruction.Arguments[0] == 0
-                        ? instruction.Arguments[1]
-                        : _instructionPointer + 3;
-
+                    _instructionPointer = Memory[instruction.Addresses[0]] == 0
+                        ? (int)Memory[instruction.Addresses[1]]
+                        : _instructionPointer + instruction.Length;
                     break;
                 case IntCodeOpCode.LessThan: // 7
-                    _memory[(int)instruction.Arguments[2]] = instruction.Arguments[0] < instruction.Arguments[1] ? 1 : 0;
+                    Memory[instruction.Addresses[2]] = Memory[instruction.Addresses[0]] < Memory[instruction.Addresses[1]] ? 1 : 0;
 
-                    _instructionPointer += 4;
+                    _instructionPointer += instruction.Length;
                     break;
                 case IntCodeOpCode.Equals: // 8
-                    _memory[(int)instruction.Arguments[2]] = instruction.Arguments[0] == instruction.Arguments[1] ? 1 : 0;
+                    Memory[instruction.Addresses[2]] = Memory[instruction.Addresses[0]] == Memory[instruction.Addresses[1]] ? 1 : 0;
 
-                    _instructionPointer += 4;
+                    _instructionPointer += instruction.Length;
                     break;
                 case IntCodeOpCode.AdjustRelativeBase: // 9
-                    _relativeBase += instruction.Arguments[0];
+                    _relativeBase += (int)Memory[instruction.Addresses[0]];
 
-                    _instructionPointer += 2;
+                    _instructionPointer += instruction.Length;
                     break;
-
                 case IntCodeOpCode.Halt: // 99
-                    return IntCodeExitCode.Halted;
+                    return new IntCodeResult(IntCodeExitCode.Halted, outputs);
                 default:
                     throw new InvalidOperationException($"Invalid opCode {instruction.OpCode}");
             }
         }
-
-        return IntCodeExitCode.Completed;
     }
 
-    public void AddAsciiInput(string text)
+    public IntCodeInstruction PrepareInstruction(int pointer)
     {
-        foreach (var character in text)
-        {
-            Inputs.Enqueue(Convert.ToInt64(character));
-        }
-    }
+        var opCode = (IntCodeOpCode)(Memory[pointer] % 100);
 
-    public string GetAsciiOutput()
-    {
-        var stringBuilder = new StringBuilder();
-        while (Outputs.TryDequeue(out var output))
-        {
-            stringBuilder.Append(Convert.ToChar(output));
-        }
-
-        return stringBuilder.ToString();
-    }
-
-    private IntCodeInstruction PrepareInstruction(long pointer)
-    {
         var instruction = new IntCodeInstruction
         {
-            OpCode = (IntCodeOpCode)(_memory[(int)pointer] % 100)
+            OpCode = opCode,
+            Length = opCode switch
+            {
+                IntCodeOpCode.Halt => 1,
+                IntCodeOpCode.AdjustRelativeBase or IntCodeOpCode.Input or IntCodeOpCode.Output => 2,
+                IntCodeOpCode.JumpIfTrue or IntCodeOpCode.JumpIfFalse => 3,
+                IntCodeOpCode.Add or IntCodeOpCode.Multiply or IntCodeOpCode.LessThan or IntCodeOpCode.Equals => 4,
+                _ => throw new InvalidOperationException($"Invalid OpCode {opCode}")
+            }
         };
 
-        // Parameters
-        var instructionDetails = _instructionDetails[instruction.OpCode];
-        instruction.Arguments = new long[instructionDetails.ParameterCount];
-
-        var parameterModes = _memory[(int)pointer] / 100;
-        for (var index = 0; index < instruction.Arguments.Length; index++)
+        for (var parameterIndex = 0; parameterIndex < instruction.Length - 1; parameterIndex++)
         {
-            var parameterMode = (IntCodeParameterMode)(parameterModes % 10);
+            var position = pointer + 1 + parameterIndex;
 
-            // Last parameter of an instruction that writes to memory always refers to memory position, either directly or relatively
-            if (instructionDetails.WritesToMemory && index == instruction.Arguments.Length - 1)
+            var parameterMode = (IntCodeParameterMode)(Memory[pointer] / _parameterModeDivisors[parameterIndex] % 10);
+            var address = parameterMode switch
             {
-                var position = _memory[(int)pointer + index + 1];
+                IntCodeParameterMode.Position => (int)Memory[position],
+                IntCodeParameterMode.Immediate => position,
+                IntCodeParameterMode.Relative => _relativeBase + (int)Memory[position],
+                _ => throw new InvalidOperationException($"Invalid parameter mode {parameterMode}")
+            };
 
-                instruction.Arguments[index] = parameterMode switch
-                {
-                    IntCodeParameterMode.Position => position,
-                    IntCodeParameterMode.Relative => _relativeBase + position,
-                    _ => throw new InvalidOperationException($"Invalid parameter mode {parameterMode}")
-                };
-            }
-            else
-            {
-                instruction.Arguments[index] = parameterMode switch
-                {
-                    IntCodeParameterMode.Position => _memory[(int)_memory[(int)pointer + index + 1]],
-                    IntCodeParameterMode.Immediate => _memory[(int)pointer + index + 1],
-                    IntCodeParameterMode.Relative => _memory[(int)_relativeBase + (int)_memory[(int)pointer + index + 1]],
-                    _ => throw new InvalidOperationException($"Invalid parameter mode {parameterMode}")
-                };
-            }
-
-            parameterModes /= 10;
+            instruction.Addresses.Add(address);
         }
 
         return instruction;
     }
-
-    private sealed record InstructionDetails(int ParameterCount, bool WritesToMemory);
 }

@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Year2019.IntCode;
 
 namespace AdventOfCode.Year2019.Day23;
@@ -6,24 +7,25 @@ namespace AdventOfCode.Year2019.Day23;
 [Puzzle(2019, 23, "Category Six")]
 public class Day23PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
+
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
         var computers = new IntCodeComputer[50];
+        var computerInputs = new List<long>[50];
 
         // Init
         for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
         {
-            var computer = new IntCodeComputer();
-            computer.Load(_program);
-            computer.Inputs.Enqueue(computerIndex);
+            var computer = new IntCodeComputer(_program);
 
             computers[computerIndex] = computer;
+            computerInputs[computerIndex] = [computerIndex];
         }
 
         // Exchange packets
@@ -32,26 +34,29 @@ public class Day23PuzzleSolver : IPuzzleSolver
             for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
             {
                 var computer = computers[computerIndex];
+                var inputs = computerInputs[computerIndex];
 
-                if (computer.Inputs.Count == 0)
+                if (inputs.Count == 0)
                 {
-                    computer.Inputs.Enqueue(-1);
+                    inputs.Add(-1);
                 }
 
-                computer.Run();
-                while (computer.Outputs.Count != 0)
+                var result = computer.Run(inputs);
+                inputs.Clear();
+
+                foreach(var chunk in result.Outputs.Chunk(3))
                 {
-                    var destination = computer.Outputs.Dequeue();
-                    var x = computer.Outputs.Dequeue();
-                    var y = computer.Outputs.Dequeue();
+                    var destination = chunk[0];
+                    var x = chunk[1];
+                    var y = chunk[2];
 
                     if (destination == 255)
                     {
                         return new PuzzleAnswer(y, 22659);
                     }
-                    
-                    computers[destination].Inputs.Enqueue(x);
-                    computers[destination].Inputs.Enqueue(y);
+
+                    computerInputs[destination].Add(x);
+                    computerInputs[destination].Add(y);
                 }
             }
         }
@@ -60,15 +65,15 @@ public class Day23PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var computers = new IntCodeComputer[50];
+        var computerInputs = new List<long>[50];
 
         // Init
         for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
         {
-            var computer = new IntCodeComputer();
-            computer.Load(_program);
-            computer.Inputs.Enqueue(computerIndex);
-
+            var computer = new IntCodeComputer(_program);
+            
             computers[computerIndex] = computer;
+            computerInputs[computerIndex] = [computerIndex];
         }
 
         long answer;
@@ -86,20 +91,23 @@ public class Day23PuzzleSolver : IPuzzleSolver
             for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
             {
                 var computer = computers[computerIndex];
+                var inputs = computerInputs[computerIndex];
 
-                if (computer.Inputs.Count == 0)
+                if (inputs.Count == 0)
                 {
-                    computer.Inputs.Enqueue(-1);
+                    inputs.Add(-1);
                 }
 
-                computer.Run();
-                while (computer.Outputs.Count != 0)
+                var result = computer.Run(inputs);
+                inputs.Clear();
+
+                foreach(var chunk in result.Outputs.Chunk(3))
                 {
                     idle = false;
 
-                    var destination = computer.Outputs.Dequeue();
-                    var x = computer.Outputs.Dequeue();
-                    var y = computer.Outputs.Dequeue();
+                    var destination = chunk[0];
+                    var x = chunk[1];
+                    var y = chunk[2];
 
                     if (destination == 255)
                     {
@@ -108,8 +116,8 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     }
                     else
                     {
-                        computers[destination].Inputs.Enqueue(x);
-                        computers[destination].Inputs.Enqueue(y);
+                        computerInputs[destination].Add(x);
+                        computerInputs[destination].Add(y);
                     }
                 }
             }
@@ -121,9 +129,9 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     answer = natY;
                     break;
                 }
-                
-                computers[0].Inputs.Enqueue(natX);
-                computers[0].Inputs.Enqueue(natY);
+
+                computerInputs[0].Add(natX);
+                computerInputs[0].Add(natY);
 
                 lastNatY = natY;                
             }

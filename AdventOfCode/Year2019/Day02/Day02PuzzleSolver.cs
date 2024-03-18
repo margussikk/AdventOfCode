@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Year2019.IntCode;
 
 namespace AdventOfCode.Year2019.Day02;
@@ -6,11 +7,11 @@ namespace AdventOfCode.Year2019.Day02;
 [Puzzle(2019, 2, "1202 Program Alarm")]
 public class Day02PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -40,14 +41,12 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
     public long GetAnswer(int address1Value, int address2Value)
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-
-        computer.WriteMemory(1, address1Value);
-        computer.WriteMemory(2, address2Value);
+        var computer = new IntCodeComputer(_program);
+        computer.Memory[1] = address1Value;
+        computer.Memory[2] = address2Value;
 
         computer.Run();
 
-        return computer.ReadMemory(0);
+        return computer.Memory[0];
     }
 }

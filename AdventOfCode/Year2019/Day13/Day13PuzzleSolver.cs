@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Year2019.IntCode;
 
@@ -7,27 +8,27 @@ namespace AdventOfCode.Year2019.Day13;
 [Puzzle(2019, 13, "Care Package")]
 public class Day13PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.Run();
+        var computer = new IntCodeComputer(_program);
+
+        var result = computer.Run();
 
         var answer = 0L;
 
-        while(computer.Outputs.Count > 0)
+        foreach(var chunk in result.Outputs.Chunk(3))
         {
-            computer.Outputs.Dequeue(); // X, Column
-            computer.Outputs.Dequeue(); // Y, Row
+            // ignore [0] X, Column
+            // ignore [1] Y, Row
 
-            var tile = (Tile)computer.Outputs.Dequeue();
+            var tile = (Tile)chunk[2];
             if (tile == Tile.Block)
             {
                 answer++;
@@ -43,24 +44,34 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
         var blockCoordinates = new HashSet<GridCoordinate>();
 
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.WriteMemory(0, 2);
+        var computer = new IntCodeComputer(_program);
+        computer.Memory[0] = 2;
 
         var answer = 0L;
-        
-        while(true)
+
+        long joystickTilt = -2;
+
+        while (true)
         {
             var ballCoordinate = new GridCoordinate(0, 0);
             var paddleCoordinate = new GridCoordinate(0, 0);
 
-            var exitCode = computer.Run();
-            
-            while (computer.Outputs.Count > 0)
+            IntCodeResult result;
+
+            if (joystickTilt == -2)
             {
-                var column = computer.Outputs.Dequeue();
-                var row = computer.Outputs.Dequeue();
-                var outputValue = computer.Outputs.Dequeue();
+                result = computer.Run();
+            }
+            else
+            {
+                result = computer.Run(joystickTilt);
+            }
+            
+            foreach(var chunk in result.Outputs.Chunk(3))
+            {
+                var column = chunk[0];
+                var row = chunk[1];
+                var outputValue = chunk[2];
 
                 var coordinate = new GridCoordinate((int)row, (int)column);
                 if (coordinate == scoreCoordinate)
@@ -87,13 +98,12 @@ public class Day13PuzzleSolver : IPuzzleSolver
                 }
             }
 
-            if (exitCode == IntCodeExitCode.Halted)
+            if (result.ExitCode == IntCodeExitCode.Halted)
             {
                 break;
             }
 
-            var joystickTilt = ballCoordinate.Column.CompareTo(paddleCoordinate.Column);
-            computer.Inputs.Enqueue(joystickTilt);
+            joystickTilt = ballCoordinate.Column.CompareTo(paddleCoordinate.Column);
         }
 
         return new PuzzleAnswer(answer, 12263);
@@ -103,19 +113,17 @@ public class Day13PuzzleSolver : IPuzzleSolver
     {
         var screen = new Dictionary<GridCoordinate, Tile>();
 
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.Run();
+        var computer = new IntCodeComputer(_program);
 
-        while (computer.Outputs.Count > 0)
+        var result = computer.Run();
+
+        foreach(var chunk in result.Outputs.Chunk(3))
         {
-            var column = computer.Outputs.Dequeue();
-            var row = computer.Outputs.Dequeue();
+            var column = chunk[0];
+            var row = chunk[1];
             var coordinate = new GridCoordinate((int)row, (int)column);
 
-            var tile = (Tile)computer.Outputs.Dequeue();
-
-            screen[coordinate] = tile;
+            screen[coordinate] = (Tile)chunk[2];
         }
 
         var maxRow = screen.Max(kvp => kvp.Key.Row);

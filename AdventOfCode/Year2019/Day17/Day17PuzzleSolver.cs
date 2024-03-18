@@ -10,11 +10,11 @@ namespace AdventOfCode.Year2019.Day17;
 [Puzzle(2019, 17, "Set and Forget")]
 public class Day17PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -118,71 +118,51 @@ public class Day17PuzzleSolver : IPuzzleSolver
             gridWalker.Move(nextDirection, steps);
         }
 
-        var result = SplitIntoFunctions(actions, 0, [], []);
-        if (!result.Success)
+        var splitResult = SplitIntoFunctions(actions, 0, [], []);
+        if (!splitResult.Success)
         {
             throw new InvalidOperationException("Failed to recurse actions");
         }
 
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.WriteMemory(0, 2);
+        var computer = new IntCodeComputer(_program);
+        computer.Memory[0] = 2;
 
-        var movementRoutine = string.Join(",", result.MainRoutine) + '\n';
-        foreach (var character in movementRoutine)
+        var inputLines = new List<string>()
         {
-            computer.Inputs.Enqueue(Convert.ToInt64(character));
-        }
+            string.Join(",", splitResult.MainRoutine),
+            string.Join(",", splitResult.Functions["A"].Actions),
+            string.Join(",", splitResult.Functions["B"].Actions),
+            string.Join(",", splitResult.Functions["C"].Actions),
+            "n"
+        };
 
-        var movementFunctions = string.Join(",", result.Functions["A"].Actions) + "\n" +
-                                string.Join(",", result.Functions["B"].Actions) + "\n" +
-                                string.Join(",", result.Functions["C"].Actions) + "\n";
-        foreach (var character in movementFunctions)
-        {
-            computer.Inputs.Enqueue(Convert.ToInt64(character));
-        }
+        var result = computer.Run(inputLines);
 
-        var continuousVideoFeed = "n\n";
-        foreach (var character in continuousVideoFeed)
-        {
-            computer.Inputs.Enqueue(Convert.ToInt64(character));
-        }
-
-        computer.Run();
-
-        var answer = computer.Outputs.Last();
+        var answer = result.Outputs[^1];
 
         return new PuzzleAnswer(answer, 982279);
     }
 
     private Grid<Tile> BuildGrid()
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
-        computer.Run();
+        var computer = new IntCodeComputer(_program);
 
-        var stringBuilder = new StringBuilder();
+        var result = computer.Run();
 
-        while (computer.Outputs.TryDequeue(out var output))
-        {
-            stringBuilder.Append(Convert.ToChar(output));
-        }
-
-        var grid = stringBuilder
-            .ToString()
-            .Split('\n')
-            .Where(line => !string.IsNullOrWhiteSpace(line))
-            .ToArray()
-            .SelectToGrid(character => character switch
-            {
-                '.' => Tile.OpenSpace,
-                '#' => Tile.Scaffold,
-                '^' => Tile.RobotFacingUp,
-                'v' => Tile.RobotFacingDown,
-                '<' => Tile.RobotFacingLeft,
-                '>' => Tile.RobotFacingRight,
-                _ => throw new InvalidOperationException($"Invalid tile character {character}")
-            });
+        var grid = result.GetAsciiOutput()
+                         .Split('\n')
+                         .Where(line => !string.IsNullOrWhiteSpace(line))
+                         .ToArray()
+                         .SelectToGrid(character => character switch
+                         {
+                             '.' => Tile.OpenSpace,
+                             '#' => Tile.Scaffold,
+                             '^' => Tile.RobotFacingUp,
+                             'v' => Tile.RobotFacingDown,
+                             '<' => Tile.RobotFacingLeft,
+                             '>' => Tile.RobotFacingRight,
+                             _ => throw new InvalidOperationException($"Invalid tile character {character}")
+                         });
 
         return grid;
     }

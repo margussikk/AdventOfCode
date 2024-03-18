@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Text;
 using AdventOfCode.Year2019.IntCode;
@@ -9,10 +10,11 @@ namespace AdventOfCode.Year2019.Day11;
 [Puzzle(2019, 11, "Space Police")]
 public class Day11PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
+
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -87,21 +89,18 @@ public class Day11PuzzleSolver : IPuzzleSolver
             [startCoordinate] = startPaint
         };
 
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
+        var computer = new IntCodeComputer(_program);
 
         while (true)
         {
-
             var currentColor = paintedPanels.GetValueOrDefault(gridWalker.CurrentCoordinate, 0);
-            computer.Inputs.Enqueue(currentColor);
 
-            var exitCode = computer.Run();
-            if (exitCode == IntCodeExitCode.WaitingForInput)
+            var result = computer.Run(currentColor);
+            if (result.ExitCode == IntCodeExitCode.WaitingForInput)
             {
-                paintedPanels[gridWalker.CurrentCoordinate] = computer.Outputs.Dequeue();
+                paintedPanels[gridWalker.CurrentCoordinate] = result.Outputs[0];
 
-                var turn = computer.Outputs.Dequeue();
+                var turn = result.Outputs[1];
                 if (turn == 0)
                 {
                     gridWalker.TurnLeft();

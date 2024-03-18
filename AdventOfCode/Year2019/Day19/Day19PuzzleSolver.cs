@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Year2019.IntCode;
 
@@ -7,10 +8,11 @@ namespace AdventOfCode.Year2019.Day19;
 [Puzzle(2019, 19, "Tractor Beam")]
 public class Day19PuzzleSolver : IPuzzleSolver
 {
-    private IntCodeProgram _program = new();
+    private IReadOnlyList<long> _program = [];
+
     public void ParseInput(string[] inputLines)
     {
-        _program = IntCodeProgram.Parse(inputLines[0]);
+        _program = inputLines[0].SelectToLongs(',');
     }
 
     public PuzzleAnswer GetPartOneAnswerOld()
@@ -145,16 +147,11 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     private bool IsInBeam(int x, int y)
     {
-        var computer = new IntCodeComputer();
-        computer.Load(_program);
+        var computer = new IntCodeComputer(_program);
 
-        computer.Inputs.Enqueue(x);
-        computer.Inputs.Enqueue(y);
+        var result = computer.Run([x, y]);
 
-        computer.Run();
-
-        var output = computer.Outputs.Dequeue();
-        return output == 1L;
+        return result.Outputs[0] == 1L;
     }
 
     private Beams DetermineBeams()
