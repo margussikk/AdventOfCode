@@ -198,7 +198,6 @@ public class Day18PuzzleSolver : IPuzzleSolver
             }
 
             var state = (stateIds, walker.Keys);
-
             if (visited.Add(state))
             {
                 foreach (var vertex in walker.CurrentVertices)

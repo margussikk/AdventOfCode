@@ -15,14 +15,14 @@ public class Day01PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = _moduleMasses.Select(CalculateFuelRequirement).Sum();
+        var answer = _moduleMasses.Sum(CalculateFuelRequirement);
 
         return new PuzzleAnswer(answer, 3456641);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var answer = _moduleMasses.Select(CalculateTotalFuelRequirement).Sum();
+        var answer = _moduleMasses.Sum(CalculateTotalFuelRequirement);
 
         return new PuzzleAnswer(answer, 5182078);
     }

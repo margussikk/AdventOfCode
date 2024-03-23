@@ -69,11 +69,11 @@ public class Day13PuzzleSolver : IPuzzleSolver
             
             foreach(var chunk in result.Outputs.Chunk(3))
             {
-                var column = chunk[0];
-                var row = chunk[1];
+                var column = (int)chunk[0];
+                var row = (int)chunk[1];
                 var outputValue = chunk[2];
 
-                var coordinate = new GridCoordinate((int)row, (int)column);
+                var coordinate = new GridCoordinate(row, column);
                 if (coordinate == scoreCoordinate)
                 {
                     answer = outputValue;

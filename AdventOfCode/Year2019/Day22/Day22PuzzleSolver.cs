@@ -1,10 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Mathematics;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Spectre.Console.Rendering;
-using System.Diagnostics;
-using System.Net.WebSockets;
-using System.Numerics;
 
 namespace AdventOfCode.Year2019.Day22;
 

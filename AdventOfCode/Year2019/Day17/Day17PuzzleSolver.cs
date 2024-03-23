@@ -3,7 +3,6 @@ using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Year2019.IntCode;
 using System.Globalization;
-using System.Text;
 
 namespace AdventOfCode.Year2019.Day17;
 
@@ -60,11 +59,10 @@ public class Day17PuzzleSolver : IPuzzleSolver
         while (true)
         {
             // Turn
-            var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
-                                .Where(cell => cell.Object == Tile.Scaffold)
-                                .ToList();
-
             var nextDirection = GridDirection.None;
+
+            var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
+                                .Where(cell => cell.Object == Tile.Scaffold);
 
             foreach (var neighbor in neighbors)
             {

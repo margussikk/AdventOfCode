@@ -22,7 +22,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        // Wires line segments
+        // Wires' line segments
         var wire1LineSegments = GetLineSegments(_wire1Instructions);
         var wire2LineSegments = GetLineSegments(_wire2Instructions);
 
@@ -36,7 +36,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        // Wires line segments
+        // Wires' line segments
         var wire1LineSegments = GetLineSegments(_wire1Instructions);
         var wire2LineSegments = GetLineSegments(_wire2Instructions);
 
