@@ -12,7 +12,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
     public void ParseInput(string[] inputLines)
     {
         _numbers = inputLines.Select(Number.Parse)
-                            .ToList();
+                             .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -50,8 +50,8 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
                 bucketList.RemoveAt(currentIndex);
 
-                // Here list is 1 element shorter. First and the last element are
-                // essentially at the same location in the circular list.
+                // Here list is 1 element shorter.
+                // The first and the last element is essentially at the same location in the circular list.
                 // Using list.Count - 1, we can skip the last index and use index 0 instead.
                 var newIndex = MathFunctions.Modulo(currentIndex + number.Value, bucketList.Count);
                 bucketList.Insert(Convert.ToInt32(newIndex), number);

@@ -36,7 +36,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = GetAnswerBySplittingCuboids(_cuboids.Where(c => c.X1 >= -50 && c.X2 <= 50 && c.Y1 >= -50 && c.Y2 <= 50 && c.Z1 >= -50 && c.Z2 <= 50));
+        var answer = GetAnswerBySplittingCuboids(_cuboids.Where(c => c is { X1: >= -50, X2: <= 50, Y1: >= -50, Y2: <= 50, Z1: >= -50, Z2: <= 50 }));
 
         return new PuzzleAnswer(answer, 580810);
     }
@@ -57,16 +57,10 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
         foreach (var inputCuboid in inputCuboids)
         {
-            var addedCuboids = new List<Cuboid>();
-
-            foreach (var cuboid in cuboids)
-            {
-                if (cuboid.Intersects(inputCuboid))
-                {
-                    var intersection = cuboid.Intersection(inputCuboid);
-                    addedCuboids.Add(intersection);
-                }
-            }
+            var addedCuboids = cuboids
+                .Where(c => c.Intersects(inputCuboid))
+                .Select(cuboid => cuboid.Intersection(inputCuboid))
+                .ToList();
 
             if (inputCuboid.On)
             {

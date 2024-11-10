@@ -6,8 +6,8 @@ namespace AdventOfCode.Framework.Cli;
 
 public class UiCommand : Command<UiSettings>
 {
-    private const string _actionBenchmark = "Benchmark puzzles";
-    private const string _actionSolve = "Solve puzzles";
+    private const string ActionBenchmark = "Benchmark puzzles";
+    private const string ActionSolve = "Solve puzzles";
 
     public override int Execute(CommandContext context, UiSettings settings)
     {
@@ -15,13 +15,14 @@ public class UiCommand : Command<UiSettings>
         var selectedYear = SelectYear();
         var selectedSolvers = SelectSolvers(selectedYear);
 
-        if (action == _actionBenchmark)
+        switch (action)
         {
-            PuzzleSolverManager.BenchmarkPuzzles(selectedSolvers);
-        }
-        else if (action == _actionSolve)
-        {
-            PuzzleSolverManager.SolvePuzzles(selectedSolvers);
+            case ActionBenchmark:
+                PuzzleSolverManager.BenchmarkPuzzles(selectedSolvers);
+                break;
+            case ActionSolve:
+                PuzzleSolverManager.SolvePuzzles(selectedSolvers);
+                break;
         }
 
         return 0;
@@ -33,7 +34,7 @@ public class UiCommand : Command<UiSettings>
             new SelectionPrompt<string>()
                 .Title("Which [green]action[/] do you want to execute?")
                 .PageSize(10)
-                .AddChoices(_actionBenchmark, _actionSolve));
+                .AddChoices(ActionBenchmark, ActionSolve));
     }
 
     private static int SelectYear()

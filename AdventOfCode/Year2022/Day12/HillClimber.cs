@@ -2,4 +2,14 @@
 
 namespace AdventOfCode.Year2022.Day12;
 
-internal record HillClimber(GridCoordinate Coordinate, int Steps);
+internal class HillClimber
+{
+    public GridCoordinate Coordinate { get; }
+    public int Steps { get; }
+
+    public HillClimber(GridCoordinate coordinate, int steps)
+    {
+        Coordinate = coordinate;
+        Steps = steps;
+    }
+}

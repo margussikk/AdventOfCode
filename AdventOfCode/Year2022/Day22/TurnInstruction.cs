@@ -2,7 +2,12 @@
 
 namespace AdventOfCode.Year2022.Day22;
 
-internal class TurnInstruction(GridDirection direction) : IInstruction
+internal class TurnInstruction : IInstruction
 {
-    public GridDirection Direction { get; } = direction;
+    public GridDirection Direction { get; }
+
+    public TurnInstruction(GridDirection direction)
+    {
+        Direction = direction;
+    }
 }

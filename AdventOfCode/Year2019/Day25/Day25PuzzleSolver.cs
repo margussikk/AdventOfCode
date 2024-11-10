@@ -27,7 +27,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
         var pathToSecurityCheckpoint = new List<string>();
         var directionToPressureSensitiveFloor = string.Empty;
 
-        var leaveItems = new List<string>()
+        var leaveItems = new List<string>
         {
             "photons", "escape pod", "molten lava", "infinite loop", "giant electromagnet"
         };
@@ -98,7 +98,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
         }
 
         // Go through all item combinations and try which works
-        for (var pattern = 0; pattern < (1 << takenItems.Count); pattern++)
+        for (var pattern = 0; pattern < 1 << takenItems.Count; pattern++)
         {
             var droppedItems = new List<string>();
             for (var itemIndex = 0; itemIndex < takenItems.Count; itemIndex++)
@@ -127,9 +127,9 @@ public class Day25PuzzleSolver : IPuzzleSolver
 
             if (chunks[2][0].Contains("you enter the cockpit"))
             {
-                var textPattern = "typing ";
+                const string textPattern = "typing ";
 
-                var index = chunks[2][2].IndexOf(textPattern);
+                var index = chunks[2][2].IndexOf(textPattern, StringComparison.Ordinal);
                 index += textPattern.Length;
 
                 answer = new string(chunks[2][2]

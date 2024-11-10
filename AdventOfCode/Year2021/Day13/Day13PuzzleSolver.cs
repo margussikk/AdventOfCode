@@ -60,14 +60,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
             for (var x = 0; x < 40; x++)
             {
                 var coordinate = new Coordinate2D(x, y);
-                if (coordinates.Contains(coordinate))
-                {
-                    stringBuilder.Append('#');
-                }
-                else
-                {
-                    stringBuilder.Append(' ');
-                }
+                stringBuilder.Append(coordinates.Contains(coordinate) ? '#' : ' ');
             }
 
             stringBuilder.AppendLine();
@@ -82,25 +75,13 @@ public class Day13PuzzleSolver : IPuzzleSolver
     {
         if (instruction.Axis == Axis.X)
         {
-            if (coordinate.X < instruction.FoldLine)
-            {
-                return coordinate;
-            }
-            else
-            {
-                return new Coordinate2D(2 * instruction.FoldLine - coordinate.X, coordinate.Y);
-            }
+            return coordinate.X < instruction.FoldLine
+                ? coordinate
+                : new Coordinate2D(2 * instruction.FoldLine - coordinate.X, coordinate.Y);
         }
-        else
-        {
-            if (coordinate.Y < instruction.FoldLine)
-            {
-                return coordinate;
-            }
-            else
-            {
-                return new Coordinate2D(coordinate.X, 2 * instruction.FoldLine - coordinate.Y);
-            }
-        }
+
+        return coordinate.Y < instruction.FoldLine
+            ? coordinate
+            : new Coordinate2D(coordinate.X, 2 * instruction.FoldLine - coordinate.Y);
     }
 }

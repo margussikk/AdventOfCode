@@ -16,7 +16,7 @@ internal class CubeWalker
 
     private CubeFace _cubeFace;
 
-    private GridCoordinate _faceLocation = new(int.MinValue, int.MinValue);
+    private GridCoordinate _faceLocation;
 
     private readonly int _cubeEdgeLength;
 
@@ -56,21 +56,19 @@ internal class CubeWalker
         queue.Enqueue((cubeFaceLocations.First(), CubeFace.Front, GridDirection.Down, CubeFace.Top));
         while (queue.TryDequeue(out var current))
         {
-            if (visited.Contains(current.Location))
+            if (!visited.Add(current.Location))
             {
                 continue;
             }
-
-            visited.Add(current.Location);
 
             _cubeFaceLocationMapping[current.Face] = current.Location;
 
             // Find the reverse of incoming direction
             var reverseDirectionIndex = Array.IndexOf(_directions, current.Direction.Flip());
-            var neighborIndex = Array.IndexOf(_cubeFaceNeigbors[current.Face], current.FromFace);
+            var neighborIndex = Array.IndexOf(_cubeFaceNeighbors[current.Face], current.FromFace);
 
             // Offset = difference of what it would be if the faces touch and what it actually is, Essentially it shows how many times
-            // it needs to be rotated so that left and right match up and up and down match up.
+            // it needs to be rotated so that the left and right match up and up and down match up.
 
             //  1    If going from 1 to 2, then 2 expects an entry from its right,
             // 234   but entry came from top, top neighbor is left's 3rd neighbor, so offset is 3
@@ -84,14 +82,13 @@ internal class CubeWalker
             foreach (var direction in _directions)
             {
                 var location = current.Location.Move(direction);
-                if (cubeFaceLocations.Contains(location))
-                {
-                    var directionIndex = Array.IndexOf(_directions, direction);
-                    var newFaceIndex = MathFunctions.Modulo(directionIndex - offset, 4);
-                    var newFace = _cubeFaceNeigbors[current.Face][newFaceIndex];
+                if (!cubeFaceLocations.Contains(location)) continue;
+                
+                var directionIndex = Array.IndexOf(_directions, direction);
+                var newFaceIndex = MathFunctions.Modulo(directionIndex - offset, 4);
+                var newFace = _cubeFaceNeighbors[current.Face][newFaceIndex];
 
-                    queue.Enqueue((location, newFace, direction, current.Face));
-                }
+                queue.Enqueue((location, newFace, direction, current.Face));
             }
         }
     }
@@ -136,10 +133,10 @@ internal class CubeWalker
                 // Find face which is at the 'Direction' side
                 var directionIndex = Array.IndexOf(_directions, Direction);
                 var testCubeFaceIndex = MathFunctions.Modulo(directionIndex - _cubeFaceOffset[_cubeFace], 4);
-                testCubeFace = _cubeFaceNeigbors[_cubeFace][testCubeFaceIndex];
+                testCubeFace = _cubeFaceNeighbors[_cubeFace][testCubeFaceIndex];
 
                 // Rotate testlocation
-                var neighborIndex = Array.IndexOf(_cubeFaceNeigbors[testCubeFace], _cubeFace);
+                var neighborIndex = Array.IndexOf(_cubeFaceNeighbors[testCubeFace], _cubeFace);
                 var reverseDirectionIndex = Array.IndexOf(_directions, Direction.Flip());
                 var positionOffset = MathFunctions.Modulo(neighborIndex - reverseDirectionIndex, 4);
                 var offset = _cubeFaceOffset[testCubeFace];
@@ -155,19 +152,17 @@ internal class CubeWalker
             var testGridRow = _cubeFaceLocationMapping[testCubeFace].Row * _cubeEdgeLength + testLocation.Row;
             var testGridColumn = _cubeFaceLocationMapping[testCubeFace].Column * _cubeEdgeLength + testLocation.Column;
 
-            if (_grid[testGridRow, testGridColumn] == Tile.Wall)
+            switch (_grid[testGridRow, testGridColumn])
             {
-                return;
-            }
-            else if (_grid[testGridRow, testGridColumn] == Tile.Open)
-            {
-                _faceLocation = testLocation;
-                _cubeFace = testCubeFace;
-                Direction = testDirection;
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                case Tile.Wall:
+                    return;
+                case Tile.Open:
+                    _faceLocation = testLocation;
+                    _cubeFace = testCubeFace;
+                    Direction = testDirection;
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
         }
     }
@@ -182,10 +177,10 @@ internal class CubeWalker
         GridDirection.Right,
         GridDirection.Down,
         GridDirection.Left,
-        GridDirection.Up,
+        GridDirection.Up
     ];
 
-    private static readonly IReadOnlyDictionary<CubeFace, CubeFace[]> _cubeFaceNeigbors = new Dictionary<CubeFace, CubeFace[]>
+    private static readonly IReadOnlyDictionary<CubeFace, CubeFace[]> _cubeFaceNeighbors = new Dictionary<CubeFace, CubeFace[]>
     {
         // Array items are ordered by going clockwise order starting from 'Right' direction.
         [CubeFace.Front] = [CubeFace.Right, CubeFace.Bottom, CubeFace.Left, CubeFace.Top],
@@ -193,6 +188,6 @@ internal class CubeWalker
         [CubeFace.Left] = [CubeFace.Front, CubeFace.Bottom, CubeFace.Back, CubeFace.Top],
         [CubeFace.Right] = [CubeFace.Back, CubeFace.Bottom, CubeFace.Front, CubeFace.Top],
         [CubeFace.Top] = [CubeFace.Right, CubeFace.Front, CubeFace.Left, CubeFace.Back],
-        [CubeFace.Bottom] = [CubeFace.Right, CubeFace.Back, CubeFace.Left, CubeFace.Front],
+        [CubeFace.Bottom] = [CubeFace.Right, CubeFace.Back, CubeFace.Left, CubeFace.Front]
     };
 }

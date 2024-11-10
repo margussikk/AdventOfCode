@@ -6,9 +6,9 @@ namespace AdventOfCode.Year2022.Day21;
 [Puzzle(2022, 21, "Monkey Math")]
 public class Day21PuzzleSolver : IPuzzleSolver
 {
-    private OperationMonkey? RootMonkey;
+    private OperationMonkey? _rootMonkey;
 
-    private NumberMonkey? HumanMonkey;
+    private NumberMonkey? _humanMonkey;
 
     public void ParseInput(string[] inputLines)
     {
@@ -38,46 +38,50 @@ public class Day21PuzzleSolver : IPuzzleSolver
                 parseResult.Monkey.SetParent(rightDependant);
             }
 
-            // Deal with current monkey
-            if (parseResult.Monkey is NumberMonkey numberMonkey)
+            switch (parseResult.Monkey)
             {
-                if (numberMonkey.Name == "humn")
+                // Deal with the current monkey
+                case NumberMonkey numberMonkey:
                 {
-                    HumanMonkey = numberMonkey;
+                    if (numberMonkey.Name == "humn")
+                    {
+                        _humanMonkey = numberMonkey;
+                    }
+
+                    break;
                 }
-            }
-            else if (parseResult.Monkey is OperationMonkey operationMonkey)
-            {
-                if (parseResult.LeftMonkeyName == null || parseResult.RightMonkeyName == null)
-                {
+                case OperationMonkey when parseResult.LeftMonkeyName == null || parseResult.RightMonkeyName == null:
                     throw new InvalidOperationException();
-                }
+                case OperationMonkey operationMonkey:
+                {
+                    // Left monkey
+                    if (knownMonkeys.TryGetValue(parseResult.LeftMonkeyName, out var leftMonkey))
+                    {
+                        operationMonkey.SetLeftMonkey(leftMonkey);
+                        leftMonkey.SetParent(operationMonkey);
+                    }
+                    else
+                    {
+                        leftDependantsOnMonkey.Add(parseResult.LeftMonkeyName, operationMonkey);
+                    }
 
-                // Left monkey
-                if (knownMonkeys.TryGetValue(parseResult.LeftMonkeyName, out var leftMonkey))
-                {
-                    operationMonkey.SetLeftMonkey(leftMonkey);
-                    leftMonkey.SetParent(operationMonkey);
-                }
-                else
-                {
-                    leftDependantsOnMonkey.Add(parseResult.LeftMonkeyName, operationMonkey);
-                }
+                    // Right monkey
+                    if (knownMonkeys.TryGetValue(parseResult.RightMonkeyName, out var rightMonkey))
+                    {
+                        operationMonkey.SetRightMonkey(rightMonkey);
+                        rightMonkey.SetParent(operationMonkey);
+                    }
+                    else
+                    {
+                        rightDependantsOnMonkey.Add(parseResult.RightMonkeyName, operationMonkey);
+                    }
 
-                // Right monkey
-                if (knownMonkeys.TryGetValue(parseResult.RightMonkeyName, out var rightMonkey))
-                {
-                    operationMonkey.SetRightMonkey(rightMonkey);
-                    rightMonkey.SetParent(operationMonkey);
-                }
-                else
-                {
-                    rightDependantsOnMonkey.Add(parseResult.RightMonkeyName, operationMonkey);
-                }
+                    if (operationMonkey.Name == "root")
+                    {
+                        _rootMonkey = operationMonkey;
+                    }
 
-                if (operationMonkey.Name == "root")
-                {
-                    RootMonkey = operationMonkey;
+                    break;
                 }
             }
         }
@@ -85,12 +89,12 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        if (RootMonkey == null)
+        if (_rootMonkey == null)
         {
             throw new InvalidOperationException("Root monkey is null");
         }
 
-        var answer = RootMonkey.YellNumber();
+        var answer = _rootMonkey.YellNumber();
 
         return new PuzzleAnswer(answer, 41857219607906L);
     }
@@ -98,12 +102,12 @@ public class Day21PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         // Get the route from 'root' to 'humn'
-        if (HumanMonkey == null)
+        if (_humanMonkey == null)
         {
             throw new InvalidOperationException("Human monkey is null");
         }
 
-        var monkeys = HumanMonkey.GetRouteFromRoot();
+        var monkeys = _humanMonkey.GetRouteFromRoot();
 
         //      r
         //     / \
@@ -117,7 +121,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
         // r = m1 * m2 => m1 = r / m2 => m2 = r / m1
         // r = m1 / m2 => m1 = r * m2 => m2 = m1 / root
 
-        // Navigate from 'root' to 'humn' calculating the opposide side of the tree
+        // Navigate from 'root' to 'humn' calculating the opposite side of the tree
         // and using reverse operations
 
         var result = 0L;
@@ -126,17 +130,17 @@ public class Day21PuzzleSolver : IPuzzleSolver
             var monkey = monkeys[monkeyIndex];
             var nextMonkey = monkeys[monkeyIndex + 1];
 
-            if (monkey is OperationMonkey operationMonkey && operationMonkey.LeftMonkey != null && operationMonkey.RightMonkey != null)
+            if (monkey is OperationMonkey { LeftMonkey: not null, RightMonkey: not null } operationMonkey)
             {
-                if (operationMonkey == RootMonkey)
+                if (operationMonkey == _rootMonkey)
                 {
-                    // Calculate the value of opposite side of the tree
+                    // Calculate the opposite side's value of the tree
                     var calculateMonkey = nextMonkey == operationMonkey.LeftMonkey ? operationMonkey.RightMonkey : operationMonkey.LeftMonkey;
                     result = calculateMonkey.YellNumber();
                 }
                 else if (nextMonkey == operationMonkey.LeftMonkey)
                 {
-                    // Human is on the left side of tree, calculate the value of right side of the tree
+                    // Human is on the left side of the tree, calculate the right side's value of the tree
                     var monkeyValue = operationMonkey.RightMonkey.YellNumber();
 
                     result = operationMonkey.Operation switch
@@ -150,7 +154,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
                 }
                 else if (nextMonkey == operationMonkey.RightMonkey)
                 {
-                    // Human is on the right side of tree, calculate the value of left side of the tree
+                    // Human is on the right side of the tree, calculate the left side's value of the tree
                     var monkeyValue = operationMonkey.LeftMonkey.YellNumber();
 
                     result = operationMonkey.Operation switch
@@ -188,27 +192,25 @@ public class Day21PuzzleSolver : IPuzzleSolver
         {
             return new MonkeyParseResult(new NumberMonkey(monkeyName, value), null, null);
         }
-        else
+
+        var operationParts = lineParts[1].Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+        var monkey1Name = operationParts[0];
+
+        var operation = operationParts[1] switch
         {
-            var operationParts = lineParts[1].Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            "+" => Operation.Add,
+            "-" => Operation.Subtract,
+            "*" => Operation.Multiply,
+            "/" => Operation.Divide,
+            _ => throw new UnreachableException()
+        };
 
-            var monkey1Name = operationParts[0];
+        var monkey2Name = operationParts[2];
 
-            var operation = operationParts[1] switch
-            {
-                "+" => Operation.Add,
-                "-" => Operation.Subtract,
-                "*" => Operation.Multiply,
-                "/" => Operation.Divide,
-                _ => throw new UnreachableException()
-            };
-
-            var monkey2Name = operationParts[2];
-
-            return new MonkeyParseResult(
-                new OperationMonkey(monkeyName, operation),
-                monkey1Name, monkey2Name);
-        }
+        return new MonkeyParseResult(
+            new OperationMonkey(monkeyName, operation),
+            monkey1Name, monkey2Name);
     }
 
     private sealed record MonkeyParseResult(Monkey Monkey, string? LeftMonkeyName, string? RightMonkeyName);

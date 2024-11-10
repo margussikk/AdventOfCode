@@ -10,10 +10,10 @@ internal class Rucksack
     {
         var itemsCount = line.Length / 2;
 
-        var rucksack = new Rucksack()
+        var rucksack = new Rucksack
         {
             Compartment1Items = line[..itemsCount],
-            Compartment2Items = line[itemsCount..],
+            Compartment2Items = line[itemsCount..]
         };
 
         return rucksack;

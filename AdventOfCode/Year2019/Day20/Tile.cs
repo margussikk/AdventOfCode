@@ -5,5 +5,5 @@ internal enum Tile
     Empty,
     Wall,
     Passage,
-    Portal,
+    Portal
 }

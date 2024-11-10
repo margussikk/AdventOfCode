@@ -32,13 +32,14 @@ public class Day15PuzzleSolver : IPuzzleSolver
         {
             var box = boxes[operation.GetLabelHash()];
 
-            if (operation is RemoveLensOperation removeLensOperation)
+            switch (operation)
             {
-                box.RemoveLens(removeLensOperation.Label);
-            }
-            else if (operation is ReplaceLensOperation replaceLensOperation)
-            {
-                box.ReplaceLens(replaceLensOperation.Label, replaceLensOperation.FocalLength);
+                case RemoveLensOperation removeLensOperation:
+                    box.RemoveLens(removeLensOperation.Label);
+                    break;
+                case ReplaceLensOperation replaceLensOperation:
+                    box.ReplaceLens(replaceLensOperation.Label, replaceLensOperation.FocalLength);
+                    break;
             }
         }
 

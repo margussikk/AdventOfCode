@@ -18,12 +18,11 @@ internal readonly struct Line2D
         B = b;
         C = c;
 
-        if (A < 0)
-        {
-            A = -A;
-            B = -B;
-            C = -C;
-        }
+        if (A >= 0) return;
+        
+        A = -A;
+        B = -B;
+        C = -C;
     }
 
     public Line2D(Coordinate2D coordinate1, Coordinate2D coordinate2)
@@ -37,12 +36,11 @@ internal readonly struct Line2D
                    new BigInteger(coordinate2.X) * new BigInteger(coordinate2.Y);
         C = (long)bigC;
 
-        if (A < 0)
-        {
-            A = -A;
-            B = -B;
-            C = -C;
-        }
+        if (A >= 0) return;
+        
+        A = -A;
+        B = -B;
+        C = -C;
     }
 
     public Line2D(Coordinate2D coordinate, Vector2D vector)
@@ -54,12 +52,11 @@ internal readonly struct Line2D
                    new BigInteger(coordinate.Y) * new BigInteger(vector.DX);
         C = (long)bigC;
 
-        if (A < 0)
-        {
-            A = -A;
-            B = -B;
-            C = -C;
-        }
+        if (A >= 0) return;
+        
+        A = -A;
+        B = -B;
+        C = -C;
     }
 
     public bool TryFindIntersectionCoordinate(Line2D other, out Coordinate2D intersectionCoordinate)
@@ -103,14 +100,7 @@ internal readonly struct Line2D
 
         if (B != 0)
         {
-            if (B >= 0)
-            {
-                stringBuilder.Append(" + ");
-            }
-            else
-            {
-                stringBuilder.Append(" - ");
-            }
+            stringBuilder.Append(B >= 0 ? " + " : " - ");
 
             var value = Math.Abs(B);
             if (value != 1)
@@ -123,14 +113,7 @@ internal readonly struct Line2D
 
         if (C != 0)
         {
-            if (C >= 0)
-            {
-                stringBuilder.Append(" + ");
-            }
-            else
-            {
-                stringBuilder.Append(" - ");
-            }
+            stringBuilder.Append(C >= 0 ? " + " : " - ");
 
             stringBuilder.Append(Math.Abs(C));
         }

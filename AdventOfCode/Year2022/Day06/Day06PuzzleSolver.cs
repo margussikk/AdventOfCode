@@ -45,13 +45,12 @@ public class Day06PuzzleSolver : IPuzzleSolver
 
             var newCharacter = _dataStream[index] - 'a';
             counters[newCharacter]++;
-            if (counters[newCharacter] == 1)
+            if (counters[newCharacter] != 1) continue;
+            
+            uniqueCounter++;
+            if (uniqueCounter == windowSize)
             {
-                uniqueCounter++;
-                if (uniqueCounter == windowSize)
-                {
-                    return index + 1;
-                }
+                return index + 1;
             }
         }
 

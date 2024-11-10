@@ -7,5 +7,5 @@ internal enum Tile
     RobotFacingUp,
     RobotFacingDown,
     RobotFacingLeft,
-    RobotFacingRight,
+    RobotFacingRight
 }

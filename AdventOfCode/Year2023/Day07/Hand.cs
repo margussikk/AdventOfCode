@@ -2,7 +2,7 @@
 
 internal class Hand
 {
-    public char[] Cards { get; private set; } = [];
+    public char[] Cards { get; private init; } = [];
 
     public long Bid { get; private set; }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode.Year2019.Day12;
+﻿namespace AdventOfCode.Year2019.Day12;
 internal class Moon
 {
     public int X { get; set; }
@@ -57,7 +51,7 @@ internal class Moon
 
     public static Moon Parse(string input)
     {
-        var separators = new string[]
+        var separators = new []
         {
             "<x=", ", y=", ", z=", ">"
         };
@@ -71,7 +65,7 @@ internal class Moon
             Z = int.Parse(splits[2]),
             VX = 0,
             VY = 0,
-            VZ = 0,
+            VZ = 0
         };
 
         return moon;

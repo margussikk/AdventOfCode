@@ -6,5 +6,5 @@ internal class WorkItem
 {
     public string WorkflowName { get; init; } = string.Empty;
 
-    public NumberRange<long>[] RatingNumberRanges { get; set; } = new NumberRange<long>[4];
+    public NumberRange<long>[] RatingNumberRanges { get; init; } = new NumberRange<long>[4];
 }

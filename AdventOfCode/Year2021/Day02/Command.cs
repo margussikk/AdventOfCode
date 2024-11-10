@@ -2,8 +2,8 @@
 
 internal class Command
 {
-    public Direction Direction { get; private set; }
-    public int Units { get; private set; }
+    public Direction Direction { get; private init; }
+    public int Units { get; private init; }
 
     public static Command Parse(string input)
     {

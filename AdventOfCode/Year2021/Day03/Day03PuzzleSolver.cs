@@ -66,14 +66,9 @@ public class Day03PuzzleSolver : IPuzzleSolver
             var setBitCount = binaryNumbers.Count(bn => (bn & bitMask) == bitMask);
             var notSetBitCount = binaryNumbers.Count - setBitCount;
 
-            if (notSetBitCount <= setBitCount)
-            {
-                binaryNumbers = binaryNumbers.Where(bn => (bn & bitMask) == bitMask).ToList();
-            }
-            else
-            {
-                binaryNumbers = binaryNumbers.Where(bn => (bn & bitMask) == 0).ToList();
-            }
+            binaryNumbers = notSetBitCount <= setBitCount
+                ? binaryNumbers.Where(bn => (bn & bitMask) == bitMask).ToList()
+                : binaryNumbers.Where(bn => (bn & bitMask) == 0).ToList();
 
             bitMask >>= 1;
         }
@@ -91,14 +86,9 @@ public class Day03PuzzleSolver : IPuzzleSolver
             var setBitCount = binaryNumbers.Count(bn => (bn & bitMask) == bitMask);
             var notSetBitCount = binaryNumbers.Count - setBitCount;
 
-            if (notSetBitCount <= setBitCount)
-            {
-                binaryNumbers = binaryNumbers.Where(bn => (bn & bitMask) == 0).ToList();
-            }
-            else
-            {
-                binaryNumbers = binaryNumbers.Where(bn => (bn & bitMask) == bitMask).ToList();
-            }
+            binaryNumbers = notSetBitCount <= setBitCount
+                ? binaryNumbers.Where(bn => (bn & bitMask) == 0).ToList()
+                : binaryNumbers.Where(bn => (bn & bitMask) == bitMask).ToList();
 
             bitMask >>= 1;
         }

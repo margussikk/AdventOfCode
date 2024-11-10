@@ -1,8 +1,15 @@
 ﻿namespace AdventOfCode.Year2023.Day20;
 
-internal class Signal(string sourceModule, string destinationModule, bool pulse)
+internal class Signal
 {
-    public string SourceModule { get; } = sourceModule;
-    public string DestinationModule { get; } = destinationModule;
-    public bool Pulse { get; } = pulse;
+    public string SourceModule { get; }
+    public string DestinationModule { get; }
+    public bool Pulse { get; }
+
+    public Signal(string sourceModule, string destinationModule, bool pulse)
+    {
+        SourceModule = sourceModule;
+        DestinationModule = destinationModule;
+        Pulse = pulse;
+    }
 }

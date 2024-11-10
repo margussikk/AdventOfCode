@@ -22,22 +22,23 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
         foreach(var instruction in _instructions)
         {
-            if (instruction is MaskInstruction maskInstruction)
+            switch (instruction)
             {
-                oneBitMask = maskInstruction.OneBitMask;
-                zeroBitMask = maskInstruction.ZeroBitMask;
-            }
-            else if (instruction is MemInstruction memInstruction)
-            {
-                var value = memInstruction.Value;
-                value |= oneBitMask;
-                value &= zeroBitMask;
+                case MaskInstruction maskInstruction:
+                    oneBitMask = maskInstruction.OneBitMask;
+                    zeroBitMask = maskInstruction.ZeroBitMask;
+                    break;
+                case MemInstruction memInstruction:
+                {
+                    var value = memInstruction.Value;
+                    value |= oneBitMask;
+                    value &= zeroBitMask;
 
-                memory[memInstruction.Address] = value;
-            }
-            else
-            {
-                throw new NotImplementedException();
+                    memory[memInstruction.Address] = value;
+                    break;
+                }
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -55,44 +56,46 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
         foreach(var instruction in _instructions)
         {
-            if (instruction is MaskInstruction maskInstruction)
+            switch (instruction)
             {
-                memoryBitMask = maskInstruction.MemoryBitMask;
-                floatingBitMask = maskInstruction.FloatingBitMask;
-            }
-            else if (instruction is MemInstruction memInstruction)
-            {
-                var fixedAddress = memInstruction.Address | memoryBitMask;
-
-                List<long> addresses = [fixedAddress];
-
-                var bitMask = 1L << 36;
-                while (bitMask != 0L)
+                case MaskInstruction maskInstruction:
+                    memoryBitMask = maskInstruction.MemoryBitMask;
+                    floatingBitMask = maskInstruction.FloatingBitMask;
+                    break;
+                case MemInstruction memInstruction:
                 {
-                    if ((floatingBitMask & bitMask) == bitMask)
-                    {
-                        var floatingAddresses = new List<long>();
+                    var fixedAddress = memInstruction.Address | memoryBitMask;
 
-                        foreach (var address in addresses)
+                    List<long> addresses = [fixedAddress];
+
+                    var bitMask = 1L << 36;
+                    while (bitMask != 0L)
+                    {
+                        if ((floatingBitMask & bitMask) == bitMask)
                         {
-                            floatingAddresses.Add(address | bitMask);
-                            floatingAddresses.Add(address & ~bitMask);
+                            var floatingAddresses = new List<long>();
+
+                            foreach (var address in addresses)
+                            {
+                                floatingAddresses.Add(address | bitMask);
+                                floatingAddresses.Add(address & ~bitMask);
+                            }
+
+                            addresses = floatingAddresses;
                         }
 
-                        addresses = floatingAddresses;
+                        bitMask >>= 1;
                     }
 
-                    bitMask >>= 1;
-                }
+                    foreach (var address in addresses)
+                    {
+                        memory[address] = memInstruction.Value;
+                    }
 
-                foreach (var address in addresses)
-                {
-                    memory[address] = memInstruction.Value;
+                    break;
                 }
-            }
-            else
-            {
-                throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException();
             }
         }
 

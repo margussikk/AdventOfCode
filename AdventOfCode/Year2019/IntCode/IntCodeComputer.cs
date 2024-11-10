@@ -8,9 +8,9 @@ internal class IntCodeComputer
 
     public long[] Memory { get; }
 
-    private int _instructionPointer = 0;
+    private int _instructionPointer;
 
-    private int _relativeBase = 0;
+    private int _relativeBase;
 
     public IntCodeComputer(IReadOnlyList<long> program)
     {
@@ -58,7 +58,7 @@ internal class IntCodeComputer
 
     public IntCodeResult Run(IReadOnlyList<long> inputs)
     {
-        int inputIndex = 0;
+        var inputIndex = 0;
         var outputs = new List<long>();
 
         while(true)

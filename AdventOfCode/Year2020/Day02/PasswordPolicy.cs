@@ -4,13 +4,13 @@ namespace AdventOfCode.Year2020.Day02;
 
 internal partial class PasswordPolicy
 {
-    public int FirstNumber { get; private set; }
+    public int FirstNumber { get; private init; }
 
-    public int SecondNumber { get; private set; }
+    public int SecondNumber { get; private init; }
 
-    public char Character { get; private set; }
+    public char Character { get; private init; }
 
-    public string Password { get; private set; } = string.Empty;
+    public string Password { get; private init; } = string.Empty;
 
     public static PasswordPolicy Parse(string input)
     {
@@ -27,12 +27,12 @@ internal partial class PasswordPolicy
             FirstNumber = int.Parse(match.Groups[1].Value),
             SecondNumber = int.Parse(match.Groups[2].Value),
             Character = match.Groups[3].Value[0],
-            Password = match.Groups[4].Value,
+            Password = match.Groups[4].Value
         };
 
         return passwordPolicy;
     }
 
-    [GeneratedRegex("(\\d+)-(\\d+) ([a-z]): ([a-z]+)")]
+    [GeneratedRegex(@"(\d+)-(\d+) ([a-z]): ([a-z]+)")]
     private static partial Regex InputLineRegex();
 }

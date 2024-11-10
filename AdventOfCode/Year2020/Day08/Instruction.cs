@@ -17,7 +17,7 @@ internal class Instruction
             InstructionType = InstructionType == InstructionType.Nop
                 ? InstructionType.Jmp
                 : InstructionType.Nop,
-            Argument = Argument,
+            Argument = Argument
         };
     }
 

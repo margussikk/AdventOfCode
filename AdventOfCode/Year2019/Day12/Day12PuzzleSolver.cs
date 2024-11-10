@@ -94,7 +94,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             step++;
         }
 
-        var answer = MathFunctions.LeastCommonMultiple(new long[] { xCycleLength, yCycleLength, zCycleLength });
+        var answer = new long[] { xCycleLength, yCycleLength, zCycleLength }.LeastCommonMultiple();
 
         return new PuzzleAnswer(answer, 279751820342592L);
     }

@@ -5,9 +5,9 @@ namespace AdventOfCode.Year2022.Day17;
 
 internal class Chamber
 {
-    static readonly int EMPTY_LINE = 0;
+    private const int EmptyLine = 0;
 
-    public List<int> LineBitMasks { get; private set; } = [];
+    public List<int> LineBitMasks { get; } = [];
 
     public void AppearRock(Rock rock)
     {
@@ -15,32 +15,38 @@ internal class Chamber
 
         // Count empty lines
         var currentEmptyLineCount = 0;
-        var lastNotEmptyLine = LineBitMasks.FindLastIndex(x => x != EMPTY_LINE);
+        var lastNotEmptyLine = LineBitMasks.FindLastIndex(x => x != EmptyLine);
         if (lastNotEmptyLine >= 0)
         {
             currentEmptyLineCount = LineBitMasks.Count - 1 - lastNotEmptyLine;
         }
 
-        if (currentEmptyLineCount > requiredEmptyLineCount)
+        switch (currentEmptyLineCount)
         {
-            // Remove empty lines
-            var excessEmptyLineCount = currentEmptyLineCount - requiredEmptyLineCount;
-            LineBitMasks.RemoveRange(LineBitMasks.Count - excessEmptyLineCount, excessEmptyLineCount);
-        }
-        else if (currentEmptyLineCount < requiredEmptyLineCount)
-        {
-            // Add empty lines
-            var missingEmptyLineCount = requiredEmptyLineCount - currentEmptyLineCount;
-            for (var i = 0; i < missingEmptyLineCount; i++)
+            case > requiredEmptyLineCount:
             {
-                LineBitMasks.Add(EMPTY_LINE);
+                // Remove empty lines
+                var excessEmptyLineCount = currentEmptyLineCount - requiredEmptyLineCount;
+                LineBitMasks.RemoveRange(LineBitMasks.Count - excessEmptyLineCount, excessEmptyLineCount);
+                break;
+            }
+            case < requiredEmptyLineCount:
+            {
+                // Add empty lines
+                var missingEmptyLineCount = requiredEmptyLineCount - currentEmptyLineCount;
+                for (var i = 0; i < missingEmptyLineCount; i++)
+                {
+                    LineBitMasks.Add(EmptyLine);
+                }
+
+                break;
             }
         }
 
         // Empty lines for rock
         for (var i = 0; i < rock.BitMasks.Length; i++)
         {
-            LineBitMasks.Add(EMPTY_LINE);
+            LineBitMasks.Add(EmptyLine);
         }
 
         rock.Row = LineBitMasks.Count - rock.BitMasks.Length;
@@ -71,7 +77,7 @@ internal class Chamber
                 -1 => rock.BitMasks[row] << 1,
                 0 => rock.BitMasks[row],
                 1 => rock.BitMasks[row] >> 1,
-                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
             };
 
             // Check if bits overlap
@@ -99,7 +105,7 @@ internal class Chamber
         for (var row = LineBitMasks.Count - 1; row >= 0; row--)
         {
             var bitmask = LineBitMasks[row];
-            if (bitmask != EMPTY_LINE)
+            if (bitmask != EmptyLine)
             {
                 break;
             }
@@ -122,12 +128,10 @@ internal class Chamber
 
         while (queue.TryDequeue(out var currentLocation))
         {
-            if (visited.Contains(currentLocation))
+            if (!visited.Add(currentLocation))
             {
                 continue;
             }
-
-            visited.Add(currentLocation);
 
             foreach (var neighbor in GetNeighborLocations(currentLocation))
             {

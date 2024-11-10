@@ -1,7 +1,12 @@
 ﻿namespace AdventOfCode.Year2021.Day04;
 
-internal class BoardNumber(int value)
+internal class BoardNumber
 {
-    public int Value { get; private set; } = value;
-    public bool Marked { get; set; } = false;
+    public int Value { get; }
+    public bool Marked { get; set; }
+
+    public BoardNumber(int value)
+    {
+        Value = value;
+    }
 }

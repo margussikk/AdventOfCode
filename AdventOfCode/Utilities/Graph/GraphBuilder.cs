@@ -2,8 +2,8 @@
 
 internal class GraphBuilder
 {
-    private int _vertexId = 0;
-    private int _edgeId = 0;
+    private int _vertexId;
+    private int _edgeId;
 
     private readonly Dictionary<string, GraphVertex> _vertices = [];
     public IReadOnlyDictionary<string, GraphVertex> Vertices => _vertices;

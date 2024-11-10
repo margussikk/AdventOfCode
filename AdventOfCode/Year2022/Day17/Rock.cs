@@ -6,24 +6,20 @@ internal class Rock
 {
     public int Row { get; set; }
 
-    private int _column = 0;
+    private int _column;
     public int Column
     {
-        get
-        {
-            return _column;
-        }
+        get => _column;
         set
         {
-            if (_column != value)
-            {
-                _column = value;
-                BitMasks = InitialBitMasks.Select(x => x >> _column).ToArray();
-            }
+            if (_column == value) return;
+            
+            _column = value;
+            BitMasks = InitialBitMasks.Select(x => x >> _column).ToArray();
         }
     }
 
-    protected int[] InitialBitMasks { get; private set; } = [];
+    public int[] InitialBitMasks { get; private init; } = [];
 
     public int[] BitMasks { get; private set; } = [];
 
@@ -35,7 +31,7 @@ internal class Rock
         {
             InitialBitMasks = new int[lines.Length],
             BitMasks = new int[lines.Length],
-            Width = lines[0].Length,
+            Width = lines[0].Length
         };
 
         // Bit masks
@@ -70,14 +66,7 @@ internal class Rock
 
             for (var i = 0; i < 7; i++)
             {
-                if ((BitMasks[row] & mask) != 0)
-                {
-                    stringBuilder.Append('#');
-                }
-                else
-                {
-                    stringBuilder.Append('.');
-                }
+                stringBuilder.Append((BitMasks[row] & mask) != 0 ? '#' : '.');
                 mask >>= 1;
             }
 

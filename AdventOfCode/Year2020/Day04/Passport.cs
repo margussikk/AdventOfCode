@@ -22,18 +22,13 @@ internal class Passport
 
     public bool RequiredFieldsAreFilled()
     {
-        if (BirthYear is null ||
-            IssueYear is null ||
-            ExpirationYear is null ||
-            Height is null ||
-            HairColor is null ||
-            EyeColor is null ||
-            PassportID is null)
-        {
-            return false;
-        }
-
-        return true;
+        return BirthYear is not null &&
+               IssueYear is not null &&
+               ExpirationYear is not null &&
+               Height is not null &&
+               HairColor is not null &&
+               EyeColor is not null &&
+               PassportID is not null;
     }
 
     public bool IsDataValid()
@@ -51,21 +46,21 @@ internal class Passport
 
         // Birth Year
         var birthYear = int.Parse(BirthYear);
-        if (birthYear < 1920 || birthYear > 2002)
+        if (birthYear is < 1920 or > 2002)
         {
             return false;
         }
 
         // Issue Year
         var issueYear = int.Parse(IssueYear);
-        if (issueYear < 2010 || issueYear > 2020)
+        if (issueYear is < 2010 or > 2020)
         {
             return false;
         }
 
         // Expiration Year
         var expirationYear = int.Parse(ExpirationYear);
-        if (expirationYear < 2020 || expirationYear > 2030)
+        if (expirationYear is < 2020 or > 2030)
         {
             return false;
         }
@@ -74,7 +69,7 @@ internal class Passport
         if (Height.EndsWith("cm"))
         {
             var height = int.Parse(Height[..^2]);
-            if (height < 150 || height > 193)
+            if (height is < 150 or > 193)
             {
                 return false;
             }
@@ -82,7 +77,7 @@ internal class Passport
         else if (Height.EndsWith("in"))
         {
             var height = int.Parse(Height[..^2]);
-            if (height < 59 || height > 76)
+            if (height is < 59 or > 76)
             {
                 return false;
             }
@@ -102,8 +97,7 @@ internal class Passport
             }
 
             if (hairColor.Any(character =>
-                (character < '0' || character > '9') &&
-                (character < 'a' || character > 'f')))
+                character is (< '0' or > '9') and (< 'a' or > 'f')))
             {
                 return false;
             }

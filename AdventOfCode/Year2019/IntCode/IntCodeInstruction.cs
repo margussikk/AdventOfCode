@@ -2,9 +2,9 @@
 
 internal class IntCodeInstruction
 {
-    public IntCodeOpCode OpCode { get; set; }
+    public IntCodeOpCode OpCode { get; init; }
 
-    public int Length { get; set; }
+    public int Length { get; init; }
 
-    public List<int> Addresses { get; set; } = [];
+    public List<int> Addresses { get; } = [];
 }

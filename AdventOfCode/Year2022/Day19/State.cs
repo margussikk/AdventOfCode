@@ -2,7 +2,7 @@
 
 internal class State
 {
-    public int MinutesLeft { get; set; }
+    public int MinutesLeft { get; init; }
 
     public int Ore { get; set; }
 
@@ -10,15 +10,15 @@ internal class State
 
     public int Obsidian { get; set; }
 
-    public int Geode { get; set; }
+    public int Geode { get; init; }
 
-    public int OreRobots { get; set; }
+    public int OreRobots { get; init; }
 
-    public int ClayRobots { get; set; }
+    public int ClayRobots { get; init; }
 
-    public int ObsidianRobots { get; set; }
+    public int ObsidianRobots { get; init; }
 
-    public int GeodeRobots { get; set; }
+    public int GeodeRobots { get; init; }
 
     public State? PreviousState { get; set; }
 
@@ -26,17 +26,15 @@ internal class State
     {
         var states = new List<State>();
 
-        State state;
-
         // Try to build ore robot
-        state = GetNextState(blueprint, RobotType.OreRobot);
+        var state = GetNextState(blueprint, RobotType.OreRobot);
         states.Add(state);
 
-        // Try to build clay robot
+        // Try to build a clay robot
         state = GetNextState(blueprint, RobotType.ClayRobot);
         states.Add(state);
 
-        // Try to build obsidian robot
+        // Try to build an obsidian robot
         state = GetNextState(blueprint, RobotType.ObsidianRobot);
         states.Add(state);
 
@@ -101,7 +99,7 @@ internal class State
 
     private State GetNextState(Blueprint blueprint, RobotType robotType)
     {
-        var minutesSpent = MinutesLeft; // Fast forward to end if we can't build anything
+        var minutesSpent = MinutesLeft; // Fast-forward to end if we can't build anything
 
         var oreCost = 0;
         var clayCost = 0;
@@ -113,62 +111,73 @@ internal class State
         var builtGeodeRobots = 0;
 
 
-        if (robotType == RobotType.OreRobot && OreRobots < blueprint.MaxOreNeededPerMinute)
+        switch (robotType)
         {
-            // Ore robot
-            var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.OreRobotCostOre, OreRobots);
-
-            var currentMinutesSpent = minutesUntilEnoughOre + 1;
-            if (MinutesLeft - currentMinutesSpent > 0)
+            case RobotType.OreRobot when OreRobots < blueprint.MaxOreNeededPerMinute:
             {
-                minutesSpent = currentMinutesSpent;
-                oreCost = blueprint.OreRobotCostOre;
-                builtOreRobots = 1;
+                // Ore robot
+                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.OreRobotCostOre, OreRobots);
+
+                var currentMinutesSpent = minutesUntilEnoughOre + 1;
+                if (MinutesLeft - currentMinutesSpent > 0)
+                {
+                    minutesSpent = currentMinutesSpent;
+                    oreCost = blueprint.OreRobotCostOre;
+                    builtOreRobots = 1;
+                }
+
+                break;
             }
-        }
-        else if (robotType == RobotType.ClayRobot && ClayRobots < blueprint.ObsidianRobotCostClay)
-        {
-            // Clay robot
-            var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ClayRobotCostOre, OreRobots);
-
-            var currentMinutesSpent = minutesUntilEnoughOre + 1;
-            if (MinutesLeft - currentMinutesSpent > 0)
+            case RobotType.ClayRobot when ClayRobots < blueprint.ObsidianRobotCostClay:
             {
-                minutesSpent = currentMinutesSpent;
-                oreCost = blueprint.ClayRobotCostOre;
-                builtClayRobots = 1;
+                // Clay robot
+                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ClayRobotCostOre, OreRobots);
+
+                var currentMinutesSpent = minutesUntilEnoughOre + 1;
+                if (MinutesLeft - currentMinutesSpent > 0)
+                {
+                    minutesSpent = currentMinutesSpent;
+                    oreCost = blueprint.ClayRobotCostOre;
+                    builtClayRobots = 1;
+                }
+
+                break;
             }
-        }
-        else if (robotType == RobotType.ObsidianRobot && ClayRobots > 0 && ObsidianRobots < blueprint.GeodeRobotCostObsidian)
-        {
-            // Obsidian robot
-            var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ObsidianRobotCostOre, OreRobots);
-            var minutesUntilEnoughClay = CalculateMinutesUntilEnoughMaterials(Clay, blueprint.ObsidianRobotCostClay, ClayRobots);
-            var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughClay);
-
-            var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
-            if (MinutesLeft - currentMinutesSpent > 0)
+            case RobotType.ObsidianRobot when ClayRobots > 0 && ObsidianRobots < blueprint.GeodeRobotCostObsidian:
             {
-                minutesSpent = currentMinutesSpent;
-                oreCost = blueprint.ObsidianRobotCostOre;
-                clayCost = blueprint.ObsidianRobotCostClay;
-                builtObsidianRobots = 1;
+                // Obsidian robot
+                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ObsidianRobotCostOre, OreRobots);
+                var minutesUntilEnoughClay = CalculateMinutesUntilEnoughMaterials(Clay, blueprint.ObsidianRobotCostClay, ClayRobots);
+                var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughClay);
+
+                var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
+                if (MinutesLeft - currentMinutesSpent > 0)
+                {
+                    minutesSpent = currentMinutesSpent;
+                    oreCost = blueprint.ObsidianRobotCostOre;
+                    clayCost = blueprint.ObsidianRobotCostClay;
+                    builtObsidianRobots = 1;
+                }
+
+                break;
             }
-        }
-        else if (robotType == RobotType.GeodeRobot && ObsidianRobots > 0)
-        {
-            // Geode robot
-            var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.GeodeRobotCostOre, OreRobots);
-            var minutesUntilEnoughObsidian = CalculateMinutesUntilEnoughMaterials(Obsidian, blueprint.GeodeRobotCostObsidian, ObsidianRobots);
-            var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughObsidian);
-
-            var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
-            if (MinutesLeft - currentMinutesSpent > 0)
+            case RobotType.GeodeRobot when ObsidianRobots > 0:
             {
-                minutesSpent = currentMinutesSpent;
-                oreCost = blueprint.GeodeRobotCostOre;
-                obsidianCost = blueprint.GeodeRobotCostObsidian;
-                builtGeodeRobots = 1;
+                // Geode robot
+                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.GeodeRobotCostOre, OreRobots);
+                var minutesUntilEnoughObsidian = CalculateMinutesUntilEnoughMaterials(Obsidian, blueprint.GeodeRobotCostObsidian, ObsidianRobots);
+                var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughObsidian);
+
+                var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
+                if (MinutesLeft - currentMinutesSpent > 0)
+                {
+                    minutesSpent = currentMinutesSpent;
+                    oreCost = blueprint.GeodeRobotCostOre;
+                    obsidianCost = blueprint.GeodeRobotCostObsidian;
+                    builtGeodeRobots = 1;
+                }
+
+                break;
             }
         }
 
@@ -176,24 +185,24 @@ internal class State
         {
             MinutesLeft = MinutesLeft - minutesSpent,
 
-            Ore = Ore + (minutesSpent * OreRobots) - oreCost,
-            Clay = Clay + (minutesSpent * ClayRobots) - clayCost,
-            Obsidian = Obsidian + (minutesSpent * ObsidianRobots) - obsidianCost,
-            Geode = Geode + (minutesSpent * GeodeRobots),
+            Ore = Ore + minutesSpent * OreRobots - oreCost,
+            Clay = Clay + minutesSpent * ClayRobots - clayCost,
+            Obsidian = Obsidian + minutesSpent * ObsidianRobots - obsidianCost,
+            Geode = Geode + minutesSpent * GeodeRobots,
 
             OreRobots = OreRobots + builtOreRobots,
             ClayRobots = ClayRobots + builtClayRobots,
             ObsidianRobots = ObsidianRobots + builtObsidianRobots,
             GeodeRobots = GeodeRobots + builtGeodeRobots,
 
-            PreviousState = this,
+            PreviousState = this
         };
 
         // Don't keep more resources than needed.
         // This should cause more cache hits and speed things up
         state.Ore = int.Min(state.Ore, blueprint.MaxOreNeededPerMinute);
-        state.Clay = int.Min(state.Clay, (state.MinutesLeft * blueprint.ObsidianRobotCostClay) - (state.ClayRobots * (state.MinutesLeft - 1)));
-        state.Obsidian = int.Min(state.Obsidian, (state.MinutesLeft * blueprint.GeodeRobotCostObsidian) - (state.ObsidianRobots * (state.MinutesLeft - 1)));
+        state.Clay = int.Min(state.Clay, state.MinutesLeft * blueprint.ObsidianRobotCostClay - state.ClayRobots * (state.MinutesLeft - 1));
+        state.Obsidian = int.Min(state.Obsidian, state.MinutesLeft * blueprint.GeodeRobotCostObsidian - state.ObsidianRobots * (state.MinutesLeft - 1));
 
         return state;
 

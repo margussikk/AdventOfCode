@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Year2020.Day19;
 
-internal class Rule(int id)
+internal class Rule
 {
     public RuleType RuleType { get; private set; } = RuleType.Unknown;
 
@@ -10,8 +10,13 @@ internal class Rule(int id)
 
     public List<Rule> OrRules { get; private set; } = [];
 
-    public int Id { get; } = id;
+    public int Id { get; }
 
+    public Rule(int id)
+    {
+        Id = id;
+    }
+    
     public void MakeItCharacterRule(char character)
     {
         RuleType = RuleType.Character;
@@ -32,12 +37,12 @@ internal class Rule(int id)
 
     public bool Matches(string message)
     {
-        var result = Matches(this, 0, message, 0);
+        var result = LocalMatches(this, 0, message, 0);
 
         return result.Any(r => r.NextIndex == message.Length);
 
         // Local method
-        static IEnumerable<(bool Matches, int NextIndex)> Matches(Rule currentRule, int ruleDepth, string message, int currentIndex)
+        static IEnumerable<(bool Matches, int NextIndex)> LocalMatches(Rule currentRule, int ruleDepth, string message, int currentIndex)
         {
             if (ruleDepth > message.Length + 1) // Magic 1
             {
@@ -47,56 +52,66 @@ internal class Rule(int id)
             {
                 // Do not continue
             }
-            else if (currentRule.RuleType == RuleType.Character)
+            else switch (currentRule.RuleType)
             {
-                if (message[currentIndex] == currentRule.Character)
+                case RuleType.Character:
                 {
-                    yield return (true, currentIndex + 1);
+                    if (message[currentIndex] == currentRule.Character)
+                    {
+                        yield return (true, currentIndex + 1);
+                    }
+
+                    break;
                 }
-            }
-            else if (currentRule.RuleType == RuleType.And)
-            {
-                List<int> currentIndexes = [currentIndex];
-
-                foreach (var rule in currentRule.AndRules)
+                case RuleType.And:
                 {
-                    ruleDepth++;
+                    List<int> currentIndexes = [currentIndex];
 
-                    var nextIndexes = new List<int>();
+                    foreach (var rule in currentRule.AndRules)
+                    {
+                        ruleDepth++;
+
+                        var nextIndexes = new List<int>();
+
+                        foreach (var index in currentIndexes)
+                        {
+                            var results = LocalMatches(rule, ruleDepth, message, index);
+                            foreach (var (matches, nextIndex) in results)
+                            {
+                                if (matches)
+                                {
+                                    nextIndexes.Add(nextIndex);
+                                }
+                            }
+                        }
+
+                        currentIndexes = nextIndexes;
+                    }
 
                     foreach (var index in currentIndexes)
                     {
-                        var results = Matches(rule, ruleDepth, message, index);
-                        foreach (var (matches, nextIndex) in results)
+                        yield return (true, index);
+                    }
+
+                    break;
+                }
+                case RuleType.Or:
+                {
+                    foreach (var rule in currentRule.OrRules)
+                    {
+                        var results = LocalMatches(rule, ruleDepth + 1, message, currentIndex);
+                        foreach (var result in results)
                         {
-                            if (matches)
+                            if (result.Matches)
                             {
-                                nextIndexes.Add(nextIndex);
+                                yield return (result.Matches, result.NextIndex);
                             }
                         }
                     }
 
-                    currentIndexes = nextIndexes;
+                    break;
                 }
-
-                foreach (var index in currentIndexes)
-                {
-                    yield return (true, index);
-                }
-            }
-            else // Or
-            {
-                foreach (var rule in currentRule.OrRules)
-                {
-                    var results = Matches(rule, ruleDepth + 1, message, currentIndex);
-                    foreach (var result in results)
-                    {
-                        if (result.Matches)
-                        {
-                            yield return (result.Matches, result.NextIndex);
-                        }
-                    }
-                }
+                default: throw new InvalidOperationException();
             }
         }
     }

@@ -14,7 +14,7 @@ namespace AdventOfCode.Year2023.Day21;
 //                        +-----+-----+-----+-----+-----+
 //                        |     |  222|33333|222  |     |
 //                        |     | 2222|33333|2222 |     |
-//                        |    1|22222|33333|22222|1    |           Solution works by filling every type of grid to count how many garden spots are reachable in that grid.
+//                        |    1|22222|33333|22222|1    |           Solution works by filling every grid type to count how many garden spots are reachable in that grid.
 //                        |   11|22222|33333|22222|11   |           Secondly amount of different grids and garden spots in them are used to calculate total reachable garden spots count.
 //                        |  111|22222|33333|22222|111  |
 //                        +-----+-----+-----+-----+-----+
@@ -46,7 +46,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _tiles = inputLines.SelectToGrid(characher => characher switch
+        _tiles = inputLines.SelectToGrid(character => character switch
         {
             'S' => Tile.StartingPosition,
             '.' => Tile.GardenPlot,
@@ -72,19 +72,20 @@ public class Day21PuzzleSolver : IPuzzleSolver
             throw new InvalidOperationException("This solution expects Start to be at 65,65");
         }
 
-        var stepCount = 26501365L; // 202300 * 131 + 65
+        const long stepCount = 26501365L; // 202300 * 131 + 65
         var gridCount = (stepCount - 65) / _tiles.Height; // Assume grids are squares
 
-        var firstRow = 0;
+        const int firstRow = 0;
         var lastRow = _tiles.LastRowIndex;
-        var firstColumn = 0;
+        const int firstColumn = 0;
         var lastColumn = _tiles.LastColumnIndex;
         var middleRow = _tiles.Height / 2;
         var middleColumn = _tiles.Width / 2;
 
 
-        // Fill every type of grid to count possible reached garden spots. Some grids are filled fully,
-        // some partally using various starting points and step counts. See diagram above.
+        // Fill every grid type to count possible reached garden spots.
+        // Some grids are filled fully, some partially using various starting points and step counts.
+        // See diagram above.
         var even = CountReachableGardenSpots(middleRow, middleColumn, 129);
         var odd = CountReachableGardenSpots(middleRow, middleColumn, 130);
 
@@ -104,7 +105,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
         var largeBottomRight = CountReachableGardenSpots(firstRow, firstColumn, 130 + 65);
 
         var answer = (gridCount - 1) * (gridCount - 1) * even +
-            (gridCount * gridCount) * odd +
+            gridCount * gridCount * odd +
             top + left + right + bottom +
             gridCount * (smallTopLeft + smallTopRight + smallBottomLeft + smallBottomRight) +
             (gridCount - 1) * (largeTopLeft + largeTopRight + largeBottomLeft + largeBottomRight);
@@ -114,10 +115,10 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
     private long CountReachableGardenSpots(int startRow, int startColumn, int steps)
     {
-        var visited = new HashSet<GridCoordinate>[2]
+        var visited = new HashSet<GridCoordinate>[]
         {
             [], // Even
-            [], // Odd
+            []  // Odd
         };
         var gardeners = new Queue<Gardener>();
 

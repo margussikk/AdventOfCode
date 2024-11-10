@@ -16,7 +16,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        // Do in parallel for speed up
+        // Do in parallel for speed-up
         var qualityLevels = new ConcurrentBag<int>();
         Parallel.ForEach(_blueprints, blueprint =>
         {
@@ -34,7 +34,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        // Do in parallel for speed up
+        // Do in parallel for speed-up
         var geodes = new ConcurrentBag<int>();
         Parallel.ForEach(_blueprints.Take(3), blueprint =>
         {
@@ -71,7 +71,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
             OreRobots = 1,
             ClayRobots = 0,
             ObsidianRobots = 0,
-            GeodeRobots = 0,
+            GeodeRobots = 0
         };
 
         stack.Push(startState);
@@ -80,27 +80,25 @@ public class Day19PuzzleSolver : IPuzzleSolver
         {
             if (state.MinutesLeft == 0)
             {
-                if (state.Geode > maxGeodes)
-                {
-                    maxGeodes = state.Geode;
-                    maxState = state;
-                }
+                if (state.Geode <= maxGeodes) continue;
+                
+                maxGeodes = state.Geode;
+                maxState = state;
             }
             else
             {
-                // Use geometric sum: Check if building new geode robot every minute left we could catch up to the best max
-                var currentlyGeodesPossible = state.Geode + state.GeodeRobots * state.MinutesLeft + (state.MinutesLeft * (state.MinutesLeft - 1)) / 2;
+                // Use the geometric sum:
+                // Check if building a new geode robot every minute left we could catch up to the best max
+                var currentlyGeodesPossible = state.Geode + state.GeodeRobots * state.MinutesLeft + state.MinutesLeft * (state.MinutesLeft - 1) / 2;
                 if (currentlyGeodesPossible < maxGeodes)
                 {
                     continue;
                 }
 
-                if (visited.Contains(state))
+                if (!visited.Add(state))
                 {
                     continue;
                 }
-
-                visited.Add(state);
 
                 var nextStates = state.GetNextStates(blueprint);
                 foreach (var nextState in nextStates)

@@ -2,11 +2,15 @@
 
 namespace AdventOfCode.Year2022.Day25;
 
-internal class Snafu(long decimalValue)
+internal class Snafu
 {
-    public long Value { get; private set; } = decimalValue;
-
     private static readonly char[] _characters = ['=', '-', '0', '1', '2'];
+    public long Value { get; }
+
+    public Snafu(long decimalValue)
+    {
+        Value = decimalValue;
+    }
 
     public override string ToString()
     {
@@ -14,26 +18,26 @@ internal class Snafu(long decimalValue)
 
         if (Value >= 0)
         {
-            var decValue = Value;
+            var decimalValue = Value;
             do
             {
-                var lastDecDigit = decValue % 5;
-                if (lastDecDigit >= 0 && lastDecDigit <= 2) // 0, 1, 2
+                var lastDecDigit = decimalValue % 5;
+                if (lastDecDigit is >= 0 and <= 2) // 0, 1, 2
                 {
                     stringBuilder.Insert(0, _characters[lastDecDigit + 2]);
-                    decValue -= lastDecDigit;
+                    decimalValue -= lastDecDigit;
                 }
                 else // 3, 4
                 {
                     stringBuilder.Insert(0, _characters[lastDecDigit - 3]);
-                    decValue += (5 - lastDecDigit);
+                    decimalValue += 5 - lastDecDigit;
                 }
 
-                if (decValue >= 5)
+                if (decimalValue >= 5)
                 {
-                    decValue /= 5;
+                    decimalValue /= 5;
                 }
-            } while (decValue != 0);
+            } while (decimalValue != 0);
         }
         else
         {
@@ -50,7 +54,7 @@ internal class Snafu(long decimalValue)
         foreach (var character in line)
         {
             value *= 5;
-            value += (Array.IndexOf(_characters, character) - 2);
+            value += Array.IndexOf(_characters, character) - 2;
         }
 
         var snafu = new Snafu(value);

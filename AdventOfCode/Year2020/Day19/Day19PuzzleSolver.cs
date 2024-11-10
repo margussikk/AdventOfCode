@@ -90,7 +90,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var interestingRuleIds = new int[]
+        var interestingRuleIds = new []
         {
             0, 8, 42, 11, 31
         };

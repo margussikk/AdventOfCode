@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Year2022.Day19;
 
-enum RobotType
+internal enum RobotType
 {
     OreRobot,
     ClayRobot,

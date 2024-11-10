@@ -1,14 +1,22 @@
 ﻿namespace AdventOfCode.Utilities.Geometry;
 
-internal class GridWalker(GridCoordinate startCoordinate, GridCoordinate currentCoordinate, GridDirection direction, int steps)
+internal class GridWalker
 {
-    public GridCoordinate StartCoordinate { get; private set; } = startCoordinate;
+    public GridCoordinate StartCoordinate { get; }
 
-    public GridCoordinate CurrentCoordinate { get; private set; } = currentCoordinate;
+    public GridCoordinate CurrentCoordinate { get; private set; }
 
-    public GridDirection Direction { get; private set; } = direction;
+    public GridDirection Direction { get; private set; }
 
-    public int Steps { get; private set; } = steps;
+    public int Steps { get; private set; }
+
+    public GridWalker(GridCoordinate startCoordinate, GridCoordinate currentCoordinate, GridDirection direction, int steps)
+    {
+        StartCoordinate = startCoordinate;
+        CurrentCoordinate = currentCoordinate;
+        Direction = direction;
+        Steps = steps;
+    }
 
     public void Move(GridDirection direction, int steps = 1)
     {

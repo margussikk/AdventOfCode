@@ -54,7 +54,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
     private (int rounds, List<Elf> elves) SpreadElves(int maxRounds)
     {
-        // Estimate how large grid could grow and adjust locations
+        // Estimate how large the grid could grow and adjust locations
         var maxRow = 0;
         var maxColumn = 0;
 
@@ -65,7 +65,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         }
 
         // Use a grid that's magic times larger than input. Using InfiniteBitGrid was about 40% slower.
-        var magicMultiplier = 4;
+        const int magicMultiplier = 4;
         var locationGrid = new BitGrid(maxRow * magicMultiplier, maxColumn * magicMultiplier);
 
         var rowOffset = maxRow * (magicMultiplier - 1) / 2;
@@ -105,29 +105,28 @@ public class Day23PuzzleSolver : IPuzzleSolver
                             _ => throw new InvalidOperationException()
                         };
 
-                        if (!neighbors.Any(coordinate => locationGrid[coordinate]))
+                        if (neighbors.Any(coordinate => locationGrid[coordinate])) continue;
+                        
+                        var proposedLocation = personalProposalIndex switch
                         {
-                            var proposedLocation = personalProposalIndex switch
-                            {
-                                0 => elf.Location.Move(GridDirection.Up), // N
-                                1 => elf.Location.Move(GridDirection.Down), // S
-                                2 => elf.Location.Move(GridDirection.Left), // W
-                                3 => elf.Location.Move(GridDirection.Right), // E
-                                _ => throw new InvalidOperationException()
-                            };
+                            0 => elf.Location.Move(GridDirection.Up), // N
+                            1 => elf.Location.Move(GridDirection.Down), // S
+                            2 => elf.Location.Move(GridDirection.Left), // W
+                            3 => elf.Location.Move(GridDirection.Right), // E
+                            _ => throw new InvalidOperationException()
+                        };
 
-                            // Add elf to location proposers list
-                            if (!proposedLocations.TryGetValue(proposedLocation, out var locationProposers))
-                            {
-                                locationProposers = [];
-                                proposedLocations[proposedLocation] = locationProposers;
-                            }
-
-                            locationProposers.Add(elf);
-
-                            madeProposal = true;
-                            break;
+                        // Add elf to a location proposers list
+                        if (!proposedLocations.TryGetValue(proposedLocation, out var locationProposers))
+                        {
+                            locationProposers = [];
+                            proposedLocations[proposedLocation] = locationProposers;
                         }
+
+                        locationProposers.Add(elf);
+
+                        madeProposal = true;
+                        break;
                     }
                 }
 
@@ -135,19 +134,16 @@ public class Day23PuzzleSolver : IPuzzleSolver
             }
 
             // Make the moves
-            foreach (var kpv in proposedLocations)
+            foreach (var kpv in proposedLocations.Where(x => x.Value.Count == 1))
             {
-                if (kpv.Value.Count == 1)
-                {
-                    var elf = kpv.Value[0];
+                var elf = kpv.Value[0];
 
-                    // Clear previous location
-                    locationGrid[elf.Location] = false;
+                // Clear previous location
+                locationGrid[elf.Location] = false;
 
-                    // Set new location
-                    elf.Location = kpv.Key;
-                    locationGrid[elf.Location] = true;
-                }
+                // Set new location
+                elf.Location = kpv.Key;
+                locationGrid[elf.Location] = true;
             }
 
             if (!someoneMoved)

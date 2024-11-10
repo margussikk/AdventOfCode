@@ -12,7 +12,7 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
     public void ParseInput(string[] inputLines)
     {
         var valves = new List<Valve>();
-        int valveId = 0;
+        var valveId = 0;
 
         var graphBuilder = new GraphBuilder();
         foreach (var line in inputLines)
@@ -60,29 +60,22 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
     {
         var cache = Traverse(26);
 
-        var answer = 0;
-        foreach (var kvp1 in cache)
-        {
-            foreach (var kvp2 in cache)
-            {
-                if ((kvp1.Key & kvp2.Key) == 0)
-                {
-                    answer = int.Max(answer, kvp1.Value + kvp2.Value);
-                }
-            }
-        }
+        var answer = cache.Aggregate(0,
+            (current1, kvp1) => cache
+                .Where(kvp2 => (kvp1.Key & kvp2.Key) == 0)
+                .Aggregate(current1, (current, kvp2) => int.Max(current, kvp1.Value + kvp2.Value)));
 
         return new PuzzleAnswer(answer, 3015);
     }
 
-    private Dictionary<int, int> Traverse(int minutesLeft)
+    private Dictionary<int, int> Traverse(int minutesLeft1)
     {
-        var ALL_VALVES_CLOSED_BITMASK = 0;
-        var ALL_VALVES_OPENED_BITMASK = (1 << _valves.Values.Count(v => v.OpenBitmask != 0)) - 1;
+        const int allValvesClosedBitmask = 0;
+        var allValvesOpenedBitmask = (1 << _valves.Values.Count(v => v.OpenBitmask != 0)) - 1;
 
         var openValvesFlowRateCache = new Dictionary<int, int>();
 
-        DFS("AA", minutesLeft, 0, ALL_VALVES_CLOSED_BITMASK);
+        DFS("AA", minutesLeft1, 0, allValvesClosedBitmask);
 
         return openValvesFlowRateCache;
 
@@ -96,7 +89,7 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
                 openValvesFlowRateCache[openValvesBitmask] = flowRate;
             }
 
-            if (minutesLeft <= 0 || (openValvesBitmask & ALL_VALVES_OPENED_BITMASK) == ALL_VALVES_OPENED_BITMASK)
+            if (minutesLeft <= 0 || (openValvesBitmask & allValvesOpenedBitmask) == allValvesOpenedBitmask)
             {
                 return;
             }
@@ -133,22 +126,20 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
         for (var i = 0; i < vertices.Count; i++)
         {
             var sourceValve = valves.Find(v => v.Name == vertices[i].Name);
-            if (sourceValve != null)
+            if (sourceValve == null) continue;
+            
+            for (var j = 0; j < vertices.Count; j++)
             {
-                for (var j = 0; j < vertices.Count; j++)
+                if (i == j || vertices[j].Name == "AA")
                 {
-                    if (i == j || vertices[j].Name == "AA")
-                    {
-                        continue;
-                    }
-
-                    var destinationValve = valves.Find(v => v.Name == vertices[j].Name);
-                    if (destinationValve != null)
-                    {
-                        var tunnel = new Tunnel(destinationValve, distances[i, j]);
-                        sourceValve.Tunnels.Add(tunnel);
-                    }
+                    continue;
                 }
+
+                var destinationValve = valves.Find(v => v.Name == vertices[j].Name);
+                if (destinationValve == null) continue;
+                
+                var tunnel = new Tunnel(destinationValve, distances[i, j]);
+                sourceValve.Tunnels.Add(tunnel);
             }
         }
     }

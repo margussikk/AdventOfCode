@@ -1,8 +1,6 @@
 ﻿using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
-using BenchmarkDotNet.Columns;
-using System.Text;
 
 namespace AdventOfCode.Year2023.Day10;
 
@@ -11,10 +9,10 @@ public class Day10PuzzleSolver : IPuzzleSolver
 {
     private readonly GridDirection[] _turnPipeDirections =
     [
-        GridDirection.Up | GridDirection.Right,
-        GridDirection.Up | GridDirection.Left,
-        GridDirection.Down | GridDirection.Right,
-        GridDirection.Down | GridDirection.Left,
+        GridDirection.UpAndRight,
+        GridDirection.UpAndLeft,
+        GridDirection.DownAndRight,
+        GridDirection.DownAndLeft
     ];
 
     private Grid<GridDirection> _pipeDirections = new(0, 0);
@@ -25,12 +23,12 @@ public class Day10PuzzleSolver : IPuzzleSolver
     {
         _pipeDirections = inputLines.SelectToGrid(character => character switch
         {
-            '|' => GridDirection.Up | GridDirection.Down,
-            '-' => GridDirection.Left | GridDirection.Right,
-            'L' => GridDirection.Up | GridDirection.Right,
-            'J' => GridDirection.Up | GridDirection.Left,
-            '7' => GridDirection.Down | GridDirection.Left,
-            'F' => GridDirection.Down | GridDirection.Right,
+            '|' => GridDirection.UpAndDown,
+            '-' => GridDirection.LeftAndRight,
+            'L' => GridDirection.UpAndRight,
+            'J' => GridDirection.UpAndLeft,
+            '7' => GridDirection.DownAndLeft,
+            'F' => GridDirection.DownAndRight,
             '.' => GridDirection.None,
             'S' => GridDirection.Start,
             _ => throw new InvalidOperationException()
@@ -107,20 +105,15 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
         void CollectTurnCoordinates(GridCoordinate coordinate)
         {
-            foreach (var direction in _turnPipeDirections)
-            {
-                if (_pipeDirections[coordinate].HasFlag(direction))
-                {
-                    turnCoordinates.Add(coordinate);
-                    return;
-                }
-            }
+            if (!Array.Exists(_turnPipeDirections, direction => _pipeDirections[coordinate].HasFlag(direction))) return;
+            
+            turnCoordinates.Add(coordinate);
         }
     }
 
     private void TraverseTheLoop(Action<GridCoordinate> action)
     {
-        var direction = new GridDirection[] { GridDirection.Up, GridDirection.Down, GridDirection.Left, GridDirection.Right }
+        var direction = new[] { GridDirection.Up, GridDirection.Down, GridDirection.Left, GridDirection.Right }
             .First(x => _pipeDirections[_startCoordinate].HasFlag(x));
 
         var currentCoordinate = _startCoordinate;
@@ -128,7 +121,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
         {
             action.Invoke(currentCoordinate);
 
-            // Remove entrance direction, this leaves only the exit direction
+            // Remove an entrance direction, this leaves only the exit direction
             direction = _pipeDirections[currentCoordinate] & ~(GridDirection.Start | direction.Flip());
 
             currentCoordinate = currentCoordinate.Move(direction);
@@ -138,17 +131,15 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     private GridDirection DetermineStartPipeDirections()
     {
-        var startPipeDirections = GridDirection.None;
-
-        foreach (var sideCell in _pipeDirections.SideNeighbors(_startCoordinate))
-        {
-            var direction = _startCoordinate.DirectionToward(sideCell.Coordinate);
-            if (sideCell.Object.HasFlag(direction.Flip()))
+        return _pipeDirections.SideNeighbors(_startCoordinate)
+            .Select(sideCell =>
             {
-                startPipeDirections |= direction;
-            }
-        }
-
-        return startPipeDirections;
+                var direction = _startCoordinate.DirectionToward(sideCell.Coordinate);
+                var hasOppositeDirection = sideCell.Object.HasFlag(direction.Flip());
+                return (Direction: direction, HasOppositeDirection: hasOppositeDirection);
+            })
+            .Where(x => x.HasOppositeDirection)
+            .Select(x => x.Direction)
+            .Aggregate(GridDirection.None, (direction, current) => direction | current);
     }
 }

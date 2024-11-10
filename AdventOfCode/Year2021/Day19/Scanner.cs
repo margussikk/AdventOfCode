@@ -32,7 +32,7 @@ internal class Scanner
         {
             AbsoluteLocation = AbsoluteLocation,
             Orientation = Orientation,
-            Aligned = Aligned,
+            Aligned = Aligned
         };
 
         foreach (var beaconLocation in BeaconLocations[0])

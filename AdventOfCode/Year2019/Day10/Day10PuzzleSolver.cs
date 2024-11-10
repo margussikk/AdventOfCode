@@ -24,7 +24,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        (_, var answer) = GetMonitoringStationDetails();
+        var (_, answer) = GetMonitoringStationDetails();
 
         return new PuzzleAnswer(answer, 274);
     }
@@ -33,7 +33,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
     {
         var answer = 0L;
 
-        (var laserCoordinate, _) = GetMonitoringStationDetails();
+        var (laserCoordinate, _) = GetMonitoringStationDetails();
 
         // Get vaporization info for all asteroids: coordinate, degree and distance from monitoring station
         var vaporizationInfoList = new List<AsteroidVaporizationDetails>();
@@ -64,7 +64,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
         var counter = 0;
         while(queue.TryDequeue(out var vaporizationInfo))
         {
-            if (vaporizationInfo.Degree == laserDegree) // Deal with it on the next round
+            if (laserDegree.HasValue && Math.Abs(vaporizationInfo.Degree - laserDegree.Value) < double.Epsilon) // Deal with it on the next round
             {
                 queue.Enqueue(vaporizationInfo);
             }
@@ -73,11 +73,10 @@ public class Day10PuzzleSolver : IPuzzleSolver
                 laserDegree = vaporizationInfo.Degree;
 
                 counter++;
-                if (counter == 200)
-                {
-                    answer = vaporizationInfo.Coordinate.X * 100 + vaporizationInfo.Coordinate.Y;
-                    break;
-                }
+                if (counter != 200) continue;
+                
+                answer = vaporizationInfo.Coordinate.X * 100 + vaporizationInfo.Coordinate.Y;
+                break;
             }
         }
 
@@ -99,15 +98,14 @@ public class Day10PuzzleSolver : IPuzzleSolver
                 sightVectors.Add(vector.Normalize());
             }
 
-            if (sightVectors.Count > detected)
-            {
-                detected = sightVectors.Count;
-                coordinate = currentAsteroidCoordinate;
-            }
+            if (sightVectors.Count <= detected) continue;
+            
+            detected = sightVectors.Count;
+            coordinate = currentAsteroidCoordinate;
         }
 
         return (coordinate, detected);
     }
 
-    private sealed record AsteroidVaporizationDetails(Coordinate2D Coordinate, Double Degree, long Distance);
+    private sealed record AsteroidVaporizationDetails(Coordinate2D Coordinate, double Degree, long Distance);
 }

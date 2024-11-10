@@ -6,5 +6,5 @@ internal enum Tile
     Wall = 1,
     Block = 2,
     HorizontalPaddle = 3,
-    Ball = 4,
+    Ball = 4
 }

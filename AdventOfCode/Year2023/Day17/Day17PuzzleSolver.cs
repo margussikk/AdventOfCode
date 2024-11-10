@@ -47,29 +47,28 @@ public class Day17PuzzleSolver : IPuzzleSolver
             {
                 return crucible.HeatLoss;
             }
-            else if (visited.Contains(crucible.State))
+
+            if (!visited.Add(crucible.State))
             {
                 continue;
             }
-
-            visited.Add(crucible.State);
 
             var directions = crucible.Direction.Flip() ^ GridDirection.AllSides;
             foreach (var neighborCell in _cityBlockHeatLosses.SideNeighbors(crucible.Coordinate, directions))
             {
                 var newDirection = crucible.Coordinate.DirectionToward(neighborCell.Coordinate);
 
-                if ((newDirection != crucible.Direction && crucible.Steps >= minSteps) ||
-                    ((newDirection == crucible.Direction || crucible.Direction == GridDirection.None) && crucible.Steps < maxSteps))
-                {
-                    var newSteps = newDirection != crucible.Direction ? 1 : crucible.Steps + 1;
-                    var newHeatLoss = crucible.HeatLoss + neighborCell.Object;
+                if ((newDirection == crucible.Direction || crucible.Steps < minSteps) &&
+                    ((newDirection != crucible.Direction && crucible.Direction != GridDirection.None) ||
+                     crucible.Steps >= maxSteps)) continue;
+                
+                var newSteps = newDirection != crucible.Direction ? 1 : crucible.Steps + 1;
+                var newHeatLoss = crucible.HeatLoss + neighborCell.Object;
 
-                    var newCrucible = new Crucible(neighborCell.Coordinate, newDirection, newSteps, newHeatLoss);
-
-                    var distance = MeasurementFunctions.ManhattanDistance(neighborCell.Coordinate, endCoordinate);
-                    crucibles.Enqueue(newCrucible, newHeatLoss + distance);
-                }
+                var newCrucible = new Crucible(neighborCell.Coordinate, newDirection, newSteps, newHeatLoss);
+                
+                var distance = MeasurementFunctions.ManhattanDistance(neighborCell.Coordinate, endCoordinate);
+                crucibles.Enqueue(newCrucible, newHeatLoss + distance);
             }
         }
 

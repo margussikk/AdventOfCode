@@ -1,9 +1,14 @@
 ﻿namespace AdventOfCode.Year2020.Day18;
 
-internal class OperatorElement(OperatorType operatorType) : IElement
+internal class OperatorElement : IElement
 {
-    public OperatorType OperatorType { get; } = operatorType;
+    public OperatorType OperatorType { get; }
 
+    public OperatorElement(OperatorType operatorType)
+    {
+        OperatorType = operatorType;
+    }
+    
     public long Calculate(long value1, long value2)
     {
         return OperatorType switch
@@ -16,17 +21,11 @@ internal class OperatorElement(OperatorType operatorType) : IElement
 
     public override string ToString()
     {
-        if (OperatorType == OperatorType.Addition)
+        return OperatorType switch
         {
-            return "+";
-        }
-        else if (OperatorType == OperatorType.Multiplication)
-        {
-            return "*";
-        }
-        else
-        {
-            return string.Empty;
-        }
+            OperatorType.Addition => "+",
+            OperatorType.Multiplication => "*",
+            _ => string.Empty
+        };
     }
 }

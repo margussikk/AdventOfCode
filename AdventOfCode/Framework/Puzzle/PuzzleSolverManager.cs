@@ -103,21 +103,15 @@ public static class PuzzleSolverManager
 
     private static string FormatElapsedTime(TimeSpan timeSpan)
     {
-        if (timeSpan.TotalMilliseconds > 1000)
+        return timeSpan.TotalMilliseconds switch
         {
-            return $"{Convert.ToInt32(timeSpan.TotalMilliseconds / 1000)} s {Convert.ToInt32(timeSpan.TotalMilliseconds % 1000)} ms";
-        }
-        else if (timeSpan.TotalMilliseconds > 1)
-        {
-            return string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMilliseconds:0.##} ms");
-        }
-        else
-        {
-            return string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMicroseconds:0.##} us");
-        }
+            > 1000 => $"{Convert.ToInt32(timeSpan.TotalMilliseconds / 1000)} s {Convert.ToInt32(timeSpan.TotalMilliseconds % 1000)} ms",
+            > 1 => string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMilliseconds:0.##} ms"),
+            _ => string.Create(CultureInfo.InvariantCulture, $"{timeSpan.TotalMicroseconds:0.##} us")
+        };
     }
 
-    private sealed class TypeOrderer : DefaultOrderer, IOrderer
+    private sealed class TypeOrderer : DefaultOrderer
     {
         public override IEnumerable<BenchmarkCase> GetSummaryOrder(ImmutableArray<BenchmarkCase> benchmarksCases, Summary summary)
         {

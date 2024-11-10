@@ -4,9 +4,9 @@ namespace AdventOfCode.Year2022.Day09;
 
 internal class Instruction
 {
-    public GridDirection Direction { get; private set; }
+    public GridDirection Direction { get; private init; }
 
-    public int Steps { get; private set; }
+    public int Steps { get; private init; }
 
     public static Instruction Parse(string line)
     {
@@ -21,10 +21,10 @@ internal class Instruction
             _ => throw new InvalidOperationException()
         };
 
-        return new Instruction()
+        return new Instruction
         {
             Direction = direction,
-            Steps = int.Parse(splits[1]),
+            Steps = int.Parse(splits[1])
         };
     }
 }

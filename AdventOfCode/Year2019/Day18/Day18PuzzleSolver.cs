@@ -36,18 +36,17 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
                 _part1Grid[row, column] = tile;
 
-
-                if (tile == Tile.Entrance)
+                switch (tile)
                 {
-                    _part1Entrances[new GridCoordinate(row, column)] = character;
-                }
-                else if (tile == Tile.Key)
-                {
-                    _keys[new GridCoordinate(row, column)] = character;
-                }
-                else if (tile == Tile.Door)
-                {
-                    _doors[new GridCoordinate(row, column)] = character;
+                    case Tile.Entrance:
+                        _part1Entrances[new GridCoordinate(row, column)] = character;
+                        break;
+                    case Tile.Key:
+                        _keys[new GridCoordinate(row, column)] = character;
+                        break;
+                    case Tile.Door:
+                        _doors[new GridCoordinate(row, column)] = character;
+                        break;
                 }
             }
         }
@@ -79,12 +78,12 @@ public class Day18PuzzleSolver : IPuzzleSolver
         part2Grid[entranceCoordinate.Move(GridDirection.Down)] = Tile.Wall;
         part2Grid[entranceCoordinate.Move(GridDirection.DownRight)] = Tile.Entrance;
 
-        var part2Entrances = new Dictionary<GridCoordinate, char>()
+        var part2Entrances = new Dictionary<GridCoordinate, char>
         {
             [entranceCoordinate.Move(GridDirection.UpLeft)] = '@',
             [entranceCoordinate.Move(GridDirection.UpRight)] = '$',
             [entranceCoordinate.Move(GridDirection.DownLeft)] = '~',
-            [entranceCoordinate.Move(GridDirection.DownRight)] = '%',
+            [entranceCoordinate.Move(GridDirection.DownRight)] = '%'
         };
 
         var answer = CountFewestSteps(part2Grid, part2Entrances);
@@ -114,51 +113,50 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
             while (queue.TryDequeue(out gridWalker))
             {
-                if (visited.Add(gridWalker.CurrentCoordinate))
+                if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
+                
+                var tile = grid[gridWalker.CurrentCoordinate];
+
+                if (gridWalker.StartCoordinate != gridWalker.CurrentCoordinate && tile is Tile.Key or Tile.Door)
                 {
-                    var tile = grid[gridWalker.CurrentCoordinate];
-
-                    if (gridWalker.StartCoordinate != gridWalker.CurrentCoordinate && (tile is Tile.Key or Tile.Door))
+                    var sourceTile = grid[gridWalker.StartCoordinate];
+                    var sourceName = sourceTile switch
                     {
-                        var sourceTile = grid[gridWalker.StartCoordinate];
-                        var sourceName = sourceTile switch
-                        {
-                            Tile.Entrance => entrances[gridWalker.StartCoordinate].ToString(),
-                            Tile.Key => _keys[gridWalker.StartCoordinate].ToString(),
-                            Tile.Door => _doors[gridWalker.StartCoordinate].ToString(),
-                            _ => throw new InvalidOperationException("Invalid source tile")
-                        };
+                        Tile.Entrance => entrances[gridWalker.StartCoordinate].ToString(),
+                        Tile.Key => _keys[gridWalker.StartCoordinate].ToString(),
+                        Tile.Door => _doors[gridWalker.StartCoordinate].ToString(),
+                        _ => throw new InvalidOperationException("Invalid source tile")
+                    };
 
-                        var destinationTile = grid[gridWalker.CurrentCoordinate];
-                        var destinationName = destinationTile switch
-                        {
-                            Tile.Key => _keys[gridWalker.CurrentCoordinate].ToString(),
-                            Tile.Door => _doors[gridWalker.CurrentCoordinate].ToString(),
-                            _ => throw new InvalidOperationException("Invalid destination tile")
-                        };
-
-                        graphBuilder.AddConnection(sourceName, GraphVertexPort.Any, destinationName, GraphVertexPort.Any, gridWalker.Steps);
-
-                        var sourceVertex = graphBuilder.Vertices[sourceName];
-                        sourceVertex.Object ??= new VertexObject(sourceName, sourceTile);
-
-                        var destinationVertex = graphBuilder.Vertices[destinationName];
-                        destinationVertex.Object ??= new VertexObject(destinationName, destinationTile);
-                    }
-                    else
+                    var destinationTile = grid[gridWalker.CurrentCoordinate];
+                    var destinationName = destinationTile switch
                     {
-                        var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
-                                            .Where(cell => cell.Object != Tile.Wall);
+                        Tile.Key => _keys[gridWalker.CurrentCoordinate].ToString(),
+                        Tile.Door => _doors[gridWalker.CurrentCoordinate].ToString(),
+                        _ => throw new InvalidOperationException("Invalid destination tile")
+                    };
 
-                        foreach (var neighbor in neighbors)
-                        {
-                            var newGridWalker = gridWalker.Clone();
+                    graphBuilder.AddConnection(sourceName, GraphVertexPort.Any, destinationName, GraphVertexPort.Any, gridWalker.Steps);
 
-                            var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
-                            newGridWalker.Move(direction);
+                    var sourceVertex = graphBuilder.Vertices[sourceName];
+                    sourceVertex.Object ??= new VertexObject(sourceName, sourceTile);
 
-                            queue.Enqueue(newGridWalker);
-                        }
+                    var destinationVertex = graphBuilder.Vertices[destinationName];
+                    destinationVertex.Object ??= new VertexObject(destinationName, destinationTile);
+                }
+                else
+                {
+                    var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
+                        .Where(cell => cell.Object != Tile.Wall);
+
+                    foreach (var neighbor in neighbors)
+                    {
+                        var newGridWalker = gridWalker.Clone();
+
+                        var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
+                        newGridWalker.Move(direction);
+
+                        queue.Enqueue(newGridWalker);
                     }
                 }
             }
@@ -191,49 +189,44 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
         while (queue.TryDequeue(out walker, out _))
         {
-            var stateIds = 0;
-            foreach (var vertex in walker.CurrentVertices)
-            {
-                stateIds = stateIds * 100 + vertex.Id;
-            }
+            var stateIds = walker.CurrentVertices.Aggregate(0, (current, vertex) => current * 100 + vertex.Id);
 
             var state = (stateIds, walker.Keys);
-            if (visited.Add(state))
+            if (!visited.Add(state)) continue;
+            
+            foreach (var vertex in walker.CurrentVertices)
             {
-                foreach (var vertex in walker.CurrentVertices)
+                if (vertex.Object is VertexObject { Tile: Tile.Key } currentVertexObject)
                 {
-                    if (vertex.Object is VertexObject currentVertexObject && currentVertexObject.Tile == Tile.Key)
-                    {
-                        walker.Keys |= currentVertexObject.KeyBitMask;
-                    }
+                    walker.Keys |= currentVertexObject.KeyBitMask;
                 }
+            }
 
-                if (walker.Keys == allKeys)
-                {
-                    return walker.Steps;
-                }
+            if (walker.Keys == allKeys)
+            {
+                return walker.Steps;
+            }
 
-                for (var index = 0; index < walker.CurrentVertices.Length; index++)
+            for (var index = 0; index < walker.CurrentVertices.Length; index++)
+            {
+                foreach (var edge in walker.CurrentVertices[index].Edges.Where(e => e.SourceVertex == walker.CurrentVertices[index]))
                 {
-                    foreach (var edge in walker.CurrentVertices[index].Edges.Where(e => e.SourceVertex == walker.CurrentVertices[index]))
+                    if (edge.DestinationVertex.Object is not VertexObject destinationObject ||
+                        (destinationObject.Tile != Tile.Key &&
+                         (destinationObject.Tile != Tile.Door ||
+                          (walker.Keys & destinationObject.KeyBitMask) == 0))) continue;
+                    
+                    GraphVertex[] newVertices = [.. walker.CurrentVertices];
+
+                    newVertices[index] = edge.DestinationVertex;
+
+                    var nextWalker = new VertexWalker(newVertices)
                     {
-                        if (edge.DestinationVertex.Object is VertexObject destinationObject &&
-                            (destinationObject.Tile == Tile.Key ||
-                            (destinationObject.Tile == Tile.Door && ((walker.Keys & destinationObject.KeyBitMask) != 0))))
-                        {
-                            GraphVertex[] newVertices = [.. walker.CurrentVertices];
+                        Steps = walker.Steps + edge.Weight,
+                        Keys = walker.Keys
+                    };
 
-                            newVertices[index] = edge.DestinationVertex;
-
-                            var nextWalker = new VertexWalker(newVertices)
-                            {
-                                Steps = walker.Steps + edge.Weight,
-                                Keys = walker.Keys
-                            };
-
-                            queue.Enqueue(nextWalker, nextWalker.Steps);
-                        }
-                    }
+                    queue.Enqueue(nextWalker, nextWalker.Steps);
                 }
             }
         }

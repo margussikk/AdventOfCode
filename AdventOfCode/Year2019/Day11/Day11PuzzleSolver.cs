@@ -55,14 +55,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 var coordinate = new GridCoordinate(row, column);
 
                 var pixel = paintedPanels.GetValueOrDefault(coordinate, Paint.Black);
-                if (pixel == Paint.White)
-                {
-                    stringBuilder.Append('#');
-                }
-                else
-                {
-                    stringBuilder.Append(' ');
-                }
+                stringBuilder.Append(pixel == Paint.White ? '#' : ' ');
             }
 
             for (var i = 0; i < padding; i++)
@@ -101,17 +94,16 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 paintedPanels[gridWalker.CurrentCoordinate] = result.Outputs[0];
 
                 var turn = result.Outputs[1];
-                if (turn == 0)
+                switch (turn)
                 {
-                    gridWalker.TurnLeft();
-                }
-                else if (turn == 1)
-                {
-                    gridWalker.TurnRight();
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Invalid turn {turn}");
+                    case 0:
+                        gridWalker.TurnLeft();
+                        break;
+                    case 1:
+                        gridWalker.TurnRight();
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Invalid turn {turn}");
                 }
             }
             else

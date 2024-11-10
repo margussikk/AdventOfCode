@@ -25,11 +25,11 @@ public class Day07PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        static int fuelCalculator(int x) => x * (x + 1) / 2;
-
-        var answer = GetAnswer(fuelCalculator);
+        var answer = GetAnswer(FuelCalculator);
 
         return new PuzzleAnswer(answer, 95476244L);
+
+        static int FuelCalculator(int x) => x * (x + 1) / 2;
     }
 
     private int GetAnswer(Func<int, int> calculateFuel)

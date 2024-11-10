@@ -28,22 +28,26 @@ public class Day02PuzzleSolver : IPuzzleSolver
             for(var verb = 0; verb <= 99; verb++)
             {
                 var memoryValue = GetAnswer(noun, verb);
-                if (memoryValue == 19690720)
-                {
-                    var answer = 100 * noun + verb;
-                    return new PuzzleAnswer(answer, 3146);
-                }
+                if (memoryValue != 19690720) continue;
+                
+                var answer = 100 * noun + verb;
+                return new PuzzleAnswer(answer, 3146);
             }
         }
 
         return new PuzzleAnswer("ERROR", "NOT ERROR");
     }
 
-    public long GetAnswer(int address1Value, int address2Value)
+    private long GetAnswer(int address1Value, int address2Value)
     {
-        var computer = new IntCodeComputer(_program);
-        computer.Memory[1] = address1Value;
-        computer.Memory[2] = address2Value;
+        var computer = new IntCodeComputer(_program)
+        {
+            Memory =
+            {
+                [1] = address1Value,
+                [2] = address2Value
+            }
+        };
 
         computer.Run();
 

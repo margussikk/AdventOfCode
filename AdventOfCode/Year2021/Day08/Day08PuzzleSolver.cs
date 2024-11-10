@@ -15,32 +15,27 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = 0;
-
-        foreach (var entry in _entries)
+        var answer = _entries.Sum(entry =>
         {
             var digitSignals = GetDigitSignals(entry);
-            var digitSignals1478 = new int[]
+            var digitSignals1478 = new []
             {
                 digitSignals[1], digitSignals[4], digitSignals[7], digitSignals[8]
             };
 
-            answer += entry.Outputs.Count(digitSignals1478.Contains);
-        }
+            return entry.Outputs.Count(digitSignals1478.Contains);
+        });
 
         return new PuzzleAnswer(answer, 301);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var answer = 0;
-
-        foreach (var entry in _entries)
+        var answer = _entries.Sum(entry =>
         {
             var digitSignals = GetDigitSignals(entry);
-
-            answer += entry.Outputs.Aggregate(0, (acc, next) => acc * 10 + Array.IndexOf(digitSignals, next));
-        }
+            return entry.Outputs.Aggregate(0, (acc, next) => acc * 10 + Array.IndexOf(digitSignals, next));
+        });
 
         return new PuzzleAnswer(answer, 908067);
     }

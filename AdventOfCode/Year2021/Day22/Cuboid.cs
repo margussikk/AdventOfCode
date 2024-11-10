@@ -1,18 +1,29 @@
 ﻿namespace AdventOfCode.Year2021.Day22;
 
-internal class Cuboid(long x1, long x2, long y1, long y2, long z1, long z2, bool on)
+internal class Cuboid
 {
-    public long X1 { get; set; } = x1;
-    public long X2 { get; set; } = x2;
-    public long Y1 { get; set; } = y1;
-    public long Y2 { get; set; } = y2;
-    public long Z1 { get; set; } = z1;
-    public long Z2 { get; set; } = z2;
+    public long X1 { get; }
+    public long X2 { get; }
+    public long Y1 { get; }
+    public long Y2 { get; }
+    public long Z1 { get; }
+    public long Z2 { get; }
 
-    public bool On { get; set; } = on;
+    public bool On { get; }
 
     public long Count => (On ? 1 : -1) * (X2 - X1 + 1) * (Y2 - Y1 + 1) * (Z2 - Z1 + 1);
 
+    public Cuboid(long x1, long x2, long y1, long y2, long z1, long z2, bool on)
+    {
+        X1 = x1;
+        X2 = x2;
+        Y1 = y1;
+        Y2 = y2;
+        Z1 = z1;
+        Z2 = z2;
+        On = on;
+    }
+    
     public bool Intersects(Cuboid other)
     {
         return !(other.X2 < X1 || other.X1 > X2 ||
@@ -24,7 +35,7 @@ internal class Cuboid(long x1, long x2, long y1, long y2, long z1, long z2, bool
     {
         return new Cuboid(Math.Max(X1, other.X1), Math.Min(X2, other.X2),
                           Math.Max(Y1, other.Y1), Math.Min(Y2, other.Y2),
-                          Math.Max(Z1, other.Z1), Math.Min(Z2, other.Z2), !On); // Flip 'On' to not double count this area
+                          Math.Max(Z1, other.Z1), Math.Min(Z2, other.Z2), !On); // Flip 'On' to not doubly count this area
     }
 
     //              a-------------------------b             a = (X1, Y2, Z2), b = (X2, Y2, Z2)
@@ -38,7 +49,7 @@ internal class Cuboid(long x1, long x2, long y1, long y2, long z1, long z2, bool
     //        |     .    k--------l     |     |             q = (o.X1, o.Y1, o.Z1), r = (o.X2, o.Y1, o.Z1)
     //        |     .   /|       /|     |     |
     //        |     .  m--------n |     |     |             Image shows the case when the other cuboid is entirely inside the first cuboid,
-    //        |     .  | |      | |     |     |             in that case entire other cuboid is the intersection and substraction creates 6 new cuboids.
+    //        |     .  | |      | |     |     |             in that case entire another cuboid is the intersection and substraction creates 6 new cuboids.
     //        |     e..|.|......|.|.....|.....f
     //        |    .   | |      | |     |    /
     //        |   .    | o------|-p     |   /
@@ -56,13 +67,13 @@ internal class Cuboid(long x1, long x2, long y1, long y2, long z1, long z2, bool
 
         if (Z1 < intersection.Z1)
         {
-            // Front part. After slicing through q-m-n-r panel, take the front part
+            // Front part. After slicing through the q-m-n-r panel, take the front part
             cuboids.Add(new Cuboid(X1, X2, Y1, Y2, Z1, intersection.Z1 - 1, true));
         }
 
         if (intersection.Z2 < Z2)
         {
-            // Back part. After slicing through o-k-l-p panel, take the back part
+            // Back part. After slicing through the o-k-l-p panel, take the back part
             cuboids.Add(new Cuboid(X1, X2, Y1, Y2, intersection.Z2 + 1, Z2, true));
         }
 

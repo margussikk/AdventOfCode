@@ -39,7 +39,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var defaultPixel = false;
         var grid = _image;
 
-        for (int i = 0; i < enhancementCount; i++)
+        for (var i = 0; i < enhancementCount; i++)
         {
             grid = Enhance(grid, _imageEnhancementAlgorithm, defaultPixel);
             defaultPixel = _imageEnhancementAlgorithm[defaultPixel ? 511 : 0];
@@ -53,7 +53,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var litPixelsCount = 0;
         for (var row = 0; row < grid.Height; row++)
         {
-            for (int column = 0; column < grid.Width; column++)
+            for (var column = 0; column < grid.Width; column++)
             {
                 if (grid[row, column])
                 {

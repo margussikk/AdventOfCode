@@ -1,7 +1,5 @@
-﻿using AdventOfCode.Utilities.Numerics;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -57,10 +55,10 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
     public bool TryFindOverlap(LineSegment2D other, [MaybeNullWhen(false)] out LineSegment2D overlapLineSegment)
     {
         // Find the four orientations needed for general and special cases 
-        int orientation1 = FindOrientation(Start, End, other.Start);
-        int orientation2 = FindOrientation(Start, End, other.End);
-        int orientation3 = FindOrientation(other.Start, other.End, Start);
-        int orientation4 = FindOrientation(other.Start, other.End, End);
+        var orientation1 = FindOrientation(Start, End, other.Start);
+        var orientation2 = FindOrientation(Start, End, other.End);
+        var orientation3 = FindOrientation(other.Start, other.End, Start);
+        var orientation4 = FindOrientation(other.Start, other.End, End);
 
         // General case 
         if (orientation1 != orientation2 && orientation3 != orientation4)
@@ -71,7 +69,7 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
             var determinant = vector.DX * otherVector.DY - otherVector.DX * vector.DY;
 
             var t = Convert.ToDouble((Start.Y - other.Start.Y) * otherVector.DX - (Start.X - other.Start.X) * otherVector.DY) / determinant;
-            if (t >= 0 && t <= 1)
+            if (t is >= 0 and <= 1)
             {
                 var intersectionCoordinate = Start + vector * t;
                 overlapLineSegment = new LineSegment2D(intersectionCoordinate, intersectionCoordinate);
@@ -79,7 +77,7 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
             }
 
             var u = Convert.ToDouble((Start.X - other.Start.X) * vector.DY - (End.Y - other.Start.Y) * vector.DX) / determinant;
-            if (u >= 0 && u <= 1)
+            if (u is >= 0 and <= 1)
             {
                 var intersectionCoordinate = other.Start + vector * u;
                 overlapLineSegment = new LineSegment2D(intersectionCoordinate, intersectionCoordinate);
@@ -90,24 +88,23 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
             return false;
         }
         // Special Cases 
-        else if ((orientation1 == 0 && IsOnSegment(Start, other.Start, End)) ||
-                 (orientation2 == 0 && IsOnSegment(Start, other.End, End)) ||
-                 (orientation3 == 0 && IsOnSegment(other.Start, Start, other.End)) ||
-                 (orientation4 == 0 && IsOnSegment(other.Start, End, other.End)))
+
+        if ((orientation1 == 0 && IsOnSegment(Start, other.Start, End)) ||
+            (orientation2 == 0 && IsOnSegment(Start, other.End, End)) ||
+            (orientation3 == 0 && IsOnSegment(other.Start, Start, other.End)) ||
+            (orientation4 == 0 && IsOnSegment(other.Start, End, other.End)))
         {
             Coordinate2D[] coordinates = [Start, End, other.Start, other.End];
             var orderedCoordinates = coordinates.OrderBy(c => c.X)
-                                                .ThenBy(c => c.Y)
-                                                .ToList();
+                .ThenBy(c => c.Y)
+                .ToList();
 
             overlapLineSegment = new LineSegment2D(orderedCoordinates[1], orderedCoordinates[2]);
             return true;
         }
-        else
-        {
-            overlapLineSegment = default;
-            return false;
-        }
+
+        overlapLineSegment = default;
+        return false;
     }
 
     // Given three collinear points, function checks if point lies on line segment
@@ -120,14 +117,14 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
     }
 
     // To find orientation of ordered triplet. 
-    // The function returns following values 
+    // The function returns the following values 
     // 0 --> Collinear 
     // 1 --> Clockwise 
     // 2 --> Counter clockwise 
     private static int FindOrientation(Coordinate2D coordinate1, Coordinate2D coordinate2, Coordinate2D coordinate3)
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-points/ 
-        // for details of below formula. 
+        // for details of the below formula. 
 
         var val = (coordinate2.Y - coordinate1.Y) * (coordinate3.X - coordinate2.X) -
                   (coordinate2.X - coordinate1.X) * (coordinate3.Y - coordinate2.Y);
@@ -136,7 +133,7 @@ internal class LineSegment2D : IEnumerable<Coordinate2D>
         {
             0 => 0, // Collinear
             > 0 => 1, // Clockwise
-            _ => 2, // Counter clockwise 
+            _ => 2 // Counterclockwise 
         };
     }
 }

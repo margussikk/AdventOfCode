@@ -1,5 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using System.Reflection.Metadata.Ecma335;
 
 namespace AdventOfCode.Year2020.Day10;
 
@@ -21,7 +20,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
         joltageDifferences[2]++; // Built-in is always 3 higher
 
-        for (int index = 0; index < joltages.Count - 1; index++)
+        for (var index = 0; index < joltages.Count - 1; index++)
         {
             var difference = joltages[index + 1] - joltages[index];
             joltageDifferences[difference - 1]++;

@@ -1,13 +1,21 @@
 ﻿namespace AdventOfCode.Year2021.Day21;
 
-internal struct GameState(int player1Position, int player1Score, int player2Position, int player2Score) : IEquatable<GameState>
+internal readonly struct GameState : IEquatable<GameState>
 {
-    public int ActivePlayerPosition { get; set; } = player1Position;
-    public int IdlePlayerPosition { get; set; } = player2Position;
-    public int ActivePlayerScore { get; set; } = player1Score;
-    public int IdlePlayerScore { get; set; } = player2Score;
+    public int ActivePlayerPosition { get; }
+    public int ActivePlayerScore { get; }
+    public int IdlePlayerPosition { get; }
+    public int IdlePlayerScore { get; }
 
-    public readonly bool Equals(GameState other)
+    public GameState(int activePlayerPosition, int activePlayerScore, int idlePlayerPosition, int idlePlayerScore)
+    {
+        ActivePlayerPosition = activePlayerPosition;
+        ActivePlayerScore = activePlayerScore;
+        IdlePlayerPosition = idlePlayerPosition;
+        IdlePlayerScore = idlePlayerScore;
+    }
+    
+    public bool Equals(GameState other)
     {
         return other.ActivePlayerPosition == ActivePlayerPosition
             && other.ActivePlayerScore == ActivePlayerScore
@@ -15,9 +23,9 @@ internal struct GameState(int player1Position, int player1Score, int player2Posi
             && other.IdlePlayerScore == IdlePlayerScore;
     }
 
-    public override readonly bool Equals(object? obj) => obj is GameState other && Equals(other);
+    public override bool Equals(object? obj) => obj is GameState other && Equals(other);
 
-    public override readonly int GetHashCode() => (ActivePlayerPosition, IdlePlayerPosition, ActivePlayerScore, IdlePlayerScore).GetHashCode();
+    public override int GetHashCode() => (ActivePlayerPosition, IdlePlayerPosition, ActivePlayerScore, IdlePlayerScore).GetHashCode();
 
     public static bool operator ==(GameState left, GameState right)
     {

@@ -4,7 +4,8 @@ namespace AdventOfCode.Utilities.Text;
 
 internal static class Ocr
 {
-    private static readonly string _smallLetters = "ABCEFGHIJKLOPRSUYZ";
+    private const string SmallLetters = "ABCEFGHIJKLOPRSUYZ";
+
     private static readonly string[] _smallLetterPatternLines =
     [
         " ##  ###   ##  #### ####  ##  #  #  ###   ## #  # #     ##  ###  ###   ### #  # #   ##### ",
@@ -15,7 +16,8 @@ internal static class Ocr
         "#  # ###   ##  #### #     ### #  #  ###  ##  #  # ####  ##  #    #  # ###   ##    #  #### "
     ];
 
-    private static readonly string _largeLetters = "ABCEFGHJKLNPRXZ";
+    private const string LargeLetters = "ABCEFGHJKLNPRXZ";
+
     private static readonly string[] _largeLetterPatternLines =
     [
         "  ##    #####    ####   ######  ######   ####   #    #     ###  #    #  #       #    #  #####   #####   #    #  ######  ",
@@ -41,29 +43,26 @@ internal static class Ocr
         if (textLines.Length == _smallLetterPatternLines.Length)
         {
             // Small letters
-            var smallLetterWidth = _smallLetterPatternLines[0].Length / _smallLetters.Length;
+            var smallLetterWidth = _smallLetterPatternLines[0].Length / SmallLetters.Length;
             if (textLines[0].Length % smallLetterWidth != 0)
             {
                 throw new InvalidOperationException("Unexpected text width");
             }
 
-            return ParseLetters(textLines, _smallLetters, _smallLetterPatternLines);
+            return ParseLetters(textLines, SmallLetters, _smallLetterPatternLines);
         }
-        else if (textLines.Length == _largeLetterPatternLines.Length)
-        {
-            // Large letters
-            var largeLetterWidth = _largeLetterPatternLines[0].Length / _largeLetters.Length;
-            if (textLines[0].Length % largeLetterWidth != 0)
-            {
-                throw new InvalidOperationException("Unexpected text width");
-            }
 
-            return ParseLetters(textLines, _largeLetters, _largeLetterPatternLines);
-        }
-        else
-        {
+        if (textLines.Length != _largeLetterPatternLines.Length)
             throw new InvalidOperationException("Unexpected text height");
+        
+        // Large letters
+        var largeLetterWidth = _largeLetterPatternLines[0].Length / LargeLetters.Length;
+        if (textLines[0].Length % largeLetterWidth != 0)
+        {
+            throw new InvalidOperationException("Unexpected text width");
         }
+
+        return ParseLetters(textLines, LargeLetters, _largeLetterPatternLines);
     }
 
     private static string ParseLetters(string[] textLines, string letters, string[] patternLines)
@@ -98,11 +97,10 @@ internal static class Ocr
                     }
                 }
 
-                if (matched)
-                {
-                    stringBuilder.Append(letters[letterIndex]);
-                    parsed = true;
-                }
+                if (!matched) continue;
+                
+                stringBuilder.Append(letters[letterIndex]);
+                parsed = true;
             }
 
             if (!parsed)

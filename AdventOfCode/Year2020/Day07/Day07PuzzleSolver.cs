@@ -1,5 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AdventOfCode.Year2020.Day07;
 
@@ -65,12 +64,10 @@ public class Day07PuzzleSolver : IPuzzleSolver
 
         while (stack.TryPop(out var bag))
         {
-            if (countedBags.Contains(bag.Color))
+            if (!countedBags.Add(bag.Color))
             {
                 continue;
             }
-
-            countedBags.Add(bag.Color);
 
             foreach (var newBag in bag.Containers)
             {

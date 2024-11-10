@@ -6,5 +6,5 @@ internal enum Tile
     PositiveSlopeMirror,
     NegativeSlopeMirror,
     HorizontalSplitter,
-    VerticalSplitter,
+    VerticalSplitter
 }

@@ -25,10 +25,10 @@ internal class Sensor
 
         _manhattanDistance = MeasurementFunctions.ManhattanDistance(Coordinate, BeaconCoordinate);
 
-        TopCoordinate = new(Coordinate.X, Coordinate.Y - _manhattanDistance);
-        BottomCoordinate = new(Coordinate.X, Coordinate.Y + _manhattanDistance);
-        LeftCoordinate = new(Coordinate.X - _manhattanDistance, Coordinate.Y);
-        RightCoordinate = new(Coordinate.X + _manhattanDistance, Coordinate.Y);
+        TopCoordinate = new Coordinate2D(Coordinate.X, Coordinate.Y - _manhattanDistance);
+        BottomCoordinate = new Coordinate2D(Coordinate.X, Coordinate.Y + _manhattanDistance);
+        LeftCoordinate = new Coordinate2D(Coordinate.X - _manhattanDistance, Coordinate.Y);
+        RightCoordinate = new Coordinate2D(Coordinate.X + _manhattanDistance, Coordinate.Y);
     }
 
     public long GetAdjustedLeftX(long y)

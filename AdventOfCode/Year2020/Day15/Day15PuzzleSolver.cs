@@ -28,7 +28,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 21768614);
     }
 
-    public int GetSpokenNumber(int spokenNumberIndex)
+    private int GetSpokenNumber(int spokenNumberIndex)
     {
         var lastSeenNumberIndexes = new Dictionary<int, int>();
 

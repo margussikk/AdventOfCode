@@ -1,14 +1,24 @@
 ﻿namespace AdventOfCode.Year2023.Day24;
 
-internal class Hailstone(long x, long y, long z, long dX, long dY, long dZ)
+internal class Hailstone
 {
-    public long X { get; } = x;
-    public long Y { get; } = y;
-    public long Z { get; } = z;
-    public long DX { get; } = dX;
-    public long DY { get; } = dY;
-    public long DZ { get; } = dZ;
+    public long X { get; }
+    public long Y { get; }
+    public long Z { get; }
+    public long DX { get; }
+    public long DY { get; }
+    public long DZ { get; }
 
+    public Hailstone(long x, long y, long z, long dX, long dY, long dZ)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+        DX = dX;
+        DY = dY;
+        DZ = dZ;
+    }
+    
     public static Hailstone Parse(string input)
     {
         var splits = input.Split('@');

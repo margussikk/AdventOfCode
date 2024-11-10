@@ -1,6 +1,11 @@
 ﻿namespace AdventOfCode.Year2021.Day24;
 
-internal class VariableParameter(int variable) : IInstructionParameter
+internal class VariableParameter : IInstructionParameter
 {
-    public int Variable { get; } = variable;
+    public int Variable { get; }
+
+    public VariableParameter(int variable)
+    {
+        Variable = variable;
+    }
 }

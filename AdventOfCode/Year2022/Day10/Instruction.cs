@@ -2,22 +2,16 @@
 
 internal abstract class Instruction
 {
-    public int CyclesCount { get; protected set; }
+    public int CyclesCount { get; protected init; }
 
     public static Instruction Parse(string line)
     {
         var splits = line.Split(' ');
-        if (splits[0] == "noop")
+        return splits[0] switch
         {
-            return new NoOpInstruction();
-        }
-        else if (splits[0] == "addx")
-        {
-            return new AddXInstruction(int.Parse(splits[1]));
-        }
-        else
-        {
-            throw new InvalidOperationException();
-        }
+            "noop" => new NoOpInstruction(),
+            "addx" => new AddXInstruction(int.Parse(splits[1])),
+            _ => throw new InvalidOperationException()
+        };
     }
 }

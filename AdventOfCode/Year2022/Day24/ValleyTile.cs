@@ -10,5 +10,5 @@ internal enum ValleyTile
     RightBlizzard,
     TwoBlizzards,
     ThreeBlizzards,
-    FourBlizzards,
+    FourBlizzards
 }

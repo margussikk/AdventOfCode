@@ -31,26 +31,25 @@ public class Day04PuzzleSolver : IPuzzleSolver
     {
         var count = 0;
         
-        var minBaseValue = (_passwordRange.Start / divider) * divider;       
-        var maxBaseValue = (_passwordRange.End / divider) * divider;        
+        var minBaseValue = _passwordRange.Start / divider * divider;       
+        var maxBaseValue = _passwordRange.End / divider * divider;        
 
-        var minDigit = (baseValue / (divider * 10)) % 10;
+        var minDigit = baseValue / (divider * 10) % 10;
         for (var digit = minDigit; digit <= 9; digit++)
         {
             var newBaseValue = baseValue + digit * divider;
-            if (newBaseValue >= minBaseValue && newBaseValue <= maxBaseValue)
+            if (newBaseValue < minBaseValue || newBaseValue > maxBaseValue) continue;
+            
+            if (divider == 1)
             {
-                if (divider == 1)
+                if (adjacentDigitsCheck(newBaseValue))
                 {
-                    if (adjacentDigitsCheck(newBaseValue))
-                    {
-                        count++;
-                    }
+                    count++;
                 }
-                else
-                {
-                    count += CountPasswords(newBaseValue, divider / 10, adjacentDigitsCheck);
-                }
+            }
+            else
+            {
+                count += CountPasswords(newBaseValue, divider / 10, adjacentDigitsCheck);
             }
         }
 

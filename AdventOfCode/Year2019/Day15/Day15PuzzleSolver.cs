@@ -41,20 +41,18 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 break;
             }
 
-            if (visited.Add(gridWalker.CurrentCoordinate))
+            if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
+            
+            foreach (var neighbor in grid.SideNeighbors(gridWalker.CurrentCoordinate).Where(c => c.Object != Tile.Wall))
             {
-                foreach (var neighbor in grid.SideNeighbors(gridWalker.CurrentCoordinate).Where(c => c.Object != Tile.Wall))
-                {
-                    var nextGridWalker = gridWalker.Clone();
+                var nextGridWalker = gridWalker.Clone();
 
-                    var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
-                    nextGridWalker.Move(direction);
+                var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
+                nextGridWalker.Move(direction);
 
-                    stack.Push(nextGridWalker);
-                }
+                stack.Push(nextGridWalker);
             }
         }
-
 
         return new PuzzleAnswer(answer, 204);
     }
@@ -68,7 +66,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         var visited = new HashSet<GridCoordinate>();
 
-        var oxygenSpreaders = new List<GridCoordinate>() { oxygenSystemCoordinate };
+        var oxygenSpreaders = new List<GridCoordinate> { oxygenSystemCoordinate };
 
         var answer = -1;
 
@@ -76,15 +74,14 @@ public class Day15PuzzleSolver : IPuzzleSolver
         {
             var newOxygenSpreaders = new List<GridCoordinate>();
 
-            foreach(var oxygenSpreader in oxygenSpreaders)
+            foreach(var oxygenSpreader in oxygenSpreaders.Where(os => visited.Add(os)))
             {
-                if (visited.Add(oxygenSpreader))
-                {
-                    var neighborCoordinates = grid.SideNeighbors(oxygenSpreader)
-                                                  .Where(cell => cell.Object != Tile.Wall && !visited.Contains(cell.Coordinate))
-                                                  .Select(cell => cell.Coordinate);
-                    newOxygenSpreaders.AddRange(neighborCoordinates);
-                }
+                var neighborCoordinates = grid
+                    .SideNeighbors(oxygenSpreader)
+                    .Where(cell => cell.Object != Tile.Wall && !visited.Contains(cell.Coordinate))
+                    .Select(cell => cell.Coordinate);
+                
+                newOxygenSpreaders.AddRange(neighborCoordinates);
             }
 
             oxygenSpreaders = newOxygenSpreaders;
@@ -187,21 +184,20 @@ public class Day15PuzzleSolver : IPuzzleSolver
             else
             {
                 var direction = stack.Pop();
-                if (direction != GridDirection.Start)
+                if (direction == GridDirection.Start) continue;
+                
+                var backDirection = direction.Flip();
+                var robotDirection = GetRobotDirection(backDirection);
+
+                var result = computer.Run(robotDirection);
+
+                var output = (Tile)result.Outputs[0];
+                if (output == Tile.Wall)
                 {
-                    var backDirection = direction.Flip();
-                    var robotDirection = GetRobotDirection(backDirection);
-
-                    var result = computer.Run(robotDirection);
-
-                    var output = (Tile)result.Outputs[0];
-                    if (output == Tile.Wall)
-                    {
-                        throw new InvalidOperationException("Shouldn't hit the wall");
-                    }
-
-                    currentCoordinate = currentCoordinate.Move(backDirection);
+                    throw new InvalidOperationException("Shouldn't hit the wall");
                 }
+
+                currentCoordinate = currentCoordinate.Move(backDirection);
             }
         }
 

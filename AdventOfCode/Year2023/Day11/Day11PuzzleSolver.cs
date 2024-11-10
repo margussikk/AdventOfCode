@@ -45,29 +45,31 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     private long GetDistance(long expansionFactor)
     {
-        long sumOfLengths = 0L;
+        var sumOfLengths = 0L;
 
         foreach (var (galaxy1, galaxy1Index) in _galaxyCoordinates.Select((item, index) => (item, index)).Take(_galaxyCoordinates.Count - 1))
         {
-            foreach (var galaxy2 in _galaxyCoordinates.Skip(galaxy1Index + 1))
-            {
-                // Direct
-                var directDistance = MeasurementFunctions.ManhattanDistance(galaxy1, galaxy2);
+            sumOfLengths += _galaxyCoordinates
+                .Skip(galaxy1Index + 1)
+                .Sum(galaxy2 =>
+                {
+                    // Direct
+                    var directDistance = MeasurementFunctions.ManhattanDistance(galaxy1, galaxy2);
 
-                // Expanded
-                var minRow = Math.Min(galaxy1.Row, galaxy2.Row);
-                var maxRow = Math.Max(galaxy1.Row, galaxy2.Row);
-                var expandingRowsBetween = _expandingRows.Count(x => x > minRow && x < maxRow);
+                    // Expanded
+                    var minRow = Math.Min(galaxy1.Row, galaxy2.Row);
+                    var maxRow = Math.Max(galaxy1.Row, galaxy2.Row);
+                    var expandingRowsBetween = _expandingRows.Count(x => x > minRow && x < maxRow);
 
-                var minColumn = Math.Min(galaxy1.Column, galaxy2.Column);
-                var maxColumn = Math.Max(galaxy1.Column, galaxy2.Column);
-                var expandingColumnsBetween = _expandingColumns.Count(x => x > minColumn && x < maxColumn);
+                    var minColumn = Math.Min(galaxy1.Column, galaxy2.Column);
+                    var maxColumn = Math.Max(galaxy1.Column, galaxy2.Column);
+                    var expandingColumnsBetween = _expandingColumns.Count(x => x > minColumn && x < maxColumn);
 
-                var expandedDistance = (expandingRowsBetween + expandingColumnsBetween) * (expansionFactor - 1);
-
-                // Total
-                sumOfLengths += directDistance + expandedDistance;
-            }
+                    var expandedDistance = (expandingRowsBetween + expandingColumnsBetween) * (expansionFactor - 1);
+                    
+                    // Total
+                    return directDistance + expandedDistance;
+                });
         }
 
         return sumOfLengths;

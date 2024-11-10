@@ -110,14 +110,13 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
             var twelveDifferences = differences.ToLookup(x => x)
                                                .FirstOrDefault(x => x.Count() >= 12);
-            if (twelveDifferences != null)
-            {
-                misalignedScanner.Aligned = true;
-                misalignedScanner.Orientation = orientation;
-                misalignedScanner.AbsoluteLocation = alignedScanner.AbsoluteLocation + twelveDifferences.Key;
+            if (twelveDifferences == null) continue;
+            
+            misalignedScanner.Aligned = true;
+            misalignedScanner.Orientation = orientation;
+            misalignedScanner.AbsoluteLocation = alignedScanner.AbsoluteLocation + twelveDifferences.Key;
 
-                return;
-            }
+            return;
         }
     }
 }

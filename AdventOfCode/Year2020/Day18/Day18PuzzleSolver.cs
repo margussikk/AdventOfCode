@@ -15,19 +15,19 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        static bool precedence(OperatorType previousOperatorType, OperatorType currentOperatorType) => true;
-
-        var answer = _expressions.Sum(e => e.Evaluate(precedence));
+        var answer = _expressions.Sum(e => e.Evaluate(Precedence));
 
         return new PuzzleAnswer(answer, 11004703763391L);
+
+        static bool Precedence(OperatorType previousOperatorType, OperatorType currentOperatorType) => true;
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        static bool precedence(OperatorType previousOperatorType, OperatorType currentOperatorType) => previousOperatorType <= currentOperatorType;
-
-        var answer = _expressions.Sum(e => e.Evaluate(precedence));
+        var answer = _expressions.Sum(e => e.Evaluate(Precedence));
 
         return new PuzzleAnswer(answer, 290726428573651L);
+
+        static bool Precedence(OperatorType previousOperatorType, OperatorType currentOperatorType) => previousOperatorType <= currentOperatorType;
     }
 }

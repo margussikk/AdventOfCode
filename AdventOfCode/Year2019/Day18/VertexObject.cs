@@ -11,17 +11,11 @@ internal class VertexObject
         Name = name;
         Tile = tile;
 
-        if (tile == Tile.Key)
+        KeyBitMask = tile switch
         {
-            KeyBitMask = 1 << (name[0] - 'a');
-        }
-        else if (tile == Tile.Door)
-        {
-            KeyBitMask = 1 << (name[0] - 'A');
-        }
-        else
-        {
-            KeyBitMask = 0;
-        }
+            Tile.Key => 1 << (name[0] - 'a'),
+            Tile.Door => 1 << (name[0] - 'A'),
+            _ => 0
+        };
     }
 }

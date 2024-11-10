@@ -7,7 +7,7 @@ internal static class MathFunctions
     public static T Modulo<T>(T first, T second) where T : INumber<T>
     {
         var c = first % second;
-        return (c < T.Zero) ? c + second : c;
+        return c < T.Zero ? c + second : c;
     }
 
     public static T GreatestCommonDivisor<T>(T first, T second) where T : INumber<T>
@@ -32,7 +32,7 @@ internal static class MathFunctions
     {
         long result = number;
 
-        for (int i = 1; i < number; i++)
+        for (var i = 1; i < number; i++)
         {
             result *= i;
         }

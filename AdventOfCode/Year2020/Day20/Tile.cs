@@ -6,9 +6,9 @@ namespace AdventOfCode.Year2020.Day20;
 
 internal class Tile
 {
-    public int Id { get; private set; }
+    public int Id { get; private init; }
 
-    public BitGrid Image { get; private set; } = new BitGrid(0, 0);
+    public BitGrid Image { get; private init; } = new(0, 0);
 
     public uint[,] BorderBitmasks { get; private set; } = new uint[0, 0];
 

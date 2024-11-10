@@ -8,7 +8,7 @@ namespace AdventOfCode.Year2023.Day05;
 public class Day05PuzzleSolver : IPuzzleSolver
 {
     private List<long> _seeds = [];
-    private readonly List<Map> _maps = [];
+    private List<Map> _maps = [];
 
     public void ParseInput(string[] inputLines)
     {
@@ -17,14 +17,15 @@ public class Day05PuzzleSolver : IPuzzleSolver
             .Select(long.Parse)
             .ToList();
 
-        foreach (var chunk in inputLines.Skip(2).SelectToChunks()) // Skip "seeds: " line and also assume that the maps are in the correct order
-        {
-            var mappings = chunk.Skip(1) // Skip name
-                                .Select(Mapping.Parse)
-                                .ToList();
-
-            _maps.Add(new Map(mappings));
-        }
+        _maps = inputLines
+            .Skip(2)
+            .SelectToChunks()
+            .Select(chunk => chunk
+                .Skip(1) // Skip name
+                .Select(Mapping.Parse)
+                .ToList())
+            .Select(mappings => new Map(mappings))
+            .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()

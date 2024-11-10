@@ -4,28 +4,18 @@ namespace AdventOfCode.Year2020.Day06;
 
 internal class AnswerGroup
 {
-    public List<int> Answers { get; private set; } = [];
+    public List<int> Answers { get; } = [];
 
     public int CountAnyoneAnswered()
     {
-        var answerTotals = 0;
-
-        foreach (var answer in Answers)
-        {
-            answerTotals |= answer;
-        }
+        var answerTotals = Answers.Aggregate(0, (current, answer) => current | answer);
 
         return BitOperations.PopCount((uint)answerTotals);
     }
 
     public int CountEveryoneAnswered()
     {
-        var answerTotals = int.MaxValue;
-
-        foreach (var answer in Answers)
-        {
-            answerTotals &= answer;
-        }
+        var answerTotals = Answers.Aggregate(int.MaxValue, (current, answer) => current & answer);
 
         return BitOperations.PopCount((uint)answerTotals);
     }
@@ -36,13 +26,8 @@ internal class AnswerGroup
 
         foreach (var line in lines)
         {
-            var answer = 0;
-
-            foreach (var character in line)
-            {
-                var bitmask = 1 << (character - 'a');
-                answer |= bitmask;
-            }
+            var answer = line.Select(character => 1 << (character - 'a'))
+                                .Aggregate(0, (current, bitmask) => current | bitmask);
 
             answerGroup.Answers.Add(answer);
         }

@@ -1,6 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Year2021.Day04;
-using System.Numerics;
 
 namespace AdventOfCode.Year2021.Day23;
 
@@ -14,7 +12,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
     {
         _board1 = Board.Parse(inputLines);
 
-        var inputLines2 = new string[]
+        var inputLines2 = new []
         {
             inputLines[0],
             inputLines[1],
@@ -22,7 +20,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             "  #D#C#B#A#",
             "  #D#B#A#C#",
             inputLines[3],
-            inputLines[4],
+            inputLines[4]
         };
 
         _board2 = Board.Parse(inputLines2);
@@ -76,13 +74,13 @@ public class Day23PuzzleSolver : IPuzzleSolver
             energies[hashCode] = board.Energy;
 
             var nextBoards = board.GetNextBoards();
-            foreach (var nextboard in nextBoards)
+            foreach (var nextBoard in nextBoards)
             {
-                var newHashCode = nextboard.GetStatesHashCode();
+                var newHashCode = nextBoard.GetStatesHashCode();
                 var currentEnergy = energies.GetValueOrDefault(newHashCode, int.MaxValue);
-                if (nextboard.Energy < currentEnergy)
+                if (nextBoard.Energy < currentEnergy)
                 {
-                    queue.Enqueue(nextboard, nextboard.Energy);
+                    queue.Enqueue(nextBoard, nextBoard.Energy);
                 }
             }
         }

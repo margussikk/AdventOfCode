@@ -15,10 +15,14 @@ internal enum GridDirection
     DownLeft = 1 << 6,
     DownRight = 1 << 7,
 
-    LeftRight = Left | Right,
-    UpDown = Up | Down,
+    LeftAndRight = Left | Right,
+    UpAndDown = Up | Down,
+    UpAndLeft = Up | Left,
+    DownAndLeft = Down | Left,
+    UpAndRight = Up | Right,
+    DownAndRight = Down | Right,
     AllSides = Up | Down | Left | Right,
 
     Start = 1 << 10,
-    End = 1 << 11,
+    End = 1 << 11
 }

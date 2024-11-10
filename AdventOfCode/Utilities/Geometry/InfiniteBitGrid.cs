@@ -12,18 +12,18 @@ public class InfiniteBitGrid
         _subGridRowCount = 64;
         _subGridColumnCount = 64;
 
-        _grid = new BitGrid[1, 1]
+        _grid = new BitGrid[,]
         {
             {
-                new BitGrid(_subGridRowCount, _subGridColumnCount)
+                new(_subGridRowCount, _subGridColumnCount)
             }
         };
 
         MinRow = 0;
-        MaxRow = MinRow + (_grid.GetLength(0) * _subGridRowCount) - 1;
+        MaxRow = MinRow + _grid.GetLength(0) * _subGridRowCount - 1;
 
         MinColumn = 0;
-        MaxColumn = MinColumn + (_grid.GetLength(1) * _subGridColumnCount) - 1;
+        MaxColumn = MinColumn + _grid.GetLength(1) * _subGridColumnCount - 1;
     }
 
     public int MinRow { get; private set; }

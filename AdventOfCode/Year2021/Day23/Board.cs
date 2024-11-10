@@ -1,18 +1,16 @@
-﻿using System;
-using System.Numerics;
-using System.Text;
+﻿using System.Text;
 
 namespace AdventOfCode.Year2021.Day23;
 
 internal class Board
 {
-    public State[] Hallway { get; private set; } = new State[11];
+    public State[] Hallway { get; private init; } = new State[11];
 
-    public State[][] Rooms { get; private set; } = new State[4][];
+    public State[][] Rooms { get; private init; } = new State[4][];
 
-    public int Energy { get; set; }
+    public int Energy { get; private set; }
 
-    public Board? PreviousBoard { get; set; }
+    public Board? PreviousBoard { get; init; }
 
     public Board()
     {
@@ -47,16 +45,8 @@ internal class Board
 
     public bool IsSolved()
     {
-        for (var i = 0; i < Rooms.Length; i++)
-        {
-            if (Array.Exists(Rooms[i], x => (int)x != i))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
+        return !Rooms.Where((t, i) => Array.Exists(t, x => (int)x != i)).Any();
+    }    
 
     public static Board Parse(string[] lines)
     {
@@ -119,7 +109,7 @@ internal class Board
                 continue;
             }
 
-            int roomIndex = (int)amphipod;
+            var roomIndex = (int)amphipod;
 
             // Verify that destination does not contain strangers
             var shouldMoveToRoom = ShouldMoveFromHallwayToRoom(amphipod, roomIndex);
@@ -129,17 +119,16 @@ internal class Board
                 continue;
             }
 
-            if (CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, true))
-            {
-                var nextBoard = Copy();
-                var roomSlot = Array.LastIndexOf(nextBoard.Rooms[roomIndex], State.Empty);
+            if (!CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, true)) continue;
+            
+            var nextBoard = Copy();
+            var roomSlot = Array.LastIndexOf(nextBoard.Rooms[roomIndex], State.Empty);
 
-                nextBoard.Energy = Energy + CalculateEnergy(amphipod, roomIndex, roomSlot, hallwaySlot);
-                nextBoard.Rooms[roomIndex][roomSlot] = amphipod;
-                nextBoard.Hallway[hallwaySlot] = State.Empty;
+            nextBoard.Energy = Energy + CalculateEnergy(amphipod, roomIndex, roomSlot, hallwaySlot);
+            nextBoard.Rooms[roomIndex][roomSlot] = amphipod;
+            nextBoard.Hallway[hallwaySlot] = State.Empty;
 
-                boards.Add(nextBoard);
-            }
+            boards.Add(nextBoard);
         }
 
         // Move from room to hallway
@@ -168,7 +157,7 @@ internal class Board
                     continue;
                 }
 
-                var entrances = new int[] { 2, 4, 6, 8 };
+                var entrances = new[] { 2, 4, 6, 8 };
                 for (var hallwaySlot = 0; hallwaySlot < Hallway.Length; hallwaySlot++)
                 {
                     if (entrances.Contains(hallwaySlot))
@@ -177,16 +166,15 @@ internal class Board
                         continue;
                     }
 
-                    if (CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, false))
-                    {
-                        var newBoard = Copy();
+                    if (!CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, false)) continue;
+                    
+                    var newBoard = Copy();
 
-                        newBoard.Energy = Energy + CalculateEnergy(amphipod, roomIndex, roomSlot, hallwaySlot);
-                        newBoard.Rooms[roomIndex][roomSlot] = State.Empty;
-                        newBoard.Hallway[hallwaySlot] = amphipod;
+                    newBoard.Energy = Energy + CalculateEnergy(amphipod, roomIndex, roomSlot, hallwaySlot);
+                    newBoard.Rooms[roomIndex][roomSlot] = State.Empty;
+                    newBoard.Hallway[hallwaySlot] = amphipod;
 
-                        boards.Add(newBoard);
-                    }
+                    boards.Add(newBoard);
                 }
             }
         }
@@ -243,12 +231,16 @@ internal class Board
 
         if (hallwaySlot < entrance)
         {
-            return Hallway.Skip(hallwaySlot + (fromHallwayToRoom ? 1 : 0)).Take(entrance - hallwaySlot).All(x => x == State.Empty);
+            var hallwaySlotOffset = fromHallwayToRoom ? 1 : 0;
+            return Hallway.Skip(hallwaySlot + hallwaySlotOffset)
+                          .Take(entrance - hallwaySlot)
+                          .All(x => x == State.Empty);
         }
-        else
-        {
-            return Hallway.Skip(entrance + (fromHallwayToRoom ? 0 : 1)).Take(hallwaySlot - entrance).All(x => x == State.Empty);
-        }
+
+        var entranceOffset = fromHallwayToRoom ? 0 : 1;
+        return Hallway.Skip(entrance + entranceOffset)
+                      .Take(hallwaySlot - entrance)
+                      .All(x => x == State.Empty);
     }
 
     private int CalculateEnergy(State amphipod, int roomIndex, int roomSlot, int hallwaySlot)
@@ -282,27 +274,10 @@ internal class Board
         // Rooms
         for (var roomSlot = 0; roomSlot < Rooms[0].Length; roomSlot++)
         {
-            if (roomSlot == 0)
-            {
-                stringBuilder.Append("##");
-            }
-            else
-            {
-                stringBuilder.Append("  ");
-            }
-
-            stringBuilder.Append($"#{StateSymbol(Rooms[0][roomSlot])}#{StateSymbol(Rooms[1][roomSlot])}#{StateSymbol(Rooms[2][roomSlot])}#{StateSymbol(Rooms[3][roomSlot])}#");
-
-            if (roomSlot == 0)
-            {
-                stringBuilder.Append("##");
-            }
-            else
-            {
-                stringBuilder.Append("  ");
-            }
-
-            stringBuilder.AppendLine();
+            stringBuilder.Append(roomSlot == 0 ? "##" : "  ")
+                         .Append($"#{StateSymbol(Rooms[0][roomSlot])}#{StateSymbol(Rooms[1][roomSlot])}#{StateSymbol(Rooms[2][roomSlot])}#{StateSymbol(Rooms[3][roomSlot])}#")
+                         .Append(roomSlot == 0 ? "##" : "  ")
+                         .AppendLine();
         }
         stringBuilder.AppendLine("  #########");
         stringBuilder.AppendLine($"Energy = {Energy}");
@@ -312,14 +287,7 @@ internal class Board
         // Local
         static string StateSymbol(State space)
         {
-            if (space == State.Empty)
-            {
-                return ".";
-            }
-            else
-            {
-                return space.ToString();
-            }
+            return space == State.Empty ? "." : space.ToString();
         }
     }
 

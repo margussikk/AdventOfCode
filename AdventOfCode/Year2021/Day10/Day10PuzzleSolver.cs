@@ -10,7 +10,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
         ['('] = ')',
         ['['] = ']',
         ['{'] = '}',
-        ['<'] = '>',
+        ['<'] = '>'
     };
 
     private string[] _inputLines = [];
@@ -27,7 +27,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             [')'] = 3,
             [']'] = 57,
             ['}'] = 1197,
-            ['>'] = 25137,
+            ['>'] = 25137
         };
 
         var answer = 0;
@@ -91,18 +91,17 @@ public class Day10PuzzleSolver : IPuzzleSolver
                 }
             }
 
-            if (!corrupt && stack.Count != 0)
+            if (corrupt || stack.Count == 0) continue;
+            
+            var answer1 = 0L;
+
+            while (stack.Count != 0)
             {
-                var answer1 = 0L;
-
-                while (stack.Count != 0)
-                {
-                    answer1 *= 5;
-                    answer1 += chunkOpenValues[stack.Pop()];
-                }
-
-                scores.Add(answer1);
+                answer1 *= 5;
+                answer1 += chunkOpenValues[stack.Pop()];
             }
+
+            scores.Add(answer1);
         }
 
         var answer = scores

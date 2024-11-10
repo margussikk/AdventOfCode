@@ -18,7 +18,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
         {
             Red = 12,
             Green = 13,
-            Blue = 14,
+            Blue = 14
         };
 
         var answer = _games

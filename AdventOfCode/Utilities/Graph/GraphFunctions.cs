@@ -12,7 +12,7 @@ internal static class GraphFunctions
         var distances = new int[vertices.Count, vertices.Count];
 
         //Fill in the default values
-        var infinity = int.MaxValue / 2 - 1;
+        const int infinity = int.MaxValue / 2 - 1;
         for (var i = 0; i < vertices.Count; i++)
         {
             for (var j = 0; j < vertices.Count; j++)
@@ -39,11 +39,10 @@ internal static class GraphFunctions
                 for (var j = 0; j < vertices.Count; j++)
                 {
                     var newDistance = distances[i, k] + distances[k, j];
-                    if (newDistance < distances[i, j])
-                    {
-                        distances[i, j] = newDistance;
-                        distances[j, i] = newDistance;
-                    }
+                    if (newDistance >= distances[i, j]) continue;
+                    
+                    distances[i, j] = newDistance;
+                    distances[j, i] = newDistance;
                 }
             }
         }

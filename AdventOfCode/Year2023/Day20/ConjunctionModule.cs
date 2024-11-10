@@ -6,7 +6,7 @@ internal class ConjunctionModule(string name, string[] destinationModules) : Mod
 
     public void InitInputPulses(string[] inputModules)
     {
-        InputPulses = inputModules.ToDictionary(x => x, x => false);
+        InputPulses = inputModules.ToDictionary(x => x, _ => false);
     }
 
     public override List<Signal> ProcessSignal(Signal signal)

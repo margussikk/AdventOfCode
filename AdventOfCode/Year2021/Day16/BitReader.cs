@@ -1,22 +1,27 @@
 ﻿namespace AdventOfCode.Year2021.Day16;
 
-internal class BitReader(byte[] bytes)
+internal class BitReader
 {
-    private const int BITS = 8;
-    private readonly byte[] _bytes = bytes;
+    private const int Bits = 8;
+    private readonly byte[] _bytes;
 
-    public int BitIndex { get; private set; } = 0;
+    public int BitIndex { get; private set; }
+
+    public BitReader(byte[] bytes)
+    {
+        _bytes = bytes;
+    }
 
     public int Read(int bitCount)
     {
-        int value = 0;
+        var value = 0;
 
         while (bitCount > 0)
         {
             value <<= 1;
 
-            var bitMask = 1 << (BITS - 1 - (BitIndex % BITS));
-            if ((_bytes[BitIndex / BITS] & bitMask) == bitMask)
+            var bitMask = 1 << (Bits - 1 - BitIndex % Bits);
+            if ((_bytes[BitIndex / Bits] & bitMask) == bitMask)
             {
                 value++;
             }

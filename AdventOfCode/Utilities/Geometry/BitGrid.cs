@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Columns;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -161,14 +159,7 @@ internal class BitGrid : IEnumerable<GridCell<bool>>
             for (var column = 0; column <= LastColumnIndex; column++)
             {
                 var value = _bitArray.Get(row * Width + column);
-                if (value)
-                {
-                    Console.Write('#');
-                }
-                else
-                {
-                    Console.Write(' ');
-                }
+                Console.Write(value ? '#' : ' ');
             }
             Console.WriteLine();
         }

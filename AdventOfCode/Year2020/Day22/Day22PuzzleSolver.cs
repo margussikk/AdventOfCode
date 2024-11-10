@@ -1,6 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
-using AdventOfCode.Year2021.Day23;
 
 namespace AdventOfCode.Year2020.Day22;
 
@@ -16,21 +15,20 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
         foreach (var chunk in chunks)
         {
-            if (chunk[0] == "Player 1:")
+            switch (chunk[0])
             {
-                _player1Cards = chunk.Skip(1)
-                                     .Select(int.Parse)
-                                     .ToList();
-            }
-            else if (chunk[0] == "Player 2:")
-            {
-                _player2Cards = chunk.Skip(1)
-                                     .Select(int.Parse)
-                                     .ToList();
-            }
-            else
-            {
-                throw new InvalidOperationException("Unexpected player");
+                case "Player 1:":
+                    _player1Cards = chunk.Skip(1)
+                        .Select(int.Parse)
+                        .ToList();
+                    break;
+                case "Player 2:":
+                    _player2Cards = chunk.Skip(1)
+                        .Select(int.Parse)
+                        .ToList();
+                    break;
+                default:
+                    throw new InvalidOperationException("Unexpected player");
             }
         }
     }
@@ -66,14 +64,14 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        (_, var winnerDeck) = PlayRecursiveCombat(_player1Cards, _player2Cards);
+        var (_, winnerDeck) = PlayRecursiveCombat(_player1Cards, _player2Cards);
 
         var answer = CalculateScore(winnerDeck);
 
         return new PuzzleAnswer(answer, 36463);
     }
 
-    public static (int Winner, Queue<int> WinnerDeck) PlayRecursiveCombat(IEnumerable<int> player1Cards, IEnumerable<int> player2Cards)
+    private static (int Winner, Queue<int> WinnerDeck) PlayRecursiveCombat(IEnumerable<int> player1Cards, IEnumerable<int> player2Cards)
     {
         var gameStates = new HashSet<GameState>();
 
@@ -83,12 +81,10 @@ public class Day22PuzzleSolver : IPuzzleSolver
         while (player1Deck.Count > 0 && player2Deck.Count > 0)
         {
             var gameState = new GameState(CalculateScore(new Queue<int>(player1Deck)), CalculateScore(new Queue<int>(player2Deck)));
-            if (gameStates.Contains(gameState))
+            if (!gameStates.Add(gameState))
             {
                 return (1, player1Deck);
             }
-
-            gameStates.Add(gameState);
 
             var player1TopCard = player1Deck.Dequeue();
             var player2TopCard = player2Deck.Dequeue();
@@ -97,7 +93,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
                 player2Deck.Count >= player2TopCard)
             {
                 // Subgame
-                (var winner, _) = PlayRecursiveCombat(player1Deck.Take(player1TopCard), player2Deck.Take(player2TopCard));
+                var (winner, _) = PlayRecursiveCombat(player1Deck.Take(player1TopCard), player2Deck.Take(player2TopCard));
                 if (winner == 1)
                 {
                     player1Deck.Enqueue(player1TopCard);
@@ -121,14 +117,9 @@ public class Day22PuzzleSolver : IPuzzleSolver
             }
         }
 
-        if (player1Deck.Count > 0)
-        {
-            return (1, player1Deck);
-        }
-        else
-        {
-            return (2, player2Deck);
-        }
+        return player1Deck.Count > 0
+            ? (1, player1Deck)
+            : (2, player2Deck);
     }
 
     private static int CalculateScore(Queue<int> deck)

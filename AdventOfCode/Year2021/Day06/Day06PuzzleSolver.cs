@@ -42,7 +42,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
         {
             var newFish = internalTimers[0];
 
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 internalTimers[i] = internalTimers[i + 1];
             }

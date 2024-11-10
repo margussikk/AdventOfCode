@@ -1,9 +1,14 @@
 ﻿namespace AdventOfCode.Year2020.Day18;
 
-internal class OperandElement(long value) : IElement
+internal class OperandElement : IElement
 {
-    public long Value { get; } = value;
+    public long Value { get; }
 
+    public OperandElement(long value)
+    {
+        Value = value;
+    }
+    
     public override string ToString()
     {
         return $"{Value}";

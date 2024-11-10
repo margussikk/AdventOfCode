@@ -1,9 +1,14 @@
 ﻿
 namespace AdventOfCode.Year2019.Day22;
 
-internal class DealWithIncrementTechnique(int increment) : Technique
+internal class DealWithIncrementTechnique : Technique
 {
-    public int Increment { get; } = increment;
+    public int Increment { get; }
+
+    public DealWithIncrementTechnique(int increment)
+    {
+        Increment = increment;
+    }
 
     public override List<int> ApplyFull(List<int> deck)
     {
@@ -23,7 +28,7 @@ internal class DealWithIncrementTechnique(int increment) : Technique
 
     public override long Apply(long index, long deckSize)
     {
-        return (index * Increment) % deckSize;
+        return index * Increment % deckSize;
     }
 
     public override long ApplyInverse(long index, long deckSize)

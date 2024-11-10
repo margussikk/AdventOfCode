@@ -2,11 +2,18 @@
 
 namespace AdventOfCode.Year2023.Day23;
 
-internal class VertexHiker(GraphVertex currentVertex, int distance, long visitedBitMask)
+internal class VertexHiker
 {
-    public GraphVertex CurrentVertex { get; } = currentVertex;
+    public GraphVertex CurrentVertex { get; }
 
-    public int Distance { get; set; } = distance;
+    public int Distance { get; }
 
-    public long VisitedBitMask { get; set; } = visitedBitMask;
+    public long VisitedBitMask { get; set; }
+
+    public VertexHiker(GraphVertex currentVertex, int distance, long visitedBitMask)
+    {
+        CurrentVertex = currentVertex;
+        Distance = distance;
+        VisitedBitMask = visitedBitMask;
+    }
 }

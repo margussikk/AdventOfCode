@@ -4,9 +4,9 @@ internal class Alu
 {
     public long[] Variables = new long[4];
 
-    private int _inputNumberIndex = 0;
+    private int _inputNumberIndex;
 
-    public bool Execute(int[] inputNumbers, List<Instruction> instructions)
+    public void Execute(int[] inputNumbers, List<Instruction> instructions)
     {
         Variables = new long[4];
         _inputNumberIndex = 0;
@@ -35,88 +35,53 @@ internal class Alu
                     throw new InvalidOperationException("ParameterB");
                 }
 
-                if (instruction.Code == InstructionCode.Add)
+                switch (instruction.Code)
                 {
-                    if (instruction.ParameterB is VariableParameter variableParameterB)
-                    {
+                    case InstructionCode.Add when instruction.ParameterB is VariableParameter variableParameterB:
                         Variables[variableParameterA.Variable] += Variables[variableParameterB.Variable];
-                    }
-                    else if (instruction.ParameterB is NumberParameter numberParameterB)
-                    {
+                        break;
+                    case InstructionCode.Add when instruction.ParameterB is NumberParameter numberParameterB:
                         Variables[variableParameterA.Variable] += numberParameterB.Number;
-                    }
-                    else
-                    {
+                        break;
+                    case InstructionCode.Add:
                         throw new InvalidOperationException($"{InstructionCode.Add} ParameterB not Variable nor Number");
-                    }
-                }
-                else if (instruction.Code == InstructionCode.Mul)
-                {
-                    if (instruction.ParameterB is VariableParameter variableParameterB)
-                    {
+                    case InstructionCode.Mul when instruction.ParameterB is VariableParameter variableParameterB:
                         Variables[variableParameterA.Variable] *= Variables[variableParameterB.Variable];
-                    }
-                    else if (instruction.ParameterB is NumberParameter numberParameterB)
-                    {
+                        break;
+                    case InstructionCode.Mul when instruction.ParameterB is NumberParameter numberParameterB:
                         Variables[variableParameterA.Variable] *= numberParameterB.Number;
-                    }
-                    else
-                    {
+                        break;
+                    case InstructionCode.Mul:
                         throw new InvalidOperationException($"{InstructionCode.Mul} ParameterB not Variable nor Number");
-                    }
-                }
-                else if (instruction.Code == InstructionCode.Div)
-                {
-                    if (instruction.ParameterB is VariableParameter variableParameterB)
-                    {
+                    case InstructionCode.Div when instruction.ParameterB is VariableParameter variableParameterB:
                         Variables[variableParameterA.Variable] /= Variables[variableParameterB.Variable];
-                    }
-                    else if (instruction.ParameterB is NumberParameter numberParameterB)
-                    {
+                        break;
+                    case InstructionCode.Div when instruction.ParameterB is NumberParameter numberParameterB:
                         Variables[variableParameterA.Variable] /= numberParameterB.Number;
-                    }
-                    else
-                    {
+                        break;
+                    case InstructionCode.Div:
                         throw new InvalidOperationException($"{InstructionCode.Div} ParameterB not Variable nor Number");
-                    }
-                }
-                else if (instruction.Code == InstructionCode.Mod)
-                {
-                    if (instruction.ParameterB is VariableParameter variableParameterB)
-                    {
+                    case InstructionCode.Mod when instruction.ParameterB is VariableParameter variableParameterB:
                         Variables[variableParameterA.Variable] %= Variables[variableParameterB.Variable];
-                    }
-                    else if (instruction.ParameterB is NumberParameter numberParameterB)
-                    {
+                        break;
+                    case InstructionCode.Mod when instruction.ParameterB is NumberParameter numberParameterB:
                         Variables[variableParameterA.Variable] %= numberParameterB.Number;
-                    }
-                    else
-                    {
+                        break;
+                    case InstructionCode.Mod:
                         throw new InvalidOperationException($"{InstructionCode.Mod} ParameterB not Variable nor Number");
-                    }
-                }
-                else if (instruction.Code == InstructionCode.Eql)
-                {
-                    if (instruction.ParameterB is VariableParameter variableParameterB)
-                    {
+                    case InstructionCode.Eql when instruction.ParameterB is VariableParameter variableParameterB:
                         Variables[variableParameterA.Variable] = Variables[variableParameterA.Variable] == Variables[variableParameterB.Variable] ? 1 : 0;
-                    }
-                    else if (instruction.ParameterB is NumberParameter numberParameterB)
-                    {
+                        break;
+                    case InstructionCode.Eql when instruction.ParameterB is NumberParameter numberParameterB:
                         Variables[variableParameterA.Variable] = Variables[variableParameterA.Variable] == numberParameterB.Number ? 1 : 0;
-                    }
-                    else
-                    {
+                        break;
+                    case InstructionCode.Eql:
                         throw new InvalidOperationException($"{InstructionCode.Eql} ParameterB not Variable nor Number");
-                    }
-
                 }
             }
 
             Console.WriteLine($"{instruction} // {this}");
         }
-
-        return true;
     }
 
     public override string ToString()

@@ -1,24 +1,30 @@
 ﻿namespace AdventOfCode.Year2023.Day12;
 
-internal class Record(List<Spring> springs, List<int> groups)
+internal class Record
 {
-    public List<Spring> Springs { get; } = springs;
-    public List<int> Groups { get; } = groups;
+    public List<Spring> Springs { get; }
+    public List<int> Groups { get; }
 
+    private Record(List<Spring> springs, List<int> groups)
+    {
+        Springs = springs;
+        Groups = groups;
+    }
+    
     public static Record Parse(string input)
     {
         var splits = input.Split(' ');
 
-        var springs1 = splits[0].Select(ParseSpringCondition)
-                               .ToList();
+        var springs = splits[0].Select(ParseSpringCondition)
+                                         .ToList();
 
-        var groups1 = splits[1].Split(',')
-                              .Select(int.Parse)
-                              .ToList();
+        var groups = splits[1].Split(',')
+            .Select(int.Parse)
+            .ToList();
 
-        return new Record(springs1, groups1);
+        return new Record(springs, groups);
     }
-
+    
     public Record Unfolded()
     {
         var springs1 = new List<Spring>(Springs);
@@ -35,7 +41,7 @@ internal class Record(List<Spring> springs, List<int> groups)
         return new Record(springs1, groups1);
     }
 
-    // V1 uses record specific cache, which is much smaller than V2 and also faster.
+    // V1 uses record-specific cache, which is much smaller than V2 and also faster.
     public long CountArrangementsV1()
     {
         var cache = new Dictionary<(int, int, int), long>();
@@ -58,16 +64,15 @@ internal class Record(List<Spring> springs, List<int> groups)
                     // Reached the end groups and no group is open.
                     return 1;
                 }
-                else if (groupIndex == Groups.Count - 1 && Groups[groupIndex] == currentGroupLength)
+
+                if (groupIndex == Groups.Count - 1 && Groups[groupIndex] == currentGroupLength)
                 {
-                    // Last group is open, but current length is the same group size, so everything's ok.
+                    // The Last group is open, but the current length is the same group size, so everything's ok.
                     return 1;
                 }
-                else
-                {
-                    // Last group is half filled or there are more groups left.
-                    return 0;
-                }
+
+                // The Last group is half-filled or there are more groups left.
+                return 0;
             }
 
             // Operational
@@ -75,12 +80,12 @@ internal class Record(List<Spring> springs, List<int> groups)
             {
                 if (currentGroupLength == 0)
                 {
-                    // Continue looking for current group
+                    // Continue looking for the current group
                     total += Recurse(springIndex + 1, groupIndex, 0);
                 }
                 else if (groupIndex < Groups.Count && Groups[groupIndex] == currentGroupLength)
                 {
-                    // Reached the end of current group. Start looking for a new group.
+                    // Reached the end of the current group. Start looking for a new group.
                     total += Recurse(springIndex + 1, groupIndex + 1, 0);
                 }
             }
@@ -103,12 +108,9 @@ internal class Record(List<Spring> springs, List<int> groups)
     {
         if (Groups.Count == 0)
         {
-            if (Springs.TrueForAll(x => x is Spring.Operational or Spring.Unknown)) // Assume that all the leftover springs are operational
-            {
-                return 1;
-            }
-
-            return 0;
+            return Springs.TrueForAll(x => x is Spring.Operational or Spring.Unknown)
+                ? 1 // Assume that all the leftover springs are operational
+                : 0;
         }
 
         if (Springs.Count < Groups.Sum() + Groups.Count - 1)
@@ -117,7 +119,7 @@ internal class Record(List<Spring> springs, List<int> groups)
         }
 
         var cacheKey = ToString();
-        if (cache.TryGetValue(cacheKey, out long total))
+        if (cache.TryGetValue(cacheKey, out var total))
         {
             return total;
         }

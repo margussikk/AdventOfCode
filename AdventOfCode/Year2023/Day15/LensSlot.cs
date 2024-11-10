@@ -1,8 +1,14 @@
 ﻿namespace AdventOfCode.Year2023.Day15;
 
-internal class LensSlot(string label, int focalLength)
+internal class LensSlot
 {
-    public string Label { get; } = label;
+    public string Label { get; }
 
-    public int FocalLength { get; set; } = focalLength;
+    public int FocalLength { get; set; }
+
+    public LensSlot(string label, int focalLength)
+    {
+        Label = label;
+        FocalLength = focalLength;
+    }
 }

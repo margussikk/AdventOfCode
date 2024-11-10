@@ -5,5 +5,5 @@ internal enum Tile
     Wall = 0,
     Empty = 1,
     OxygenSystem = 2,
-    Start = 3,
+    Start = 3
 }

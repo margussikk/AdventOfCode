@@ -18,7 +18,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
     {
         var numbers = new List<int>(_numbers);
 
-        for (int phase = 1; phase <= 100; phase++)
+        for (var phase = 1; phase <= 100; phase++)
         {
             numbers = ApplyFFT(numbers);
         }
@@ -50,7 +50,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             _numbers.CopyTo(numbers, index);
         }
 
-        for (int phase = 1; phase <= 100; phase++)
+        for (var phase = 1; phase <= 100; phase++)
         {
             numbers = ApplyFFT2(numbers);
         }
@@ -71,12 +71,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
         for (var repeat = 1; repeat <= numbers.Count; repeat++)
         {
-            var output = 0;
-
-            for (var index = 0; index < numbers.Count; index++)
-            {
-                output += numbers[index] * _baseNumbers[(index + 1) / repeat % 4];
-            }
+            var output = numbers.Select((t, index) => t * _baseNumbers[(index + 1) / repeat % 4]).Sum();
 
             newNumbers.Add(Math.Abs(output) % 10);
         }

@@ -4,9 +4,9 @@ namespace AdventOfCode.Year2020.Day16;
 
 internal class TicketFieldRule
 {
-    public string FieldName {  get; private set; } = string.Empty;
+    public string FieldName {  get; private init; } = string.Empty;
 
-    public NumberRange<int>[] Ranges { get; private set; } = [];
+    public NumberRange<int>[] Ranges { get; private init; } = [];
 
     public bool IsValid(int number)
     {
@@ -15,7 +15,7 @@ internal class TicketFieldRule
 
     public static TicketFieldRule Parse(string input)
     {
-        var separators = new string[]
+        var separators = new[]
         {
             ": ", " or "
         };
@@ -28,7 +28,7 @@ internal class TicketFieldRule
             Ranges =
             [
                 NumberRange<int>.Parse(splits[1]),
-                NumberRange<int>.Parse(splits[2]),
+                NumberRange<int>.Parse(splits[2])
             ] 
         };
 

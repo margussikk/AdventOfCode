@@ -56,14 +56,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             {
                 var position = (cycle - 1) % 40;
 
-                if (Math.Abs(position - x) <= 1)
-                {
-                    stringBuilder.Append('#');
-                }
-                else
-                {
-                    stringBuilder.Append('.');
-                }
+                stringBuilder.Append(Math.Abs(position - x) <= 1 ? '#' : '.');
 
                 if (cycle % 40 == 0)
                 {

@@ -2,10 +2,9 @@
 
 internal class Packet
 {
-    public int Version { get; private set; }
-    public PacketType Type { get; private set; }
+    public int Version { get; private init; }
+    public PacketType Type { get; private init; }
     public List<Packet> Packets { get; } = [];
-
     public long Value { get; private set; }
 
     public static Packet Build(BitReader bitReader)
@@ -24,7 +23,7 @@ internal class Packet
                 group = bitReader.Read(5);
 
                 packet.Value <<= 4;
-                packet.Value |= (group & 0b1111);
+                packet.Value |= group & 0b1111;
             }
             while ((group & 0b1_0000) == 0b1_0000);
         }
@@ -73,7 +72,7 @@ internal class Packet
             PacketType.GreaterThan => Packets[0].Evaluate() > Packets[1].Evaluate() ? 1 : 0,
             PacketType.LessThan => Packets[0].Evaluate() < Packets[1].Evaluate() ? 1 : 0,
             PacketType.EqualTo => Packets[0].Evaluate() == Packets[1].Evaluate() ? 1 : 0,
-            _ => 0,
+            _ => 0
         };
     }
 }

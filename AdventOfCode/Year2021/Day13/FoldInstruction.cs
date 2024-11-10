@@ -1,7 +1,13 @@
 ﻿namespace AdventOfCode.Year2021.Day13;
 
-internal class FoldInstruction(Axis axis, int foldLine)
+internal class FoldInstruction
 {
-    public Axis Axis { get; } = axis;
-    public int FoldLine { get; } = foldLine;
+    public Axis Axis { get; }
+    public int FoldLine { get; }
+
+    public FoldInstruction(Axis axis, int foldLine)
+    {
+        Axis = axis;
+        FoldLine = foldLine;
+    }
 }

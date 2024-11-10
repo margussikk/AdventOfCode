@@ -2,8 +2,8 @@
 
 internal class Workflow
 {
-    public string Name { get; private set; } = string.Empty;
-    public List<Rule> Rules { get; private set; } = [];
+    public string Name { get; private init; } = string.Empty;
+    public List<Rule> Rules { get; private init; } = [];
 
     public string GetNextWorkflowName(Part part)
     {

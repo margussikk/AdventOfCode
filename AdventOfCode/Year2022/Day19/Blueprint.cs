@@ -6,14 +6,14 @@ internal partial class Blueprint
 {
     public int Id { get; private set; }
 
-    public int OreRobotCostOre { get; private set; }
-    public int ClayRobotCostOre { get; private set; }
-    public int ObsidianRobotCostOre { get; private set; }
-    public int ObsidianRobotCostClay { get; private set; }
-    public int GeodeRobotCostOre { get; private set; }
-    public int GeodeRobotCostObsidian { get; private set; }
+    public int OreRobotCostOre { get; private init; }
+    public int ClayRobotCostOre { get; private init; }
+    public int ObsidianRobotCostOre { get; private init; }
+    public int ObsidianRobotCostClay { get; private init; }
+    public int GeodeRobotCostOre { get; private init; }
+    public int GeodeRobotCostObsidian { get; private init; }
 
-    public int MaxOreNeededPerMinute { get; set; }
+    public int MaxOreNeededPerMinute { get; private set; }
 
     public static Blueprint Parse(string line)
     {
@@ -25,7 +25,7 @@ internal partial class Blueprint
 
         var match = matches[0];
 
-        var blueprint = new Blueprint()
+        var blueprint = new Blueprint
         {
             Id = int.Parse(match.Groups[1].Value),
             OreRobotCostOre = int.Parse(match.Groups[2].Value),
@@ -33,7 +33,7 @@ internal partial class Blueprint
             ObsidianRobotCostOre = int.Parse(match.Groups[4].Value),
             ObsidianRobotCostClay = int.Parse(match.Groups[5].Value),
             GeodeRobotCostOre = int.Parse(match.Groups[6].Value),
-            GeodeRobotCostObsidian = int.Parse(match.Groups[7].Value),
+            GeodeRobotCostObsidian = int.Parse(match.Groups[7].Value)
         };
 
         blueprint.MaxOreNeededPerMinute = blueprint.OreRobotCostOre;
@@ -44,6 +44,6 @@ internal partial class Blueprint
         return blueprint;
     }
 
-    [GeneratedRegex("Blueprint (\\d+): Each ore robot costs (\\d+) ore. Each clay robot costs (\\d+) ore. Each obsidian robot costs (\\d+) ore and (\\d+) clay. Each geode robot costs (\\d+) ore and (\\d+) obsidian.")]
+    [GeneratedRegex(@"Blueprint (\d+): Each ore robot costs (\d+) ore. Each clay robot costs (\d+) ore. Each obsidian robot costs (\d+) ore and (\d+) clay. Each geode robot costs (\d+) ore and (\d+) obsidian.")]
     private static partial Regex LineRegex();
 }

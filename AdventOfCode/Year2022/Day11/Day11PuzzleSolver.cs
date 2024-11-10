@@ -23,7 +23,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
             monkey.Reset();
         }
 
-        var answer = GetMonkeyBusiness(20, (x) => x / 3);
+        var answer = GetMonkeyBusiness(20, x => x / 3);
 
         return new PuzzleAnswer(answer, 88208);
     }
@@ -35,8 +35,8 @@ public class Day11PuzzleSolver : IPuzzleSolver
             monkey.Reset();
         }
 
-        var lcm = MathFunctions.LeastCommonMultiple(_monkeys.Select(m => m.TestDivisor));
-        var answer = GetMonkeyBusiness(10_000, (x) => x % lcm);
+        var lcm = _monkeys.Select(m => m.TestDivisor).LeastCommonMultiple();
+        var answer = GetMonkeyBusiness(10_000, x => x % lcm);
 
         return new PuzzleAnswer(answer, 21115867968L);
     }

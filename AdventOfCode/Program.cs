@@ -1,13 +1,12 @@
 ﻿using AdventOfCode.Framework.Cli;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System;
 
 namespace AdventOfCode;
 
 public static class Program
 {
-    static int Main(string[] args)
+    private static int Main(string[] args)
     {
         var figletText = new FigletText(FigletFont.Default, "Advent of Code")
         {

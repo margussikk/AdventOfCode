@@ -51,12 +51,9 @@ internal class Aabb3D: IEnumerable<Aabb3DCell>
 
     public IEnumerable<Aabb3DCell> AroundNeighbors(Coordinate3D coordinate)
     {
-        foreach (var neighborCoordinate in coordinate.AroundNeighbors())
+        foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
         {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new Aabb3DCell(neighborCoordinate, _bitArray.Get(GetIndex(neighborCoordinate.X, neighborCoordinate.Y, neighborCoordinate.Z)));
-            }
+            yield return new Aabb3DCell(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 
@@ -68,7 +65,8 @@ internal class Aabb3D: IEnumerable<Aabb3DCell>
             {
                 for (var x = minCoordinate.X; x <= maxCoordinate.X; x++)
                 {
-                    yield return new Aabb3DCell(new Coordinate3D(x, y, z), _bitArray.Get(GetIndex(x, y, z)));
+                    var coordinate = new Coordinate3D(x, y, z);
+                    yield return new Aabb3DCell(coordinate, this[coordinate]);
                 }
             }
         }

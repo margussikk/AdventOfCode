@@ -1,10 +1,15 @@
 ﻿namespace AdventOfCode.Year2022.Day21;
 
-internal abstract class Monkey(string name)
+internal abstract class Monkey
 {
-    public string Name { get; } = name;
+    public string Name { get; }
 
     public OperationMonkey? Parent { get; private set; }
+
+    protected Monkey(string name)
+    {
+        Name = name;
+    }
 
     public void SetParent(OperationMonkey parent)
     {
@@ -22,7 +27,7 @@ internal abstract class Monkey(string name)
             current = current.Parent;
         }
 
-        return new List<Monkey>(stack);
+        return [..stack];
     }
 
     public abstract long YellNumber();

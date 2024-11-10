@@ -96,23 +96,17 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
             neighborCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column + 1));
         }
 
-        foreach (var neighborCoordinate in neighborCoordinates)
+        foreach (var neighborCoordinate in neighborCoordinates.Where(InBounds))
         {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new GridCell<T>(neighborCoordinate, _array[neighborCoordinate.Row, neighborCoordinate.Column]);
-            }
+            yield return new GridCell<T>(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 
     public IEnumerable<GridCell<T>> AroundNeighbors(GridCoordinate coordinate)
     {
-        foreach (var neighborCoordinate in coordinate.AroundNeighbors())
+        foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
         {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new GridCell<T>(neighborCoordinate, _array[neighborCoordinate.Row, neighborCoordinate.Column]);
-            }
+            yield return new GridCell<T>(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 

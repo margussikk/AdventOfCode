@@ -7,5 +7,5 @@ internal enum Tile
     SlopeUp,
     SlopeDown,
     SlopeLeft,
-    SlopeRight,
+    SlopeRight
 }

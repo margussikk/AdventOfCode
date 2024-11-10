@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2023.Day09;
 
 internal class History
 {
-    public List<long> Sequence { get; private set; } = [];
+    public List<long> Sequence { get; private init; } = [];
 
     public long GetNextValue()
     {
@@ -26,7 +26,7 @@ internal class History
         return history;
     }
 
-    public IEnumerable<List<long>> BuildSequences()
+    private IEnumerable<List<long>> BuildSequences()
     {
         var sequences = new List<List<long>>
         {

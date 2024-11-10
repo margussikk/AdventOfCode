@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
-using Spectre.Console;
 
 namespace AdventOfCode.Year2020.Day11;
 
@@ -33,19 +32,26 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
             foreach (var gridCell in grid)
             {
-                if (gridCell.Object == Tile.EmptySeat)
+                switch (gridCell.Object)
                 {
-                    if (grid.AroundNeighbors(gridCell.Coordinate).All(gc => gc.Object != Tile.OccupiedSeat))
+                    case Tile.EmptySeat:
                     {
-                        updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                        if (grid.AroundNeighbors(gridCell.Coordinate).All(gc => gc.Object != Tile.OccupiedSeat))
+                        {
+                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                        }
+
+                        break;
                     }
-                }
-                else if (gridCell.Object == Tile.OccupiedSeat)
-                {
-                    var aroundOccupied = grid.AroundNeighbors(gridCell.Coordinate).Count(gc => gc.Object == Tile.OccupiedSeat);
-                    if (aroundOccupied >= 4)
+                    case Tile.OccupiedSeat:
                     {
-                        updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                        var aroundOccupied = grid.AroundNeighbors(gridCell.Coordinate).Count(gc => gc.Object == Tile.OccupiedSeat);
+                        if (aroundOccupied >= 4)
+                        {
+                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                        }
+
+                        break;
                     }
                 }
             }
@@ -64,11 +70,11 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var directions = new GridDirection[]
+        var directions = new []
         {
             GridDirection.UpLeft, GridDirection.Up, GridDirection.UpRight,
             GridDirection.Left, GridDirection.Right,
-            GridDirection.DownLeft, GridDirection.Down, GridDirection.DownRight,
+            GridDirection.DownLeft, GridDirection.Down, GridDirection.DownRight
         };
 
         var grid = _grid.Clone();
@@ -81,20 +87,27 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
             foreach (var gridCell in grid)
             {
-                if (gridCell.Object == Tile.EmptySeat)
+                switch (gridCell.Object)
                 {
-                    var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
-                    if (occupiedSeatCount == 0)
+                    case Tile.EmptySeat:
                     {
-                        updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                        var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
+                        if (occupiedSeatCount == 0)
+                        {
+                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                        }
+
+                        break;
                     }
-                }
-                else if (gridCell.Object == Tile.OccupiedSeat)
-                {
-                    var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
-                    if (occupiedSeatCount >= 5)
+                    case Tile.OccupiedSeat:
                     {
-                        updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                        var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
+                        if (occupiedSeatCount >= 5)
+                        {
+                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                        }
+
+                        break;
                     }
                 }
             }
@@ -124,13 +137,12 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 return false;
             }
 
-            if (grid[testCoordinate] == Tile.OccupiedSeat)
+            switch (grid[testCoordinate])
             {
-                return true;
-            }
-            else if (grid[testCoordinate] == Tile.EmptySeat)
-            {
-                return false;
+                case Tile.OccupiedSeat:
+                    return true;
+                case Tile.EmptySeat:
+                    return false;
             }
         }
 

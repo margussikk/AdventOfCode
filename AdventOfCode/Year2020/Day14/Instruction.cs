@@ -8,13 +8,12 @@ internal abstract class Instruction
         {
             return MaskInstruction.Parse(input);
         }
-        else if (input.StartsWith("mem["))
+
+        if (input.StartsWith("mem["))
         {
             return MemInstruction.Parse(input);
         }
-        else
-        {
-            throw new InvalidOperationException("Failed to parse instruction");
-        }
+
+        throw new InvalidOperationException("Failed to parse instruction");
     }
 }

@@ -8,7 +8,7 @@ internal partial class MemInstruction: Instruction
 
     public long Value { get; private set; }
 
-    public static new MemInstruction Parse(string input)
+    public new static MemInstruction Parse(string input)
     {
         var matches = InputRegex().Matches(input);
         if (matches.Count != 1)
@@ -25,6 +25,6 @@ internal partial class MemInstruction: Instruction
         return memInstruction;
     }
 
-    [GeneratedRegex("mem\\[(\\d+)\\] = (\\d+)")]
+    [GeneratedRegex(@"mem\[(\d+)\] = (\d+)")]
     private static partial Regex InputRegex();
 }

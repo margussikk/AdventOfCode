@@ -2,7 +2,7 @@
 
 internal class Reaction
 {
-    public Chemical Product { get; private set; } = new Chemical(0, string.Empty);
+    public Chemical Product { get; private set; } = new(0, string.Empty);
     public List<Chemical> Reactants { get; } = [];
 
     public static Reaction Parse(string input)

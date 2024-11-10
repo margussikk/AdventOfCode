@@ -78,13 +78,12 @@ public class Day03PuzzleSolver : IPuzzleSolver
         {
             foreach (var wire2LineSegment in wire2LineSegments)
             {
-                if (wire1LineSegment.TryFindOverlap(wire2LineSegment, out var overlapLineSegment) &&
-                    overlapLineSegment.Start != Coordinate2D.Zero)
+                if (!wire1LineSegment.TryFindOverlap(wire2LineSegment, out var overlapLineSegment) ||
+                    overlapLineSegment.Start == Coordinate2D.Zero) continue;
+                
+                foreach(var coordinate in overlapLineSegment)
                 {
-                    foreach(var coordinate in overlapLineSegment)
-                    {
-                        intersections.Add(coordinate);
-                    }
+                    intersections.Add(coordinate);
                 }
             }
         }

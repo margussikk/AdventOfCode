@@ -58,7 +58,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
             {
                 case Direction.Forward:
                     submarine.HorizontalPosition += command.Units;
-                    submarine.Depth += (aim * command.Units);
+                    submarine.Depth += aim * command.Units;
                     break;
                 case Direction.Up:
                     aim -= command.Units;

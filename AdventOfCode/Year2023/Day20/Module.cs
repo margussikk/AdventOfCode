@@ -1,11 +1,17 @@
 ﻿namespace AdventOfCode.Year2023.Day20;
 
-internal abstract class Module(string name, string[] destinationModules)
+internal abstract class Module
 {
-    public string Name { get; } = name;
+    public string Name { get; }
 
-    public string[] DestinationModules { get; } = destinationModules;
+    public string[] DestinationModules { get; }
 
+    protected Module(string name, string[] destinationModules)
+    {
+        Name = name;
+        DestinationModules = destinationModules;
+    }
+    
     public abstract List<Signal> ProcessSignal(Signal signal);
 
     public abstract void Reset();
@@ -19,7 +25,7 @@ internal abstract class Module(string name, string[] destinationModules)
         {
             '%' => new FlipFlopModule(splits[0][1..], destinationModules1),
             '&' => new ConjunctionModule(splits[0][1..], destinationModules1),
-            _ => new RepeatModule(splits[0], destinationModules1),
+            _ => new RepeatModule(splits[0], destinationModules1)
         };
     }
 }

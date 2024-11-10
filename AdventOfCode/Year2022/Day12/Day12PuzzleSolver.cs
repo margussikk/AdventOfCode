@@ -9,8 +9,8 @@ public class Day12PuzzleSolver : IPuzzleSolver
 {
     private Grid<char> _grid = new(0, 0);
 
-    private GridCoordinate _startCoordinate = new();
-    private GridCoordinate _endCoordinate = new();
+    private GridCoordinate _startCoordinate;
+    private GridCoordinate _endCoordinate;
 
     public void ParseInput(string[] inputLines)
     {
@@ -18,15 +18,16 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
         foreach (var gridCell in _grid)
         {
-            if (gridCell.Object == 'S')
+            switch (gridCell.Object)
             {
-                _grid[gridCell.Coordinate] = 'a';
-                _startCoordinate = gridCell.Coordinate;
-            }
-            else if (gridCell.Object == 'E')
-            {
-                _grid[gridCell.Coordinate] = 'z';
-                _endCoordinate = gridCell.Coordinate;
+                case 'S':
+                    _grid[gridCell.Coordinate] = 'a';
+                    _startCoordinate = gridCell.Coordinate;
+                    break;
+                case 'E':
+                    _grid[gridCell.Coordinate] = 'z';
+                    _endCoordinate = gridCell.Coordinate;
+                    break;
             }
         }
     }
@@ -60,7 +61,8 @@ public class Day12PuzzleSolver : IPuzzleSolver
             {
                 return hillclimber.Steps;
             }
-            else if (shortestDistancesGrid[hillclimber.Coordinate].HasValue)
+
+            if (shortestDistancesGrid[hillclimber.Coordinate].HasValue)
             {
                 continue;
             }
@@ -70,15 +72,13 @@ public class Day12PuzzleSolver : IPuzzleSolver
             foreach (var neighborCell in _grid.SideNeighbors(hillclimber.Coordinate))
             {
                 var elevationDifference = directionMultiplier * (neighborCell.Object - _grid[hillclimber.Coordinate]);
-                if (elevationDifference <= 1)
-                {
-                    var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
-                    if (hillclimber.Steps + 1 < currentDistance)
-                    {
-                        var newHillClimber = new HillClimber(neighborCell.Coordinate, hillclimber.Steps + 1);
-                        hillClimbers.Enqueue(newHillClimber, newHillClimber.Steps);
-                    }
-                }
+                if (elevationDifference > 1) continue;
+                
+                var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
+                if (hillclimber.Steps + 1 >= currentDistance) continue;
+                
+                var newHillClimber = new HillClimber(neighborCell.Coordinate, hillclimber.Steps + 1);
+                hillClimbers.Enqueue(newHillClimber, newHillClimber.Steps);
             }
         }
 

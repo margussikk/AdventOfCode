@@ -2,8 +2,14 @@
 
 namespace AdventOfCode.Year2021.Day15;
 
-internal class CaveWalker(GridCoordinate coordinate, int distance)
+internal class CaveWalker
 {
-    public GridCoordinate Coordinate { get; } = coordinate;
-    public int Distance { get; } = distance;
+    public GridCoordinate Coordinate { get; }
+    public int Distance { get; }
+
+    public CaveWalker(GridCoordinate coordinate, int distance)
+    {
+        Coordinate = coordinate;
+        Distance = distance;
+    }
 }

@@ -1,15 +1,10 @@
 ﻿using AdventOfCode.Utilities.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode.Year2020.Day24;
 
 internal class Instruction
 {
-    public List<GridDirection> Directions { get; private set; } = [];
+    public List<GridDirection> Directions { get; private init; } = [];
 
     public static Instruction Parse(string input)
     {
@@ -18,45 +13,46 @@ internal class Instruction
         var span = input.AsSpan();
         while(span.Length > 0)
         {
-            if (span[0] == 'e')
+            switch (span[0])
             {
-                directions.Add(GridDirection.Right);
-                span = span[1..];
-            }
-            else if (span[0] == 'w')
-            {
-                directions.Add(GridDirection.Left);
-                span = span[1..];
-            }
-            else if (span[..2].SequenceEqual("se"))
-            {
-                directions.Add(GridDirection.DownRight);
-                span = span[2..];
-            }
-            else if (span[..2].SequenceEqual("sw"))
-            {
-                directions.Add(GridDirection.DownLeft);
-                span = span[2..];
-            }
-            else if (span[..2].SequenceEqual("ne"))
-            {
-                directions.Add(GridDirection.UpRight);
-                span = span[2..];
-            }
-            else if (span[..2].SequenceEqual("nw"))
-            {
-                directions.Add(GridDirection.UpLeft);
-                span = span[2..];
-            }
-            else
-            {
-                throw new InvalidOperationException("Failed to parse direction");
+                case 'e':
+                    directions.Add(GridDirection.Right);
+                    span = span[1..];
+                    break;
+                case 'w':
+                    directions.Add(GridDirection.Left);
+                    span = span[1..];
+                    break;
+                default:
+                {
+                    switch (span[..2])
+                    {
+                        case "se":
+                            directions.Add(GridDirection.DownRight);
+                            break;
+                        case "sw":
+                            directions.Add(GridDirection.DownLeft);
+                            break;
+                        case "ne":
+                            directions.Add(GridDirection.UpRight);
+                            break;
+                        case "nw":
+                            directions.Add(GridDirection.UpLeft);
+                            break;
+                        default:
+                            throw new InvalidOperationException("Failed to parse direction");
+                    }
+
+                    span = span[2..];
+
+                    break;
+                }
             }
         }
 
         return new Instruction
         {
-            Directions = directions,
+            Directions = directions
         };
     }
 }

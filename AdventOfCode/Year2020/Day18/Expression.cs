@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2020.Day18;
 
 internal class Expression
 {
-    public List<IElement> Elements { get; private set; } = [];
+    public List<IElement> Elements { get; } = [];
 
     public long Evaluate(Func<OperatorType, OperatorType, bool> precedence)
     {
@@ -13,33 +13,32 @@ internal class Expression
 
         foreach (var element in Elements)
         {
-            if (element is OperandElement operandElement)
+            switch (element)
             {
-                operandValuesStack.Push(operandElement.Value);
-            }
-            else if (element is ParenthesesElement parenthesesElement)
-            {
-                if (parenthesesElement.Open)
-                {
+                case OperandElement operandElement:
+                    operandValuesStack.Push(operandElement.Value);
+                    break;
+                case ParenthesesElement { Open: true } parenthesesElement:
                     operatorAndParenthesesStack.Push(parenthesesElement);
-                }
-                else // Close parentheses
+                    break;
+                // Close parentheses
+                case ParenthesesElement:
                 {
                     ProcessStacks(operandValuesStack, operatorAndParenthesesStack);
 
                     if (operatorAndParenthesesStack.Count > 0 &&
-                        operatorAndParenthesesStack.Peek() is ParenthesesElement previousParenthesesElement &&
-                        previousParenthesesElement.Open)
+                        operatorAndParenthesesStack.Peek() is ParenthesesElement { Open: true })
                     {
                         operatorAndParenthesesStack.Pop();
                     }
-                }
-            }
-            else if (element is OperatorElement operatorElement)
-            {
-                ProcessStacks(operandValuesStack, operatorAndParenthesesStack, previousOperatorType => precedence(previousOperatorType, operatorElement.OperatorType));
 
-                operatorAndParenthesesStack.Push(operatorElement);
+                    break;
+                }
+                case OperatorElement operatorElement:
+                    ProcessStacks(operandValuesStack, operatorAndParenthesesStack, previousOperatorType => precedence(previousOperatorType, operatorElement.OperatorType));
+
+                    operatorAndParenthesesStack.Push(operatorElement);
+                    break;
             }
         }
 
@@ -56,45 +55,49 @@ internal class Expression
         var span = input.AsSpan();
         while(span.Length > 0)
         {
-            if (span[0] == ' ') // Ignore spaces
+            switch (span[0])
             {
-                span = span[1..];
-            }
-            else if (span[0] == '(')
-            {
-                expression.Elements.Add(new ParenthesesElement(true));
-                span = span[1..];
-            }
-            else if (span[0] == ')')
-            {
-                expression.Elements.Add(new ParenthesesElement(false));
-                span = span[1..];
-            }
-            else if (span[0] == '+')
-            {
-                expression.Elements.Add(new OperatorElement(OperatorType.Addition));
-                span = span[1..];
-            }
-            else if (span[0] == '*')
-            {
-                expression.Elements.Add(new OperatorElement(OperatorType.Multiplication));
-                span = span[1..];
-            }
-            else if (char.IsDigit(span[0]))
-            {
-                var index = span.IndexOfAnyExceptInRange('0', '9');
-                if (index < 0)
+                // Ignore spaces
+                case ' ':
+                    span = span[1..];
+                    break;
+                case '(':
+                    expression.Elements.Add(new ParenthesesElement(true));
+                    span = span[1..];
+                    break;
+                case ')':
+                    expression.Elements.Add(new ParenthesesElement(false));
+                    span = span[1..];
+                    break;
+                case '+':
+                    expression.Elements.Add(new OperatorElement(OperatorType.Addition));
+                    span = span[1..];
+                    break;
+                case '*':
+                    expression.Elements.Add(new OperatorElement(OperatorType.Multiplication));
+                    span = span[1..];
+                    break;
+                default:
                 {
-                    index = span.Length;
-                }
+                    if (char.IsDigit(span[0]))
+                    {
+                        var index = span.IndexOfAnyExceptInRange('0', '9');
+                        if (index < 0)
+                        {
+                            index = span.Length;
+                        }
 
-                var value = long.Parse(span[..index]);
-                expression.Elements.Add(new OperandElement(value));
-                span = span[index..];
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid expression character");
+                        var value = long.Parse(span[..index]);
+                        expression.Elements.Add(new OperandElement(value));
+                        span = span[index..];
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid expression character");
+                    }
+
+                    break;
+                }
             }
         }
 

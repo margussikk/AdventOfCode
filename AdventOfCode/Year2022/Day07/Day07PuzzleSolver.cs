@@ -12,7 +12,8 @@ public class Day07PuzzleSolver : IPuzzleSolver
         Directory? rootDirectory = null;
         Directory? currentDirectory = null;
 
-        for (var lineIndex = 0; lineIndex < inputLines.Length; lineIndex++)
+        var lineIndex = 0;
+        while (lineIndex < inputLines.Length)
         {
             var line = inputLines[lineIndex];
 
@@ -22,14 +23,13 @@ public class Day07PuzzleSolver : IPuzzleSolver
             }
 
             var command = Command.Parse(line);
-            if (command is ChangeDirectoryCommand changeDirectoryCommand)
+            switch (command)
             {
-                if (changeDirectoryCommand.Parameter == "/")
-                {
+                case ChangeDirectoryCommand { Parameter: "/" }:
                     rootDirectory ??= Directory.Root();
                     currentDirectory = rootDirectory;
-                }
-                else if (currentDirectory != null)
+                    break;
+                case ChangeDirectoryCommand changeDirectoryCommand when currentDirectory != null:
                 {
                     if (changeDirectoryCommand.Parameter == "..")
                     {
@@ -40,47 +40,48 @@ public class Day07PuzzleSolver : IPuzzleSolver
                         currentDirectory = currentDirectory.Directories
                             .Find(d => d.Name == changeDirectoryCommand.Parameter);
                     }
+
+                    break;
                 }
-                else
-                {
+                case ChangeDirectoryCommand:
                     throw new InvalidOperationException("Change directory, but current directory is null");
-                }
-            }
-            else if (command is ListCommand)
-            {
-                if (currentDirectory == null)
-                {
+                case ListCommand when currentDirectory == null:
                     throw new InvalidOperationException("List command, but current directory is null");
-                }
-
-                lineIndex++; // Skip the current list command line
-                for (; lineIndex < inputLines.Length; lineIndex++)
+                case ListCommand:
                 {
-                    line = inputLines[lineIndex];
+                    lineIndex++; // Skip the current list command line
+                    while (lineIndex < inputLines.Length)
+                    {
+                        line = inputLines[lineIndex];
 
-                    if (Directory.IsDirectoryLine(line))
-                    {
-                        var directory = Directory.Parse(line);
-                        directory.SetParent(currentDirectory);
-                        currentDirectory.Directories.Add(directory);
-                    }
-                    else
-                    {
-                        var file = File.Parse(line);
-                        currentDirectory.Files.Add(file);
+                        if (Directory.IsDirectoryLine(line))
+                        {
+                            var directory = Directory.Parse(line);
+                            directory.SetParent(currentDirectory);
+                            currentDirectory.Directories.Add(directory);
+                        }
+                        else
+                        {
+                            var file = File.Parse(line);
+                            currentDirectory.Files.Add(file);
+                        }
+
+                        if (lineIndex + 1 < inputLines.Length &&
+                            Command.IsCommandLine(inputLines[lineIndex + 1]))
+                        {
+                            break; // End of current list command
+                        }
+
+                        lineIndex++;
                     }
 
-                    if (lineIndex + 1 < inputLines.Length &&
-                        Command.IsCommandLine(inputLines[lineIndex + 1]))
-                    {
-                        break; // End of current list command
-                    }
+                    break;
                 }
+                default:
+                    throw new InvalidOperationException("Unknown command");
             }
-            else
-            {
-                throw new InvalidOperationException("Unknown command");
-            }
+
+            lineIndex++;
         }
 
         _rootDirectory = rootDirectory ?? throw new InvalidOperationException("Couldn't find root directory");

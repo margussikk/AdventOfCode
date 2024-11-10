@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct Coordinate2D
+internal readonly struct Coordinate2D : IEquatable<Coordinate2D>
 {
     public static readonly Coordinate2D Zero = new(0, 0);
 
@@ -47,11 +47,6 @@ internal readonly struct Coordinate2D
         return new Vector2D(coordinate1.X - coordinate2.X, coordinate1.Y - coordinate2.Y);
     }
 
-    public override bool Equals([NotNullWhen(true)] object? obj)
-    {
-        return obj is Coordinate2D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y;
-    }
-
     public override int GetHashCode()
     {
         return HashCode.Combine(X, Y);
@@ -67,5 +62,15 @@ internal readonly struct Coordinate2D
         var splits = input.Split(',');
 
         return new Coordinate2D(long.Parse(splits[0]), long.Parse(splits[1]));
+    }
+
+    public bool Equals(Coordinate2D other)
+    {
+        return X == other.X && Y == other.Y;
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is Coordinate2D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y;
     }
 }

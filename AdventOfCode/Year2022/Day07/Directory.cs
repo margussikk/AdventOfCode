@@ -2,13 +2,13 @@
 
 internal class Directory
 {
-    public string Name { get; private set; } = "";
+    public string Name { get; private init; } = string.Empty;
 
     public Directory? Parent { get; private set; }
 
-    public List<Directory> Directories { get; set; } = [];
+    public List<Directory> Directories { get; } = [];
 
-    public List<File> Files { get; set; } = [];
+    public List<File> Files { get; } = [];
 
     public int TotalSize { get; private set; }
 
@@ -21,12 +21,9 @@ internal class Directory
     {
         yield return this;
 
-        foreach (var directory in Directories)
+        foreach (var dir2 in Directories.SelectMany(directory => directory.EnumerateAllDirectories()))
         {
-            foreach (var dir2 in directory.EnumerateAllDirectories())
-            {
-                yield return dir2;
-            }
+            yield return dir2;
         }
     }
 

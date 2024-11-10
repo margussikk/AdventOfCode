@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Mathematics;
-using BenchmarkDotNet.Columns;
 
 namespace AdventOfCode.Year2022.Day24;
 
@@ -38,25 +37,20 @@ public class Day24PuzzleSolver : IPuzzleSolver
             {
                 var character = inputLines[row][column];
 
-                if (character == '^')
+                switch (character)
                 {
-                    _blizzardUpLocations.Add(new GridCoordinate(row, column));
-                }
-                else if (character == 'v')
-                {
-                    _blizzardDownLocations.Add(new GridCoordinate(row, column));
-                }
-                else if (character == '<')
-                {
-                    _blizzardLeftLocations.Add(new GridCoordinate(row, column));
-                }
-                else if (character == '>')
-                {
-                    _blizzardRightLocations.Add(new GridCoordinate(row, column));
-                }
-                else
-                {
-                    // Ignore walls '#' and empty spaces '.'
+                    case '^':
+                        _blizzardUpLocations.Add(new GridCoordinate(row, column));
+                        break;
+                    case 'v':
+                        _blizzardDownLocations.Add(new GridCoordinate(row, column));
+                        break;
+                    case '<':
+                        _blizzardLeftLocations.Add(new GridCoordinate(row, column));
+                        break;
+                    case '>':
+                        _blizzardRightLocations.Add(new GridCoordinate(row, column));
+                        break;
                 }
             }
         }
@@ -87,12 +81,12 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
         var expeditionLocation = startLocation;
 
-        var blizzardLocations = new Dictionary<ValleyTile, List<GridCoordinate>>()
+        var blizzardLocations = new Dictionary<ValleyTile, List<GridCoordinate>>
         {
             [ValleyTile.UpBlizzard] = _blizzardUpLocations,
             [ValleyTile.DownBlizzard] = _blizzardDownLocations,
             [ValleyTile.LeftBlizzard] = _blizzardLeftLocations,
-            [ValleyTile.RightBlizzard] = _blizzardRightLocations,
+            [ValleyTile.RightBlizzard] = _blizzardRightLocations
         };
 
         var lcm = MathFunctions.LeastCommonMultiple(_height - 2, _width - 2);
@@ -126,12 +120,10 @@ public class Day24PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
-            if (visited.Contains(valleyWalker))
+            if (!visited.Add(valleyWalker))
             {
                 continue;
             }
-
-            visited.Add(valleyWalker);
 
             // Next state
             var valleyIndex = (valleyWalker.Minute + 1) % lcm;
@@ -147,13 +139,13 @@ public class Day24PuzzleSolver : IPuzzleSolver
             var movementLocations = GetEmptyMovementLocations(valley, valleyWalker.Coordinate);
             foreach (var movementLocation in movementLocations)
             {
-                if (valleyWalker.Coordinate == startLocation || movementLocation != startLocation) // Allow staying at the start, but not come back
-                {
-                    var newValleyWalker = new ValleyWalker(movementLocation, valleyWalker.Minute + 1);
+                // Allow staying at the start, but not come back
+                if (valleyWalker.Coordinate != startLocation && movementLocation == startLocation) continue;
+                
+                var newValleyWalker = new ValleyWalker(movementLocation, valleyWalker.Minute + 1);
 
-                    distance = MeasurementFunctions.ManhattanDistance(newValleyWalker.Coordinate, endLocation);
-                    queue.Enqueue(newValleyWalker, newValleyWalker.Minute + distance);
-                }
+                distance = MeasurementFunctions.ManhattanDistance(newValleyWalker.Coordinate, endLocation);
+                queue.Enqueue(newValleyWalker, newValleyWalker.Minute + distance);
             }
         }
 
@@ -221,7 +213,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
                     ValleyTile.TwoBlizzards => '2',
                     ValleyTile.ThreeBlizzards => '3',
                     ValleyTile.FourBlizzards => '4',
-                    _ => ' ',
+                    _ => ' '
                 };
 
                 if (row == expeditionLocation.Row && column == expeditionLocation.Column)
@@ -240,7 +232,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
     private Dictionary<ValleyTile, List<GridCoordinate>> BuildNextBlizzardLocations(Dictionary<ValleyTile, List<GridCoordinate>> currentBlizzardLocations)
     {
-        var wallThickness = 1;
+        const int wallThickness = 1;
         var areaRowCount = _height - 2 * wallThickness;
         var areaColumnCount = _width - 2 * wallThickness;
 
@@ -260,13 +252,13 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
             [ValleyTile.RightBlizzard] = currentBlizzardLocations[ValleyTile.RightBlizzard]
                 .Select(x => new GridCoordinate(x.Row, Move(x.Column, 1, areaColumnCount)))
-                .ToList(),
+                .ToList()
         };
 
 
         return nextBlizzardLocations;
 
-        int Move(int value, int offset, int valueCount)
+        static int Move(int value, int offset, int valueCount)
         {
             return MathFunctions.Modulo(value - 1 + offset, valueCount) + wallThickness;
         }

@@ -89,33 +89,32 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
                 tileVisits[beam.CurrentCoordinate] |= visitedDirection;
 
-                // Process beam's movement
-                if (tile is Tile.PositiveSlopeMirror or Tile.NegativeSlopeMirror)
+                switch (tile)
                 {
-                    if ((tile == Tile.PositiveSlopeMirror && (beam.Direction is GridDirection.Left or GridDirection.Right)) ||
-                        (tile == Tile.NegativeSlopeMirror && (beam.Direction is GridDirection.Up or GridDirection.Down)))
-                    {
+                    // Process beam's movement
+                    case Tile.PositiveSlopeMirror or Tile.NegativeSlopeMirror when (tile == Tile.PositiveSlopeMirror && beam.Direction is GridDirection.Left or GridDirection.Right) ||
+                        (tile == Tile.NegativeSlopeMirror && beam.Direction is GridDirection.Up or GridDirection.Down):
                         beam.TurnLeft();
-                    }
-                    else
-                    {
+                        break;
+                    case Tile.PositiveSlopeMirror or Tile.NegativeSlopeMirror:
                         beam.TurnRight();
-                    }
-                }
-                else if ((tile is Tile.HorizontalSplitter && (beam.Direction is GridDirection.Up or GridDirection.Down)) ||
-                         (tile is Tile.VerticalSplitter && (beam.Direction is GridDirection.Left or GridDirection.Right)))
-                {
-                    // New beam turns left
-                    var clone = beam.Clone();
-                    clone.TurnLeft();
-                    beams.Push(clone);
+                        break;
+                    case Tile.HorizontalSplitter when beam.Direction is GridDirection.Up or GridDirection.Down:
+                    case Tile.VerticalSplitter when beam.Direction is GridDirection.Left or GridDirection.Right:
+                    {
+                        // New beam turns left
+                        var clone = beam.Clone();
+                        clone.TurnLeft();
+                        beams.Push(clone);
 
-                    // Current beam turns right
-                    beam.TurnRight();
-                }
-                else // Empty space or splitter in the passthrough orientation
-                {
-                    beam.Step();
+                        // Current beam turns right
+                        beam.TurnRight();
+                        break;
+                    }
+                    // Empty space or splitter in the passthrough orientation
+                    default:
+                        beam.Step();
+                        break;
                 }
             }
         }
@@ -125,40 +124,25 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
     private static GridDirection GetVisitedDirection(Tile tile, GridDirection beamDirection)
     {
-        if (tile is Tile.EmptySpace or Tile.HorizontalSplitter or Tile.VerticalSplitter)
+        return tile switch
         {
-            if ((beamDirection & (GridDirection.Left | GridDirection.Right)) != GridDirection.None)
-            {
-                return GridDirection.Left | GridDirection.Right;
-            }
-            else if ((beamDirection & (GridDirection.Up | GridDirection.Down)) != GridDirection.None)
-            {
-                return GridDirection.Up | GridDirection.Down;
-            }
-        }
-        else if (tile is Tile.PositiveSlopeMirror)
-        {
-            if ((beamDirection & (GridDirection.Right | GridDirection.Down)) != GridDirection.None)
-            {
-                return (GridDirection.Right | GridDirection.Down).Flip();
-            }
-            else if ((beamDirection & (GridDirection.Left | GridDirection.Up)) != GridDirection.None)
-            {
-                return (GridDirection.Left | GridDirection.Up).Flip();
-            }
-        }
-        else if (tile is Tile.NegativeSlopeMirror)
-        {
-            if ((beamDirection & (GridDirection.Right | GridDirection.Up)) != GridDirection.None)
-            {
-                return (GridDirection.Right | GridDirection.Up).Flip();
-            }
-            else if ((beamDirection & (GridDirection.Left | GridDirection.Down)) != GridDirection.None)
-            {
-                return (GridDirection.Left | GridDirection.Down).Flip();
-            }
-        }
-
-        return GridDirection.None;
+            Tile.EmptySpace or
+            Tile.HorizontalSplitter or
+            Tile.VerticalSplitter when (beamDirection & GridDirection.LeftAndRight) != GridDirection.None
+                => GridDirection.LeftAndRight,
+            Tile.EmptySpace or
+            Tile.HorizontalSplitter or
+            Tile.VerticalSplitter when (beamDirection & GridDirection.UpAndDown) != GridDirection.None
+                => GridDirection.UpAndDown,
+            Tile.PositiveSlopeMirror when (beamDirection & GridDirection.DownAndRight) != GridDirection.None
+                => GridDirection.DownAndRight.Flip(),
+            Tile.PositiveSlopeMirror when (beamDirection & GridDirection.UpAndLeft) != GridDirection.None
+                => GridDirection.UpAndLeft.Flip(),
+            Tile.NegativeSlopeMirror when (beamDirection & GridDirection.UpAndRight) != GridDirection.None
+                => GridDirection.UpAndRight.Flip(),
+            Tile.NegativeSlopeMirror when (beamDirection & GridDirection.DownAndLeft) != GridDirection.None
+                => GridDirection.DownAndLeft.Flip(),
+            _ => GridDirection.None
+        };
     }
 }

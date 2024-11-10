@@ -20,7 +20,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
         var biodiversityRatings = new HashSet<long>();
 
-        var answer = 0L;
+        long answer;
 
         while (true)
         {
@@ -44,7 +44,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
                     else
                     {
                         // An empty space becomes infested with a bug if exactly one or two bugs are adjacent to it.
-                        if (bugCount == 1 || bugCount == 2)
+                        if (bugCount is 1 or 2)
                         {
                             gridUpdates.Add(new GridCell<bool>(cell.Coordinate, true));
                         }
@@ -106,7 +106,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
                                 GridDirection.Up => innerGrid.Row(innerGrid.LastRowIndex).Count(x => x.Object),
                                 GridDirection.Right => innerGrid.Column(0).Count(x => x.Object),
                                 GridDirection.Left => innerGrid.Column(innerGrid.LastColumnIndex).Count(x => x.Object),
-                                _ => throw new InvalidOperationException($"Invalid direction {direction}"),
+                                _ => throw new InvalidOperationException($"Invalid direction {direction}")
                             };
                         }
                         else if (grid.InBounds(neighborCoordinate))
@@ -142,7 +142,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
                     else
                     {
                         // An empty space becomes infested with a bug if exactly one or two bugs are adjacent to it.
-                        if (bugCount == 1 || bugCount == 2)
+                        if (bugCount is 1 or 2)
                         {
                             gridCellUpdates.Add(new GridCellUpdate(depth, cell.Coordinate, true));
                         }
@@ -164,15 +164,9 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
     private static long CalculateBiodiversityRating(BitGrid grid)
     {
-        var result = 0L;
-        
-        foreach (var cell in grid.Where(x => x.Object))
-        {
-            var index = cell.Coordinate.Row * grid.Width + cell.Coordinate.Column;
-            result |= (1L << index);
-        }
-
-        return result;
+        return grid.Where(x => x.Object)
+                   .Select(cell => cell.Coordinate.Row * grid.Width + cell.Coordinate.Column)
+                   .Aggregate(0L, (current, index) => current | 1L << index);
     }
 
     private sealed record GridCellUpdate(int Depth, GridCoordinate Coordinate, bool Value);

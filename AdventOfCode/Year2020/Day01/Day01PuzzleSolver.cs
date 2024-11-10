@@ -44,23 +44,20 @@ public class Day01PuzzleSolver : IPuzzleSolver
                 answer = 0L;
                 return false;
             }
-            else if (summandCount == 1)
+
+            if (summandCount == 1)
             {
-                if (currentSum + entry == 2020)
-                {
-                    answer = entry;
-                    return true;
-                }
+                if (currentSum + entry != 2020) continue;
+                
+                answer = entry;
+                return true;
             }
-            else
-            {
-                var found = GetAnswer(entries, summandCount - 1, index + 1, currentSum + entry, out var answer1);
-                if (found)
-                {
-                    answer = entry * answer1;
-                    return found;
-                }
-            }
+
+            var found = GetAnswer(entries, summandCount - 1, index + 1, currentSum + entry, out var answer1);
+            if (!found) continue;
+            
+            answer = entry * answer1;
+            return found;
         }
 
         answer = 0L;

@@ -51,13 +51,12 @@ public class Day20PuzzleSolver : IPuzzleSolver
                     lowPulses++;
                 }
 
-                if (_modules.TryGetValue(signal.DestinationModule, out var module))
+                if (!_modules.TryGetValue(signal.DestinationModule, out var module)) continue;
+                
+                var newSignals = module.ProcessSignal(signal);
+                foreach (var newSignal in newSignals)
                 {
-                    var newSignals = module.ProcessSignal(signal);
-                    foreach (var newSignal in newSignals)
-                    {
-                        signalQueue.Enqueue(newSignal);
-                    }
+                    signalQueue.Enqueue(newSignal);
                 }
             }
         }
@@ -88,23 +87,22 @@ public class Day20PuzzleSolver : IPuzzleSolver
             signalQueue.Enqueue(new Signal(ModuleName.Button, ModuleName.Broadcaster, false));
             while (signalQueue.TryDequeue(out var signal))
             {
-                if (signal.DestinationModule == feederModule.Name && signal.Pulse && !counters.ContainsKey(signal.SourceModule))
+                if (signal.DestinationModule == feederModule.Name && signal.Pulse)
                 {
-                    counters[signal.SourceModule] = buttonPresses;
+                    counters.TryAdd(signal.SourceModule, buttonPresses);
                 }
 
-                if (_modules.TryGetValue(signal.DestinationModule, out var module))
+                if (!_modules.TryGetValue(signal.DestinationModule, out var module)) continue;
+                
+                var newSignals = module.ProcessSignal(signal);
+                foreach (var newSignal in newSignals)
                 {
-                    var newSignals = module.ProcessSignal(signal);
-                    foreach (var newSignal in newSignals)
-                    {
-                        signalQueue.Enqueue(newSignal);
-                    }
+                    signalQueue.Enqueue(newSignal);
                 }
             }
         }
 
-        var answer = MathFunctions.LeastCommonMultiple(counters.Values);
+        var answer = counters.Values.LeastCommonMultiple();
 
         return new PuzzleAnswer(answer, 244178746156661L);
     }

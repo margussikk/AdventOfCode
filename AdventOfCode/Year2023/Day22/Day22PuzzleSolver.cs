@@ -19,7 +19,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
         var bricks = SettleBricks(_bricks);
 
         var answer = bricks
-            .Count(b1 => b1.Supports.All(b2 => b2.SupportedBy.Count > 1)); // NB! TrueForAll returns true if list is empty
+            .Count(b1 => b1.Supports.All(b2 => b2.SupportedBy.Count > 1));
 
         return new PuzzleAnswer(answer, 434);
     }
@@ -38,14 +38,11 @@ public class Day22PuzzleSolver : IPuzzleSolver
             while (fallenBricksQueue.TryDequeue(out var fallenBrick))
             {
                 fallenBrickIds.Add(fallenBrick.Id);
-                foreach (var supportedBrick in fallenBrick.Supports)
-                {
-                    if (supportedBrick.SupportedBy.Any(x => !fallenBrickIds.Contains(x.Id)))
-                    {
-                        // Brick which is supported by current brick is also supported by some other brick.
-                        continue;
-                    }
 
+                // Check if some other brick also supports brick which is supported by current brick.
+                foreach (var supportedBrick in fallenBrick.Supports
+                             .Where(supportedBrick => supportedBrick.SupportedBy.All(x => fallenBrickIds.Contains(x.Id))))
+                {
                     fallenBricksQueue.Enqueue(supportedBrick);
                 }
             }

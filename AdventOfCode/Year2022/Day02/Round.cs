@@ -2,9 +2,9 @@
 
 internal class Round
 {
-    public Hand OpponentHand { get; private set; }
+    public Hand OpponentHand { get; private init; }
 
-    public Decision PlayerDecision { get; private set; }
+    public Decision PlayerDecision { get; private init; }
 
     public int CalculateScorePartOne()
     {
@@ -48,7 +48,7 @@ internal class Round
     {
         var splits = input.Split(' ');
 
-        var round = new Round()
+        var round = new Round
         {
             OpponentHand = splits[0][0] switch
             {

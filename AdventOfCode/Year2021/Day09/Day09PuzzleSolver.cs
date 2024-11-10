@@ -52,12 +52,10 @@ public class Day09PuzzleSolver : IPuzzleSolver
         coordinates.Enqueue(coordinate);
         while (coordinates.TryDequeue(out coordinate))
         {
-            if (visited.Contains(coordinate))
+            if (!visited.Add(coordinate))
             {
                 continue;
             }
-
-            visited.Add(coordinate);
 
             foreach (var neighbor in _grid.SideNeighbors(coordinate).Where(cell => cell.Object < 9))
             {

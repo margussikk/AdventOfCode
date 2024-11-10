@@ -46,19 +46,15 @@ public class Day25PuzzleSolver : IPuzzleSolver
     {
         var updatedDirections = new List<(GridCoordinate coordinate, GridDirection direction)>();
 
-        foreach (var gridCell in _grid)
+        foreach (var gridCell in _grid.Where(c => c.Object == GridDirection.Right))
         {
-            if (gridCell.Object == GridDirection.Right)
-            {
-                var nextColumn = (gridCell.Coordinate.Column + 1) % _grid.Width;
-                var nextCoordinate = new GridCoordinate(gridCell.Coordinate.Row, nextColumn);
+            var nextColumn = (gridCell.Coordinate.Column + 1) % _grid.Width;
+            var nextCoordinate = new GridCoordinate(gridCell.Coordinate.Row, nextColumn);
 
-                if (_grid[nextCoordinate] == GridDirection.None)
-                {
-                    updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
-                    updatedDirections.Add((nextCoordinate, GridDirection.Right));
-                }
-            }
+            if (_grid[nextCoordinate] != GridDirection.None) continue;
+            
+            updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
+            updatedDirections.Add((nextCoordinate, GridDirection.Right));
         }
 
         foreach (var (coordinate, direction) in updatedDirections)
@@ -73,19 +69,15 @@ public class Day25PuzzleSolver : IPuzzleSolver
     {
         var updatedDirections = new List<(GridCoordinate coordinate, GridDirection direction)>();
 
-        foreach (var gridCell in _grid)
+        foreach (var gridCell in _grid.Where(c => c.Object == GridDirection.Down))
         {
-            if (gridCell.Object == GridDirection.Down)
-            {
-                var nextRow = (gridCell.Coordinate.Row + 1) % _grid.Height;
-                var nextCoordinate = new GridCoordinate(nextRow, gridCell.Coordinate.Column);
+            var nextRow = (gridCell.Coordinate.Row + 1) % _grid.Height;
+            var nextCoordinate = new GridCoordinate(nextRow, gridCell.Coordinate.Column);
 
-                if (_grid[nextCoordinate] == GridDirection.None)
-                {
-                    updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
-                    updatedDirections.Add((nextCoordinate, GridDirection.Down));
-                }
-            }
+            if (_grid[nextCoordinate] != GridDirection.None) continue;
+            
+            updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
+            updatedDirections.Add((nextCoordinate, GridDirection.Down));
         }
 
         foreach (var (coordinate, direction) in updatedDirections)

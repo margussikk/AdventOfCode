@@ -1,9 +1,14 @@
 ﻿namespace AdventOfCode.Year2022.Day13;
 
-internal class IntegerPacket(int value) : Packet
+internal class IntegerPacket : Packet
 {
-    public int Value { get; } = value;
+    public int Value { get; }
 
+    public IntegerPacket(int value)
+    {
+        Value = value;
+    }
+    
     public override string ToString()
     {
         return Value.ToString();
@@ -17,7 +22,7 @@ internal class IntegerPacket(int value) : Packet
         return listPacket;
     }
 
-    public override int CompareTo(IntegerPacket integerPacket)
+    protected override int CompareTo(IntegerPacket integerPacket)
     {
         return Value.CompareTo(integerPacket.Value);
     }

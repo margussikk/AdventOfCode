@@ -2,12 +2,7 @@
 
 internal class ListPacket : Packet
 {
-    public List<Packet> Packets { get; }
-
-    public ListPacket()
-    {
-        Packets = [];
-    }
+    public List<Packet> Packets { get; } = [];
 
     public void AddPacket(Packet packet)
     {
@@ -19,7 +14,7 @@ internal class ListPacket : Packet
         return $"[{string.Join(',', Packets.Select(x => x.ToString()))}]";
     }
 
-    public override int CompareTo(IntegerPacket integerPacket)
+    protected override int CompareTo(IntegerPacket integerPacket)
     {
         return CompareTo(integerPacket.ToListPacket());
     }

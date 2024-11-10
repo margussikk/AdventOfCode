@@ -2,9 +2,9 @@
 
 internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCoordinate>
 {
-    public readonly int Row { get; } = row;
+    public int Row { get; } = row;
 
-    public readonly int Column { get; } = column;
+    public int Column { get; } = column;
 
     public IEnumerable<GridCoordinate> UpNeighbors()
     {

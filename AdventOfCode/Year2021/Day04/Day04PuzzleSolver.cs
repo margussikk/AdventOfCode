@@ -26,11 +26,10 @@ public class Day04PuzzleSolver : IPuzzleSolver
             foreach (var board in boards)
             {
                 board.MarkNumber(number);
-                if (board.IsWinner())
-                {
-                    var answer = board.SumOfUnmarkedNumbers() * number;
-                    return new PuzzleAnswer(answer, 45031);
-                }
+                if (!board.IsWinner()) continue;
+                
+                var answer = board.SumOfUnmarkedNumbers() * number;
+                return new PuzzleAnswer(answer, 45031);
             }
         }
 
@@ -59,18 +58,17 @@ public class Day04PuzzleSolver : IPuzzleSolver
                 }
             }
 
-            if (winningBoards.Count != 0)
+            if (winningBoards.Count == 0) continue;
+            
+            if (boards.Count == 1)
             {
-                if (boards.Count == 1)
-                {
-                    var answer = winningBoards[0].SumOfUnmarkedNumbers() * number;
-                    return new PuzzleAnswer(answer, 2568);
-                }
+                var answer = winningBoards[0].SumOfUnmarkedNumbers() * number;
+                return new PuzzleAnswer(answer, 2568);
+            }
 
-                foreach (var winningBoard in winningBoards)
-                {
-                    boards.Remove(winningBoard);
-                }
+            foreach (var winningBoard in winningBoards)
+            {
+                boards.Remove(winningBoard);
             }
         }
 

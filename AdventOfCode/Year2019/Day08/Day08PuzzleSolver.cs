@@ -47,20 +47,16 @@ public class Day08PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var stringBuilder = new StringBuilder();
-
+        
         for (var row = 0; row <= _layers[0].LastRowIndex; row++)
         {
             for(var column = 0; column <= _layers[0].LastColumnIndex; column++)
             {
-                for(var index = 0; index < _layers.Count; index++)
+                var layer = _layers.Find(l => l[row, column] != Pixel.Transparent);
+                if (layer != null)
                 {
-                    var pixel = _layers[index][row, column];
-                    if (pixel != Pixel.Transparent)
-                    {
-                        var character = pixel == Pixel.White ? '#' : ' ';
-                        stringBuilder.Append(character);
-                        break;
-                    }
+                    var character = layer[row, column] == Pixel.White ? '#' : ' ';
+                    stringBuilder.Append(character);
                 }
             }
             stringBuilder.AppendLine();

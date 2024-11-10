@@ -4,8 +4,8 @@ namespace AdventOfCode.Year2019.Day19;
 
 internal class Beam
 {
-    public Coordinate2D Start { get; set; }
-    public Vector2D Vector { get; set; }
+    public Coordinate2D Start { get; init; }
+    public Vector2D Vector { get; init; }
 
     public long GetX(long y)
     {

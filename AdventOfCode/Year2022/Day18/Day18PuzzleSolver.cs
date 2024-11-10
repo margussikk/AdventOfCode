@@ -1,6 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
-using Microsoft.CodeAnalysis;
 
 namespace AdventOfCode.Year2022.Day18;
 
@@ -59,12 +58,10 @@ public class Day18PuzzleSolver : IPuzzleSolver
         queue.Enqueue(scanMinLocation);
         while (queue.TryDequeue(out var currentCoordinate))
         {
-            if (visited.Contains(currentCoordinate))
+            if (!visited.Add(currentCoordinate))
             {
                 continue;
             }
-
-            visited.Add(currentCoordinate);
 
             // Count connected to cubes
             answer += currentCoordinate.SideNeighbors()

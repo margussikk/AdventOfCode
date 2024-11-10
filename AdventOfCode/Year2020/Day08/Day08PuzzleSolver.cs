@@ -28,7 +28,8 @@ public class Day08PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        foreach (var fixedInstruction in _instructions.Where(instruction => instruction.InstructionType != InstructionType.Acc))
+        foreach (var fixedInstruction in _instructions
+                     .Where(instruction => instruction.InstructionType != InstructionType.Acc))
         {
             var fixedInstructions = _instructions
                 .Select(instruction => instruction == fixedInstruction
@@ -37,11 +38,10 @@ public class Day08PuzzleSolver : IPuzzleSolver
                 .ToList();
 
             var terminatedNormally = RunProgram(fixedInstructions, out var accumulator);
-            if (terminatedNormally)
-            {
-                answer = accumulator;
-                break;
-            }
+            if (!terminatedNormally) continue;
+            
+            answer = accumulator;
+            break;
         }
 
         return new PuzzleAnswer(answer, 1160);
@@ -56,12 +56,10 @@ public class Day08PuzzleSolver : IPuzzleSolver
         var instructionIndex = 0;
         while (instructionIndex < instructions.Count)
         {
-            if (visitedInstructionIndexes.Contains(instructionIndex))
+            if (!visitedInstructionIndexes.Add(instructionIndex))
             {
                 return false;
             }
-
-            visitedInstructionIndexes.Add(instructionIndex);
 
             var instruction = instructions[instructionIndex];
             switch (instruction.InstructionType)

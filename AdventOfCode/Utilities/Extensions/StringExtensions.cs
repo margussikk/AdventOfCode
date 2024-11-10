@@ -12,35 +12,38 @@ internal static class StringExtensions
 
         while (span.Length > 0)
         {
-            if (span[0] == '-')
+            switch (span[0])
             {
-                if (value.HasValue)
-                {
+                case '-' when value.HasValue:
                     throw new InvalidOperationException("- in the middle of the number");
-                }
-                sign = -1;
-            }
-            else if (span[0] is >= '0' and <= '9')
-            {
-                if (!value.HasValue)
+                case '-':
+                    sign = -1;
+                    break;
+                case >= '0' and <= '9':
                 {
-                    value = 0;
-                }
+                    value ??= 0;
 
-                value = value * 10 + sign * (span[0] - '0');
-            }
-            else if (separators.Contains(span[0]))
-            {
-                if (value.HasValue)
-                {
-                    items.Add(value.Value);
-                    value = null;
-                    sign = 1;
+                    value = value * 10 + sign * (span[0] - '0');
+                    break;
                 }
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unexcpected characted '{span[0]}'");
+                default:
+                {
+                    if (separators.Contains(span[0]))
+                    {
+                        if (value.HasValue)
+                        {
+                            items.Add(value.Value);
+                            value = null;
+                            sign = 1;
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Unexcpected characted '{span[0]}'");
+                    }
+
+                    break;
+                }
             }
 
             span = span[1..];
@@ -63,32 +66,25 @@ internal static class StringExtensions
 
         while (span.Length > 0)
         {
-            if (span[0] == '-')
+            switch (span[0])
             {
-                if (value.HasValue)
-                {
+                case '-' when value.HasValue:
                     throw new InvalidOperationException("- in the middle of the number");
-                }
-                sign = -1;
-            }
-            else if (span[0] is >= '0' and <= '9')
-            {
-                if (!value.HasValue)
+                case '-':
+                    sign = -1;
+                    break;
+                case >= '0' and <= '9':
                 {
-                    value = 0;
-                }
+                    value ??= 0;
 
-                value = value * 10 + sign * (span[0] - '0');
+                    value = value * 10 + sign * (span[0] - '0');
+                    break;
+                }
             }
 
             span = span[1..];
         }
 
-        if (value.HasValue)
-        {
-            return value.Value;
-        }
-
-        return 0;
+        return value ?? 0;
     }
 }

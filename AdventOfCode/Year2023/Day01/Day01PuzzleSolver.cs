@@ -7,15 +7,15 @@ public class Day01PuzzleSolver : IPuzzleSolver
 {
     private readonly SpelledDigit[] _spelledDigits =
     [
-        new SpelledDigit("one", 1),
-        new SpelledDigit("two", 2),
-        new SpelledDigit("three", 3),
-        new SpelledDigit("four", 4),
-        new SpelledDigit("five", 5),
-        new SpelledDigit("six", 6),
-        new SpelledDigit("seven", 7),
-        new SpelledDigit("eight", 8),
-        new SpelledDigit("nine", 9)
+        new("one", 1),
+        new("two", 2),
+        new("three", 3),
+        new("four", 4),
+        new("five", 5),
+        new("six", 6),
+        new("seven", 7),
+        new("eight", 8),
+        new("nine", 9)
     ];
 
     private string[] _inputLines = [];
@@ -53,53 +53,50 @@ public class Day01PuzzleSolver : IPuzzleSolver
         var lastDigitIndex = lineSpan.LastIndexOfAnyInRange('1', '9');
         var lastDigit = line[lastDigitIndex] - '0';
 
-        if (includeSpelledDigits)
+        if (!includeSpelledDigits) return 10 * firstDigit + lastDigit;
+        
+        var startSpan = lineSpan[..firstDigitIndex];
+        while (startSpan.Length > 0)
         {
-            var startSpan = lineSpan[..firstDigitIndex];
-            while (startSpan.Length > 0)
+            SpelledDigit? foundSpelledDigit = null;
+
+            foreach (var spelledDigit in _spelledDigits)
             {
-                SpelledDigit? foundSpelledDigit = null;
-
-                foreach (var spelledDigit in _spelledDigits)
-                {
-                    if (startSpan.StartsWith(spelledDigit.Spelling))
-                    {
-                        foundSpelledDigit = spelledDigit;
-                        break;
-                    }
-                }
-
-                if (foundSpelledDigit != null)
-                {
-                    firstDigit = foundSpelledDigit.Digit;
-                    break;
-                }
-
-                startSpan = startSpan[1..];
+                if (!startSpan.StartsWith(spelledDigit.Spelling)) continue;
+                    
+                foundSpelledDigit = spelledDigit;
+                break;
             }
 
-            var endSpan = lineSpan[(lastDigitIndex + 1)..];
-            while (endSpan.Length > 0)
+            if (foundSpelledDigit != null)
             {
-                SpelledDigit? foundSpelledDigit = null;
-
-                foreach (var spelledDigit in _spelledDigits)
-                {
-                    if (endSpan.EndsWith(spelledDigit.Spelling))
-                    {
-                        foundSpelledDigit = spelledDigit;
-                        break;
-                    }
-                }
-
-                if (foundSpelledDigit != null)
-                {
-                    lastDigit = foundSpelledDigit.Digit;
-                    break;
-                }
-
-                endSpan = endSpan[..^1];
+                firstDigit = foundSpelledDigit.Digit;
+                break;
             }
+
+            startSpan = startSpan[1..];
+        }
+
+        var endSpan = lineSpan[(lastDigitIndex + 1)..];
+        while (endSpan.Length > 0)
+        {
+            SpelledDigit? foundSpelledDigit = null;
+
+            foreach (var spelledDigit in _spelledDigits)
+            {
+                if (!endSpan.EndsWith(spelledDigit.Spelling)) continue;
+                    
+                foundSpelledDigit = spelledDigit;
+                break;
+            }
+
+            if (foundSpelledDigit != null)
+            {
+                lastDigit = foundSpelledDigit.Digit;
+                break;
+            }
+
+            endSpan = endSpan[..^1];
         }
 
         return 10 * firstDigit + lastDigit;

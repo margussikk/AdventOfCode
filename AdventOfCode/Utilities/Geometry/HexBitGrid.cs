@@ -43,12 +43,9 @@ internal class HexBitGrid : IEnumerable<HexGridCell<bool>>
 
     public IEnumerable<HexGridCell<bool>> AroundNeighbors(HexCoordinate coordinate)
     {
-        foreach (var neighborCoordinate in coordinate.AroundNeighbors())
+        foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
         {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new HexGridCell<bool>(neighborCoordinate, _bitArray.Get(GetIndex(neighborCoordinate.Q, neighborCoordinate.R)));
-            }
+            yield return new HexGridCell<bool>(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 
@@ -61,7 +58,7 @@ internal class HexBitGrid : IEnumerable<HexGridCell<bool>>
 
             for (var r = rStart; r <= rEnd; r++)
             {
-                yield return new HexGridCell<bool>(new HexCoordinate(q, r), _bitArray.Get(GetIndex(q, r)));
+                yield return new HexGridCell<bool>(new HexCoordinate(q, r), this[q, r]);
             }
         }
     }

@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct Coordinate3D(long x, long y, long z)
+internal readonly struct Coordinate3D(long x, long y, long z) : IEquatable<Coordinate3D>
 {
     public long X { get; } = x;
 
@@ -17,11 +17,6 @@ internal readonly struct Coordinate3D(long x, long y, long z)
                           .ToList();
 
         return new Coordinate3D(values[0], values[1], values[2]);
-    }
-
-    public override bool Equals([NotNullWhen(true)] object? obj)
-    {
-        return obj is Coordinate3D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y && Z == otherCoordinate.Z;
     }
 
     public override int GetHashCode()
@@ -45,7 +40,7 @@ internal readonly struct Coordinate3D(long x, long y, long z)
             new(0, -1, 0),
 
             new(0, 0, 1),
-            new(0, 0, -1),
+            new(0, 0, -1)
         };
 
         foreach (var vector in vectors)
@@ -80,30 +75,30 @@ internal readonly struct Coordinate3D(long x, long y, long z)
 
         return
         [
-            new(X, Y, Z),
-            new(-Z, Y, X),
-            new(-X, Y, -Z),
-            new(Z, Y, -X),
-            new(Y, -X, Z),
-            new(Y, Z, X),
-            new(Y, X, -Z),
-            new(Y, -Z, -X),
-            new(-Y, X, Z),
-            new(-Y, -Z, X),
-            new(-Y, -X, -Z),
-            new(-Y, Z, -X),
-            new(X, Z, -Y),
-            new(-Z, X, -Y),
-            new(-X, -Z, -Y),
-            new(Z, -X, -Y),
-            new(X, -Y, -Z),
-            new(-Z, -Y, -X),
-            new(-X, -Y, Z),
-            new(Z, -Y, X),
-            new(X, -Z, Y),
-            new(-Z, -X, Y),
-            new(-X, Z, Y),
-            new(Z, X, Y),
+            new Coordinate3D(X, Y, Z),
+            new Coordinate3D(-Z, Y, X),
+            new Coordinate3D(-X, Y, -Z),
+            new Coordinate3D(Z, Y, -X),
+            new Coordinate3D(Y, -X, Z),
+            new Coordinate3D(Y, Z, X),
+            new Coordinate3D(Y, X, -Z),
+            new Coordinate3D(Y, -Z, -X),
+            new Coordinate3D(-Y, X, Z),
+            new Coordinate3D(-Y, -Z, X),
+            new Coordinate3D(-Y, -X, -Z),
+            new Coordinate3D(-Y, Z, -X),
+            new Coordinate3D(X, Z, -Y),
+            new Coordinate3D(-Z, X, -Y),
+            new Coordinate3D(-X, -Z, -Y),
+            new Coordinate3D(Z, -X, -Y),
+            new Coordinate3D(X, -Y, -Z),
+            new Coordinate3D(-Z, -Y, -X),
+            new Coordinate3D(-X, -Y, Z),
+            new Coordinate3D(Z, -Y, X),
+            new Coordinate3D(X, -Z, Y),
+            new Coordinate3D(-Z, -X, Y),
+            new Coordinate3D(-X, Z, Y),
+            new Coordinate3D(Z, X, Y)
         ];
     }
 
@@ -130,5 +125,15 @@ internal readonly struct Coordinate3D(long x, long y, long z)
     public static Vector3D operator -(Coordinate3D coordinate1, Coordinate3D coordinate2)
     {
         return new Vector3D(coordinate1.X - coordinate2.X, coordinate1.Y - coordinate2.Y, coordinate1.Z - coordinate2.Z);
+    }
+
+    public bool Equals(Coordinate3D other)
+    {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is Coordinate3D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y && Z == otherCoordinate.Z;
     }
 }

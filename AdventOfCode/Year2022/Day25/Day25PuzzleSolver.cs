@@ -5,17 +5,17 @@ namespace AdventOfCode.Year2022.Day25;
 [Puzzle(2022, 25, "Full of Hot Air")]
 public class Day25PuzzleSolver : IPuzzleSolver
 {
-    private List<Snafu> Snafus = [];
+    private List<Snafu> _snafus = [];
 
     public void ParseInput(string[] inputLines)
     {
-        Snafus = inputLines.Select(Snafu.Parse)
+        _snafus = inputLines.Select(Snafu.Parse)
                            .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var sum = Snafus.Sum(x => x.Value);
+        var sum = _snafus.Sum(x => x.Value);
 
         var sumSnafu = new Snafu(sum);
 

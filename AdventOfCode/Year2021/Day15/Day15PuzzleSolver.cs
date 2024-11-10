@@ -32,7 +32,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var value = _riskLevelGrid[row % _riskLevelGrid.Height, column % _riskLevelGrid.Width] +
                             row / _riskLevelGrid.Height +
                             column / _riskLevelGrid.Width;
-                value = value > 9 ? (value % 10) + 1 : value;
+                value = value > 9 ? value % 10 + 1 : value;
 
                 grid[row, column] = Convert.ToByte(value);
             }
@@ -73,13 +73,12 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var currentLowestTotalRisk = totalRiskGrid[neighbor.Coordinate] ?? int.MaxValue;
 
                 var newTotalRisk = currentCaveWalker.Distance + neighbor.Object;
-                if (newTotalRisk < currentLowestTotalRisk)
-                {
-                    var newCaveWalker = new CaveWalker(neighbor.Coordinate, newTotalRisk);
+                if (newTotalRisk >= currentLowestTotalRisk) continue;
+                
+                var newCaveWalker = new CaveWalker(neighbor.Coordinate, newTotalRisk);
 
-                    var manhattan = MeasurementFunctions.ManhattanDistance(newCaveWalker.Coordinate, endCoordinate);
-                    queue.Enqueue(newCaveWalker, newTotalRisk + manhattan);
-                }
+                var manhattan = MeasurementFunctions.ManhattanDistance(newCaveWalker.Coordinate, endCoordinate);
+                queue.Enqueue(newCaveWalker, newTotalRisk + manhattan);
             }
         }
 

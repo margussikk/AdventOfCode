@@ -2,9 +2,9 @@
 
 internal class Food
 {
-    public string[] Ingredients { get; private set; } = [];
+    public string[] Ingredients { get; private init; } = [];
 
-    public string[] Allergens { get; private set; } = [];
+    public string[] Allergens { get; private init; } = [];
 
     public static Food Parse(string input)
     {

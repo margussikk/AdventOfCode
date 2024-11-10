@@ -91,7 +91,7 @@ internal readonly struct NumberRange<T>(T start, T end) : IEnumerable<T> where T
         {
             var lastRange = stack.Pop();
 
-            if (lastRange.IsOverlapped(currentRange) || (lastRange.End + T.One == currentRange.Start))
+            if (lastRange.IsOverlapped(currentRange) || lastRange.End + T.One == currentRange.Start)
             {
                 var max = T.Max(lastRange.End, currentRange.End);
                 var newLastRange = new NumberRange<T>(lastRange.Start, max);

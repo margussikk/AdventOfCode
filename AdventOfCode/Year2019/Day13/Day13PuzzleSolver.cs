@@ -21,19 +21,13 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
         var result = computer.Run();
 
-        var answer = 0L;
-
-        foreach(var chunk in result.Outputs.Chunk(3))
-        {
-            // ignore [0] X, Column
-            // ignore [1] Y, Row
-
-            var tile = (Tile)chunk[2];
-            if (tile == Tile.Block)
-            {
-                answer++;
-            }
-        }
+        // ignore [0] X, Column
+        // ignore [1] Y, Row
+        
+        var answer = result.Outputs
+            .Chunk(3)
+            .Select(chunk => (Tile)chunk[2])
+            .LongCount(tile => tile == Tile.Block);
 
         return new PuzzleAnswer(answer, 253);
     }
@@ -44,8 +38,13 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
         var blockCoordinates = new HashSet<GridCoordinate>();
 
-        var computer = new IntCodeComputer(_program);
-        computer.Memory[0] = 2;
+        var computer = new IntCodeComputer(_program)
+        {
+            Memory =
+            {
+                [0] = 2
+            }
+        };
 
         var answer = 0L;
 
@@ -56,16 +55,9 @@ public class Day13PuzzleSolver : IPuzzleSolver
             var ballCoordinate = new GridCoordinate(0, 0);
             var paddleCoordinate = new GridCoordinate(0, 0);
 
-            IntCodeResult result;
-
-            if (joystickTilt == -2)
-            {
-                result = computer.Run();
-            }
-            else
-            {
-                result = computer.Run(joystickTilt);
-            }
+            var result = joystickTilt == -2
+                ? computer.Run()
+                : computer.Run(joystickTilt);
             
             foreach(var chunk in result.Outputs.Chunk(3))
             {

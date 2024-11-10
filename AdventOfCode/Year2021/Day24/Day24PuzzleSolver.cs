@@ -2,10 +2,10 @@ using AdventOfCode.Framework.Puzzle;
 
 namespace AdventOfCode.Year2021.Day24;
 
-/* There are 14 groups of instructions, which differ only at 3 places. 7 groups increase z value, 7 decrease z value. z gets its next value from formula
-    "z = 26 * z + Input + Addition". The goal is to get z to 0. If z is 1 in the divide instruction then its next instruction (add x 13) has input difference
-    over 10 which makes the input comparisons fail. However it is possible to decrease z when the divider is 26 by choosing an input which satisfies the condition
-    "input == (z % 26) + InputDifference". Basically the instructions multiply z by 26 and divide by 26 and if all the inputs are correct then it divides back to 0.
+/* There are 14 groups of instructions, which differ only at 3 places. 7 groups increase z value, 7 decrease z value. Z gets its next value from formula
+    "z = 26 * z + Input + Addition". The goal is to get z to 0. If z is 1 in the divide instruction, then its next instruction (add x 13) has input difference
+    over 10, which makes the input comparisons fail. However, it is possible to decrease z when the divider is 26 by choosing an input which satisfies the condition
+    "input == (z % 26) + InputDifference". Basically, the instructions multiply z by 26 and divide by 26, and if all the inputs are correct, then it divides back to 0.
 
     inp w
     mul x 0
@@ -63,10 +63,10 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var alu = new Alu();
 
         alu.Execute(minModelNumber, _instructions);
-        Console.WriteLine($"min valid={(alu.Variables['z' - 'w'] == 0)}");
+        Console.WriteLine($"min valid={alu.Variables['z' - 'w'] == 0}");
 
         alu.Execute(maxModelNumber, _instructions);
-        Console.WriteLine($"max valid={(alu.Variables['z' - 'w'] == 0)}");
+        Console.WriteLine($"max valid={alu.Variables['z' - 'w'] == 0}");
     }
 
     private (int[] minModelNumber, int[] maxModelNumber) GetMinMaxModelNumbers()
@@ -106,14 +106,12 @@ public class Day24PuzzleSolver : IPuzzleSolver
         static (int currentInputValue, int otherInputValue) GetInputValues(int otherInputValue, int difference)
         {
             var currentInputValue = otherInputValue + difference;
-            if (currentInputValue <= 0)
+            currentInputValue = currentInputValue switch
             {
-                currentInputValue = 1;
-            }
-            else if (currentInputValue > 9)
-            {
-                currentInputValue = 9;
-            }
+                <= 0 => 1,
+                > 9 => 9,
+                _ => currentInputValue
+            };
 
             otherInputValue = currentInputValue - difference;
 
@@ -146,17 +144,17 @@ public class Day24PuzzleSolver : IPuzzleSolver
                     throw new InvalidOperationException();
                 }
 
-                if (instructionCounter == 4 && instruction.Code == InstructionCode.Div && instruction.ParameterB is NumberParameter numberParameterB1)
+                switch (instructionCounter)
                 {
-                    instructionGroup.Divider = numberParameterB1.Number;
-                }
-                else if (instructionCounter == 5 && instruction.Code == InstructionCode.Add && instruction.ParameterB is NumberParameter numberParameterB2)
-                {
-                    instructionGroup.InputDifference = numberParameterB2.Number;
-                }
-                else if (instructionCounter == 15 && instruction.Code == InstructionCode.Add && instruction.ParameterB is NumberParameter numberParameterB3)
-                {
-                    instructionGroup.Addition = numberParameterB3.Number;
+                    case 4 when instruction is { Code: InstructionCode.Div, ParameterB: NumberParameter numberParameterB1 }:
+                        instructionGroup.Divider = numberParameterB1.Number;
+                        break;
+                    case 5 when instruction is { Code: InstructionCode.Add, ParameterB: NumberParameter numberParameterB2 }:
+                        instructionGroup.InputDifference = numberParameterB2.Number;
+                        break;
+                    case 15 when instruction is { Code: InstructionCode.Add, ParameterB: NumberParameter numberParameterB3 }:
+                        instructionGroup.Addition = numberParameterB3.Number;
+                        break;
                 }
             }
 

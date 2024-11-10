@@ -12,8 +12,8 @@ internal static class MeasurementFunctions
         {
             var index2 = (index + 1) % coordinates.Count;
 
-            sum += Convert.ToInt64(coordinates[index].Row) * (long)coordinates[index2].Column -
-                   (long)coordinates[index].Column * (long)coordinates[index2].Row;
+            sum += Convert.ToInt64(coordinates[index].Row) * coordinates[index2].Column -
+                   Convert.ToInt64(coordinates[index].Column) * coordinates[index2].Row;
 
         }
 

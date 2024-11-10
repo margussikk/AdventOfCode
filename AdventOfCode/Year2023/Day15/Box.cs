@@ -1,10 +1,16 @@
 ﻿namespace AdventOfCode.Year2023.Day15;
 
-internal class Box(int number)
+internal class Box
 {
-    private int Number { get; } = number;
+    public int Number { get; }
+    
     private readonly List<LensSlot> _slots = [];
 
+    public Box(int number)
+    {
+        Number = number;
+    }
+    
     public void RemoveLens(string label)
     {
         var slot = _slots.Find(x => x.Label == label);

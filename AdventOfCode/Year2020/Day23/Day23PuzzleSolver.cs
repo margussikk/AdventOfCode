@@ -47,7 +47,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
         var previousCupNumber = 0;
 
-        // First numbers are from input
+        // The First numbers are from input
         foreach (var number in _cupNumbers)
         {
             nextCupNumbers[previousCupNumber] = number;
@@ -74,7 +74,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             // Jump over picked up cups
             nextCupNumbers[currentCup] = nextCupNumbers[thirdPickedUp];
 
-            // Find destination cup
+            // Find the destination cup
             var destinationCup = currentCup == 1
                 ? nextCupNumbers.Length - 1
                 : currentCup - 1;
@@ -88,7 +88,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     : destinationCup - 1;
             }
 
-            // Link picked up cups after destination cup. Set tail first.
+            // Link picked up cups after the destination cup. Set tail first.
             nextCupNumbers[thirdPickedUp] = nextCupNumbers[destinationCup];
             nextCupNumbers[destinationCup] = firstPickedUp;
 

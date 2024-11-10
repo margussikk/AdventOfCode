@@ -25,7 +25,7 @@ internal class SnailfishNumber
         return newSnailfishNumber;
     }
 
-    public void Reduce()
+    private void Reduce()
     {
         while (Explode() || Split())
         {
@@ -39,19 +39,18 @@ internal class SnailfishNumber
         {
             return Number.Value;
         }
-        else if (Left != null && Right != null)
+
+        if (Left != null && Right != null)
         {
             return Left.Magnitude() * 3 + Right.Magnitude() * 2;
         }
-        else
-        {
-            throw new InvalidOperationException();
-        }
+
+        throw new InvalidOperationException();
     }
 
-    public bool Explode()
+    private bool Explode()
     {
-        if (Level >= 4 && Left != null && Left.Number.HasValue && Right != null && Right.Number.HasValue)
+        if (Level >= 4 && Left is { Number: not null } && Right is { Number: not null })
         {
             // Explode Left
             // Pair's left value is added to the first regular number to the left of the exploding pair (if any)
@@ -103,14 +102,10 @@ internal class SnailfishNumber
             return true;
         }
 
-        if (Right != null && Right.Explode())
-        {
-            return true;
-        }
-
-        return false;
+        return Right != null && Right.Explode();
     }
-    public bool ExplodeLeft(bool skipRight, int value)
+
+    private bool ExplodeLeft(bool skipRight, int value)
     {
         if (Number.HasValue)
         {
@@ -123,15 +118,10 @@ internal class SnailfishNumber
             return true;
         }
 
-        if (Left != null && Left.ExplodeLeft(false, value))
-        {
-            return true;
-        }
-
-        return false;
+        return Left != null && Left.ExplodeLeft(false, value);
     }
 
-    public bool ExplodeRight(bool skipLeft, int value)
+    private bool ExplodeRight(bool skipLeft, int value)
     {
         if (Number.HasValue)
         {
@@ -144,17 +134,12 @@ internal class SnailfishNumber
             return true;
         }
 
-        if (Right != null && Right.ExplodeRight(false, value))
-        {
-            return true;
-        }
-
-        return false;
+        return Right != null && Right.ExplodeRight(false, value);
     }
 
-    public bool Split()
+    private bool Split()
     {
-        if (Number.HasValue && Number >= 10)
+        if (Number is >= 10)
         {
             Left = new SnailfishNumber
             {
@@ -165,7 +150,7 @@ internal class SnailfishNumber
             Right = new SnailfishNumber
             {
                 Parent = this,
-                Number = Number / 2 + (Number % 2)
+                Number = Number / 2 + Number % 2
             };
 
             Number = null;
@@ -178,24 +163,12 @@ internal class SnailfishNumber
             return true;
         }
 
-        if (Right != null && Right.Split())
-        {
-            return true;
-        }
-
-        return false;
+        return Right != null && Right.Split();
     }
 
     public override string ToString()
     {
-        if (Number.HasValue)
-        {
-            return $"{Number}";
-        }
-        else
-        {
-            return $"[{Left},{Right}]";
-        }
+        return Number.HasValue ? $"{Number}" : $"[{Left},{Right}]";
     }
 
     public SnailfishNumber DeepCopy(SnailfishNumber? parent = null)
@@ -221,7 +194,7 @@ internal class SnailfishNumber
 
     public static SnailfishNumber Parse(string line)
     {
-        int index = 0;
+        var index = 0;
 
         return ParseLocal(ref index);
 
@@ -257,13 +230,10 @@ internal class SnailfishNumber
                 snailfishNumber.Right = ParseLocal(ref indexRef, snailfishNumber);
             }
 
-            if (line[index] == ']')
-            {
-                indexRef++;
-                return snailfishNumber;
-            }
-
-            throw new InvalidOperationException();
+            if (line[index] != ']') throw new InvalidOperationException();
+            
+            indexRef++;
+            return snailfishNumber;
         }
     }
 }

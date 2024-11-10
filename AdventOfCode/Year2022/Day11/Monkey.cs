@@ -4,25 +4,25 @@ internal class Monkey
 {
     public int Id { get; private set; }
 
-    public List<long> StartingItems { get; private set; } = [];
+    public List<long> StartingItems { get; private init; } = [];
 
-    private readonly Queue<long> items = new();
-    public IReadOnlyCollection<long> Items => items;
+    private readonly Queue<long> _items = new();
+    public IReadOnlyCollection<long> Items => _items;
 
-    public Operation Operation { get; private set; } = new MultiplyOperation(new NumberOperand(0));
+    public Operation Operation { get; private init; } = new MultiplyOperation(new NumberOperand(0));
 
-    public int TestDivisor { get; private set; }
+    public int TestDivisor { get; private init; }
 
-    public int ThrowToMonkeyIfTrue { get; private set; }
+    public int ThrowToMonkeyIfTrue { get; private init; }
 
-    public int ThrowToMonkeyIfFalse { get; private set; }
+    public int ThrowToMonkeyIfFalse { get; private init; }
 
     public int Inspections { get; private set; }
 
     public long TakeOutInspectedItem()
     {
         Inspections++;
-        return items.Dequeue();
+        return _items.Dequeue();
     }
 
     public long CalculateWorryLevel(long worryLevel)
@@ -32,16 +32,16 @@ internal class Monkey
 
     public void CatchItem(long item)
     {
-        items.Enqueue(item);
+        _items.Enqueue(item);
     }
 
     public void Reset()
     {
-        items.Clear();
+        _items.Clear();
 
         foreach (var item in StartingItems)
         {
-            items.Enqueue(item);
+            _items.Enqueue(item);
         }
 
         Inspections = 0;
@@ -49,12 +49,9 @@ internal class Monkey
 
     public int DecideCatcher(long worryLevel)
     {
-        if (worryLevel % TestDivisor == 0)
-        {
-            return ThrowToMonkeyIfTrue;
-        }
-
-        return ThrowToMonkeyIfFalse;
+        return worryLevel % TestDivisor == 0
+            ? ThrowToMonkeyIfTrue
+            : ThrowToMonkeyIfFalse;
     }
 
     public static Monkey Parse(string[] lines)
@@ -77,7 +74,7 @@ internal class Monkey
             .Split(' ');
 
         // operationSplits[0] is always 'old' so ignore that
-        Operand operand = operationSplits[2] == "old"
+        IOperand operand = operationSplits[2] == "old"
             ? new OldOperand()
             : new NumberOperand(int.Parse(operationSplits[2]));
 
@@ -85,13 +82,13 @@ internal class Monkey
             ? new MultiplyOperation(operand)
             : new AddOperation(operand);
 
-        // Test: divisible by ..
+        // Test: divisible by ...
         var testDivisor = int.Parse(lines[3].Split(' ')[^1]);
 
-        // If true: throw to monkey ..
+        // If true: throw to monkey ...
         var throwToMonkeyIfTestTrue = int.Parse(lines[4].Split(' ')[^1]);
 
-        // If false: throw to monkey ..
+        // If false: throw to monkey ...
         var throwToMonkeyIfTestFalse = int.Parse(lines[5].Split(' ')[^1]);
 
         return new Monkey

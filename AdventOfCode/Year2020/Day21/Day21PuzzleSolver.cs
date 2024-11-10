@@ -18,7 +18,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
         var allergenIngredients = FindPossibleAllergenIngredients();
 
         var ingredientsWithAllergens = allergenIngredients.Values
-            .SelectMany(_ => _)
+            .SelectMany(x => x)
             .Distinct()
             .ToList();
 
@@ -73,7 +73,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
                 }
                 else
                 {
-                    ingredients = new List<string>(food.Ingredients);
+                    ingredients = [..food.Ingredients];
                 }
 
                 allergenIngredients[allergen] = ingredients;

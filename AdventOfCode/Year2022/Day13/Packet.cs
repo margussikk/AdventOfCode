@@ -64,14 +64,15 @@ internal abstract class Packet : IComparable<Packet>
 
     public abstract int CompareTo(ListPacket listPacket);
 
-    public abstract int CompareTo(IntegerPacket integerPacket);
+    protected abstract int CompareTo(IntegerPacket integerPacket);
 
     public static ListPacket Parse(string line)
     {
         var stack = new Stack<ListPacket>();
         ListPacket? currentPacket = null;
 
-        for (var index = 0; index < line.Length; index++)
+        var index = 0;
+        while (index < line.Length)
         {
             if (line[index] == '[')
             {
@@ -99,25 +100,29 @@ internal abstract class Packet : IComparable<Packet>
 
                 currentPacket.AddPacket(packet);
             }
-            else if (line[index] == ',' && currentPacket != null)
+            else switch (line[index])
             {
-                // Ignore
-            }
-            else if (line[index] == ']' && currentPacket != null)
-            {
-                if (stack.Count != 0)
+                case ',' when currentPacket != null:
+                    // Ignore
+                    break;
+                case ']' when currentPacket != null:
                 {
-                    currentPacket = stack.Pop();
+                    if (stack.Count != 0)
+                    {
+                        currentPacket = stack.Pop();
+                    }
+                    else
+                    {
+                        return currentPacket;
+                    }
+
+                    break;
                 }
-                else
-                {
-                    return currentPacket;
-                }
+                default:
+                    throw new InvalidOperationException();
             }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            index++;
         }
 
         throw new InvalidOperationException();

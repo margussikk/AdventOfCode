@@ -51,73 +51,64 @@ internal class Instruction
 
     public override string ToString()
     {
-        if (ParameterA == null)
-        {
-            return string.Empty;
-        }
-
         if (ParameterA is not VariableParameter variableParameterA)
         {
             return string.Empty;
         }
 
-        if (Code == InstructionCode.Inp)
+        switch (Code)
         {
-            return $"inp {Convert.ToChar('w' + variableParameterA.Variable)} = Input";
-        }
-        else if (Code == InstructionCode.Add)
-        {
-            if (ParameterB is VariableParameter variableParameterB)
-            {
+            case InstructionCode.Inp:
+                return $"inp {Convert.ToChar('w' + variableParameterA.Variable)} = Input";
+            case InstructionCode.Add when ParameterB is VariableParameter variableParameterB:
                 return $"add {Convert.ToChar('w' + variableParameterA.Variable)} += {Convert.ToChar('w' + variableParameterB.Variable)}";
-            }
-            else if (ParameterB is NumberParameter numberParameterB)
-            {
+            case InstructionCode.Add when ParameterB is NumberParameter numberParameterB:
                 return $"add {Convert.ToChar('w' + variableParameterA.Variable)} += {numberParameterB.Number}";
-            }
-        }
-        else if (Code == InstructionCode.Mul && ParameterB != null)
-        {
-            if (ParameterB is VariableParameter variableParameterB)
+            case InstructionCode.Mul when ParameterB != null:
+                switch (ParameterB)
+                {
+                    case VariableParameter variableParameterB:
+                        return $"mul {Convert.ToChar('w' + variableParameterA.Variable)} *= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                    case NumberParameter numberParameterB:
+                        return $"mul {Convert.ToChar('w' + variableParameterA.Variable)} *= {numberParameterB.Number}";
+                }
+
+                break;
+            case InstructionCode.Div when ParameterB != null:
             {
-                return $"mul {Convert.ToChar('w' + variableParameterA.Variable)} *= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                switch (ParameterB)
+                {
+                    case VariableParameter variableParameterB:
+                        return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                    case NumberParameter numberParameterB:
+                        return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {numberParameterB.Number}";
+                }
+
+                break;
             }
-            else if (ParameterB is NumberParameter numberParameterB)
+            case InstructionCode.Mod when ParameterB != null:
             {
-                return $"mul {Convert.ToChar('w' + variableParameterA.Variable)} *= {numberParameterB.Number}";
+                switch (ParameterB)
+                {
+                    case VariableParameter variableParameterB:
+                        return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                    case NumberParameter numberParameterB:
+                        return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {numberParameterB.Number}";
+                }
+
+                break;
             }
-        }
-        else if (Code == InstructionCode.Div && ParameterB != null)
-        {
-            if (ParameterB is VariableParameter variableParameterB)
+            case InstructionCode.Eql when ParameterB != null:
             {
-                return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {Convert.ToChar('w' + variableParameterB.Variable)}";
-            }
-            else if (ParameterB is NumberParameter numberParameterB)
-            {
-                return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {numberParameterB.Number}";
-            }
-        }
-        else if (Code == InstructionCode.Mod && ParameterB != null)
-        {
-            if (ParameterB is VariableParameter variableParameterB)
-            {
-                return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {Convert.ToChar('w' + variableParameterB.Variable)}";
-            }
-            else if (ParameterB is NumberParameter numberParameterB)
-            {
-                return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {numberParameterB.Number}";
-            }
-        }
-        else if (Code == InstructionCode.Eql && ParameterB != null)
-        {
-            if (ParameterB is VariableParameter variableParameterB)
-            {
-                return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {Convert.ToChar('w' + variableParameterB.Variable)}";
-            }
-            else if (ParameterB is NumberParameter numberParameterB)
-            {
-                return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {numberParameterB.Number}";
+                switch (ParameterB)
+                {
+                    case VariableParameter variableParameterB:
+                        return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                    case NumberParameter numberParameterB:
+                        return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {numberParameterB.Number}";
+                }
+
+                break;
             }
         }
 

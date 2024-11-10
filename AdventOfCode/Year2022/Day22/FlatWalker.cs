@@ -3,17 +3,24 @@ using AdventOfCode.Utilities.Mathematics;
 
 namespace AdventOfCode.Year2022.Day22;
 
-internal class FlatWalker(Grid<Tile> grid)
+internal class FlatWalker
 {
-    public GridCoordinate Location { get; private set; } =
-        grid.FindCoordinate(tile => tile == Tile.Open) ?? throw new InvalidOperationException("Flat walker stat location not found");
-
+    public GridCoordinate Location { get; private set; }
     public GridDirection Direction { get; private set; } = GridDirection.Right;
 
-    private readonly Grid<Tile> _grid = grid;
+    private readonly Grid<Tile> _grid;
 
-    private readonly int _cubeEdgeLength = int.Max(grid.Height, grid.Width) % int.Min(grid.Height, grid.Width);
+    private readonly int _cubeEdgeLength;
 
+    public FlatWalker(Grid<Tile> grid)
+    {
+        _grid = grid;
+        
+        Location = grid.FindCoordinate(tile => tile == Tile.Open) ?? throw new InvalidOperationException("Flat walker stat location not found");
+        
+        _cubeEdgeLength = int.Max(grid.Height, grid.Width) % int.Min(grid.Height, grid.Width);
+    }
+    
     public void TurnLeft()
     {
         Direction = Direction.TurnLeft();
@@ -44,13 +51,12 @@ internal class FlatWalker(Grid<Tile> grid)
             while (_grid[nextLocation] == Tile.Nothing)
             {
                 nextLocation = nextLocation.Move(Direction, _cubeEdgeLength);
-                if (!_grid.InBounds(nextLocation))
-                {
-                    var nextRow = MathFunctions.Modulo(nextLocation.Row, _grid.Height);
-                    var nextColumn = MathFunctions.Modulo(nextLocation.Column, _grid.Width);
+                if (_grid.InBounds(nextLocation)) continue;
+                
+                var nextRow = MathFunctions.Modulo(nextLocation.Row, _grid.Height);
+                var nextColumn = MathFunctions.Modulo(nextLocation.Column, _grid.Width);
 
-                    nextLocation = new GridCoordinate(nextRow, nextColumn);
-                }
+                nextLocation = new GridCoordinate(nextRow, nextColumn);
             }
 
             if (_grid[nextLocation] == Tile.Wall)
@@ -58,7 +64,8 @@ internal class FlatWalker(Grid<Tile> grid)
                 // Location stays the same
                 break;
             }
-            else if (_grid[nextLocation] == Tile.Open)
+
+            if (_grid[nextLocation] == Tile.Open)
             {
                 Location = nextLocation;
             }

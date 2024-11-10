@@ -1,8 +1,13 @@
 ﻿namespace AdventOfCode.Year2022.Day11;
 
-internal abstract class Operation(Operand operand)
+internal abstract class Operation
 {
-    public Operand Operand { get; set; } = operand;
+    public IOperand Operand { get; }
 
+    protected Operation(IOperand operand)
+    {
+        Operand = operand;
+    }
+    
     public abstract long CalculateWorryLevel(long oldWorryLevel);
 }

@@ -4,18 +4,15 @@ namespace AdventOfCode.Year2021.Day04;
 
 internal class Board
 {
-    public Grid<BoardNumber> BoardNumbers { get; } = new Grid<BoardNumber>(5, 5);
+    public Grid<BoardNumber> BoardNumbers { get; } = new(5, 5);
 
     public void MarkNumber(int value)
     {
-        foreach (var boardNumber in BoardNumbers)
+        var boardNumber = BoardNumbers.Cast<GridCell<BoardNumber>?>().FirstOrDefault(cell => cell.HasValue && cell.Value.Object.Value == value);
+        if (boardNumber != null)
         {
-            if (boardNumber.Object.Value == value)
-            {
-                boardNumber.Object.Marked = true;
-                return;
-            }
-        }
+            boardNumber.Value.Object.Marked = true;
+        }        
     }
 
     public void Reset()
@@ -49,17 +46,8 @@ internal class Board
 
     public int SumOfUnmarkedNumbers()
     {
-        var sum = 0;
-
-        foreach (var boardNumber in BoardNumbers)
-        {
-            if (!boardNumber.Object.Marked)
-            {
-                sum += boardNumber.Object.Value;
-            }
-        }
-
-        return sum;
+        return BoardNumbers.Where(boardNumber => !boardNumber.Object.Marked)
+                           .Sum(boardNumber => boardNumber.Object.Value);
     }
 
     public static Board Parse(string[] lines)

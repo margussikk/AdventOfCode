@@ -33,17 +33,11 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     private static int CalculateItemPriority(char item)
     {
-        if (item >= 'a' && item <= 'z')
+        return item switch
         {
-            return item - 'a' + 1;
-        }
-        else if (item >= 'A' && item <= 'Z')
-        {
-            return item - 'A' + 27;
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+            >= 'a' and <= 'z' => item - 'a' + 1,
+            >= 'A' and <= 'Z' => item - 'A' + 27,
+            _ => throw new NotImplementedException()
+        };
     }
 }

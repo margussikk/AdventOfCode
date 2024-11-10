@@ -23,7 +23,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
         do
         {
-            currentPlayer = (currentPlayer == player2) ? player1 : player2;
+            currentPlayer = currentPlayer == player2 ? player1 : player2;
 
             var rolledScore = dice.Roll() + dice.Roll() + dice.Roll();
             var landedOn = (currentPlayer.Position + rolledScore - 1) % 10 + 1;
@@ -66,7 +66,8 @@ public class Day21PuzzleSolver : IPuzzleSolver
             {
                 return new Wins { ActivePlayerWins = 1 };
             }
-            else if (idlePlayerScore >= 21)
+
+            if (idlePlayerScore >= 21)
             {
                 return new Wins { IdlePlayerWins = 1 };
             }
@@ -80,10 +81,8 @@ public class Day21PuzzleSolver : IPuzzleSolver
             var wins = new Wins();
             for (var rolledScore = 3; rolledScore <= 9; rolledScore++)
             {
-                int landedOn = (activePlayerPosition + rolledScore - 1) % 10 + 1;
-
-                var newActivePlayerPosition = landedOn;
-                var newActivePlayerScore = activePlayerScore + landedOn;
+                var newActivePlayerPosition = (activePlayerPosition + rolledScore - 1) % 10 + 1;
+                var newActivePlayerScore = activePlayerScore + newActivePlayerPosition;
 
                 // Switch players, because only active player rolls the dice above
                 var wins2 = CountWins(idlePlayerPosition, idlePlayerScore, newActivePlayerPosition, newActivePlayerScore);

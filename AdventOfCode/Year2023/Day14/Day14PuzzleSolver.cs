@@ -33,8 +33,8 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
+        const int totalCycles = 1_000_000_000;
         var answer = 0;
-        var totalCycles = 1_000_000_000;
         var platformCycles = new Dictionary<int, int>();
         var totalLoads = new List<int>();
 
@@ -51,10 +51,8 @@ public class Day14PuzzleSolver : IPuzzleSolver
                 answer = totalLoads[cycleStart + reminder];
                 break;
             }
-            else
-            {
-                platformCycles[hashCode] = cycle;
-            }
+
+            platformCycles[hashCode] = cycle;
 
             totalLoads.Add(CalculateTotalLoad(platform));
 
@@ -67,7 +65,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
     private static Grid<Item> SpinCycle(Grid<Item> platform)
     {
-        // Instead of tilting to west, south and east we rotate the grid and always tilt to the north
+        // Instead of tilting to west, south and east, we rotate the grid and always tilt to the north
 
         // North
         TiltToNorth(platform);
@@ -84,7 +82,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
         platform = platform.RotateClockwise();
         TiltToNorth(platform);
 
-        // Rotate back to original direction
+        // Rotate back to the original direction
         platform = platform.RotateClockwise();
 
         return platform;
@@ -100,11 +98,10 @@ public class Day14PuzzleSolver : IPuzzleSolver
                 rolledToRow--;
             }
 
-            if (rolledToRow != cell.Coordinate.Row)
-            {
-                platform[rolledToRow, cell.Coordinate.Column] = Item.RoundedRock;
-                platform[cell.Coordinate.Row, cell.Coordinate.Column] = Item.EmptySpace;
-            }
+            if (rolledToRow == cell.Coordinate.Row) continue;
+            
+            platform[rolledToRow, cell.Coordinate.Column] = Item.RoundedRock;
+            platform[cell.Coordinate.Row, cell.Coordinate.Column] = Item.EmptySpace;
         }
     }
 

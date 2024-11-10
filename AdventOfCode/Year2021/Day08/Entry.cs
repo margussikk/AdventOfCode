@@ -2,8 +2,8 @@
 
 internal class Entry
 {
-    public int[] Signals { get; private set; } = [];
-    public int[] Outputs { get; private set; } = [];
+    public int[] Signals { get; private init; } = [];
+    public int[] Outputs { get; private init; } = [];
 
     public static Entry Parse(string line)
     {

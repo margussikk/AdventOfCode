@@ -29,11 +29,10 @@ public class Day13PuzzleSolver : IPuzzleSolver
             var mod = _timestamp % busId;
             var waitingTime = mod == 0 ? 0 : busId - mod;
 
-            if (waitingTime < leastWaitingTime)
-            {
-                earliestBusId = busId;
-                leastWaitingTime = waitingTime;
-            }
+            if (waitingTime >= leastWaitingTime) continue;
+            
+            earliestBusId = busId;
+            leastWaitingTime = waitingTime;
         }
 
         var answer = earliestBusId * leastWaitingTime;

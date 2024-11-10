@@ -7,5 +7,5 @@ internal enum CubeFace
     Left,
     Right,
     Top,
-    Bottom,
+    Bottom
 }

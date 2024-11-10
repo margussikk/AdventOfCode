@@ -20,17 +20,10 @@ public class Day17PuzzleSolver : IPuzzleSolver
     {
         var grid = BuildGrid();
 
-        var answer = 0;
-
-        foreach(var cell in grid)
-        {
-            if (cell.Object == Tile.Scaffold &&
-                grid.SideNeighbors(cell.Coordinate)
-                    .Count(c => c.Object == Tile.Scaffold) == 4)
-            {
-                answer += cell.Coordinate.Row * cell.Coordinate.Column;
-            }
-        }
+        var answer = grid.Where(cell => cell.Object == Tile.Scaffold &&
+                                           grid.SideNeighbors(cell.Coordinate)
+                                               .Count(c => c.Object == Tile.Scaffold) == 4)
+                            .Sum(cell => cell.Coordinate.Row * cell.Coordinate.Column);
 
         return new PuzzleAnswer(answer, 4800);
     }
@@ -74,17 +67,13 @@ public class Day17PuzzleSolver : IPuzzleSolver
                     actions.Add("L");
                     break;
                 }
-                else if (gridWalker.Direction.TurnRight() == direction)
-                {
-                    nextDirection = direction;
 
-                    actions.Add("R");
-                    break;
-                }
-                else
-                {
-                    // Ignore, robot came from there
-                }
+                if (gridWalker.Direction.TurnRight() != direction) continue;
+                
+                nextDirection = direction;
+
+                actions.Add("R");
+                break;
             }
 
             if (nextDirection == GridDirection.None)
@@ -122,10 +111,15 @@ public class Day17PuzzleSolver : IPuzzleSolver
             throw new InvalidOperationException("Failed to recurse actions");
         }
 
-        var computer = new IntCodeComputer(_program);
-        computer.Memory[0] = 2;
+        var computer = new IntCodeComputer(_program)
+        {
+            Memory =
+            {
+                [0] = 2
+            }
+        };
 
-        var inputLines = new List<string>()
+        var inputLines = new List<string>
         {
             string.Join(",", splitResult.MainRoutine),
             string.Join(",", splitResult.Functions["A"].Actions),
@@ -178,13 +172,11 @@ public class Day17PuzzleSolver : IPuzzleSolver
                     Functions = functions
                 };
             }
-            else
+
+            return new SplitResult
             {
-                return new SplitResult
-                {
-                    Success = false
-                };
-            }
+                Success = false
+            };
         }
 
         for (var length = 2; actionIndex + length <= actions.Count; length += 2) // 2 = Handle turn and movement together

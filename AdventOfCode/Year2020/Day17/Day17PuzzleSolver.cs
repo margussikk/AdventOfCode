@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
-using BenchmarkDotNet.Columns;
 
 namespace AdventOfCode.Year2020.Day17;
 
@@ -17,7 +16,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var totalCycles = 6;
+        const int totalCycles = 6;
 
         // Initialize Aabb
         var minCoordinate = new Coordinate3D(-totalCycles, -totalCycles, -totalCycles);
@@ -71,7 +70,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var totalCycles = 6;
+        const int totalCycles = 6;
 
         // Initialize Aabb
         var minCoordinate = new Coordinate4D(-totalCycles, -totalCycles, -totalCycles, -totalCycles);

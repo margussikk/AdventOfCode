@@ -11,10 +11,7 @@ internal class BucketList<T> : IList<T> where T : notnull
             var indexes = GetIndexes(index);
             return _buckets[indexes.BucketIndex][indexes.IndexInBucket];
         }
-        set
-        {
-            throw new NotImplementedException();
-        }
+        set => throw new NotImplementedException();
     }
 
     public int Count => _buckets.Aggregate(0, (acc, curr) => acc + curr.Count);
@@ -24,7 +21,7 @@ internal class BucketList<T> : IList<T> where T : notnull
 
     private readonly int _bucketSize;
 
-    public Dictionary<T, int> _bucketIndexes = [];
+    public readonly Dictionary<T, int> BucketIndexes = [];
 
     private readonly List<List<T>> _buckets = [[]];
 
@@ -47,7 +44,7 @@ internal class BucketList<T> : IList<T> where T : notnull
         }
 
         _buckets[^1].Add(item);
-        _bucketIndexes[item] = _buckets.Count - 1;
+        BucketIndexes[item] = _buckets.Count - 1;
     }
 
     public void Clear()
@@ -73,11 +70,11 @@ internal class BucketList<T> : IList<T> where T : notnull
     public int IndexOf(T item)
     {
         // Get index in own bucket
-        int bucketIndex = _bucketIndexes[item];
-        int index = _buckets[bucketIndex].IndexOf(item);
+        var bucketIndex = BucketIndexes[item];
+        var index = _buckets[bucketIndex].IndexOf(item);
 
         // Add previous bucket counts
-        for (int i = 0; i < bucketIndex; i++)
+        for (var i = 0; i < bucketIndex; i++)
         {
             index += _buckets[i].Count;
         }
@@ -89,7 +86,7 @@ internal class BucketList<T> : IList<T> where T : notnull
     {
         var indexes = GetIndexes(index);
 
-        _bucketIndexes[item] = indexes.BucketIndex;
+        BucketIndexes[item] = indexes.BucketIndex;
         _buckets[indexes.BucketIndex].Insert(indexes.IndexInBucket, item);
     }
 
@@ -105,27 +102,22 @@ internal class BucketList<T> : IList<T> where T : notnull
 
         var item = _buckets[indexes.BucketIndex][indexes.IndexInBucket];
 
-        _bucketIndexes.Remove(item);
+        BucketIndexes.Remove(item);
         _buckets[indexes.BucketIndex].RemoveAt(indexes.IndexInBucket);
     }
 
     public int FindIndex(Predicate<T> match)
     {
-        int index = 0;
+        var index = 0;
 
-        for (var bucketIndex = 0; bucketIndex < _buckets.Count; bucketIndex++)
+        foreach (var item in _buckets.SelectMany(bucket => bucket))
         {
-            var bucket = _buckets[bucketIndex];
-
-            foreach (var item in bucket)
+            if (match(item))
             {
-                if (match(item))
-                {
-                    return index;
-                }
-
-                index++;
+                return index;
             }
+
+            index++;
         }
 
         return index;
@@ -138,7 +130,7 @@ internal class BucketList<T> : IList<T> where T : notnull
 
     private BucketListIndexes GetIndexes(int index)
     {
-        int currentIndex = 0;
+        var currentIndex = 0;
 
         for (var bucketIndex = 0; bucketIndex < _buckets.Count; bucketIndex++)
         {
@@ -149,10 +141,8 @@ internal class BucketList<T> : IList<T> where T : notnull
                 var indexInBucket = index - currentIndex;
                 return new BucketListIndexes(bucketIndex, indexInBucket);
             }
-            else
-            {
-                currentIndex += bucket.Count;
-            }
+
+            currentIndex += bucket.Count;
         }
 
         throw new InvalidOperationException();

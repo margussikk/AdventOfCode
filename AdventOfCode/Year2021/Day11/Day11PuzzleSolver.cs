@@ -52,7 +52,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     private static int ProcessOctopus(Grid<int> grid, GridCoordinate coordinate)
     {
-        grid[coordinate] = grid[coordinate] + 1;
+        grid[coordinate] += 1;
         if (grid[coordinate] == 10) // Flash only for the first time, 9 -> 10
         {
             return 1 + grid.AroundNeighbors(coordinate)

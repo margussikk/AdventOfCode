@@ -68,7 +68,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
         var answer = numberParts
             .Where(numberPart => symbolParts
-                .Exists(symbolPart => numberPart.IsAdjacentTo(symbolPart)))
+                .Exists(numberPart.IsAdjacentTo))
             .Sum(numberPart => numberPart.Number);
 
         return new PuzzleAnswer(answer, 527144);

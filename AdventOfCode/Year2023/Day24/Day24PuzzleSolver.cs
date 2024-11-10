@@ -17,8 +17,8 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var minCoordinateValue = 200_000_000_000_000L;
-        var maxCoordinateValue = 400_000_000_000_000L;
+        const long minCoordinateValue = 200_000_000_000_000L;
+        const long maxCoordinateValue = 400_000_000_000_000L;
 
         var answer = 0;
 
@@ -38,8 +38,8 @@ public class Day24PuzzleSolver : IPuzzleSolver
                 var line2 = new Line2D(coordinate2, vector2);
 
                 if (line1.TryFindIntersectionCoordinate(line2, out var coordinate) &&
-                    coordinate.X >= minCoordinateValue && coordinate.X <= maxCoordinateValue &&
-                    coordinate.Y >= minCoordinateValue && coordinate.Y <= maxCoordinateValue &&
+                    coordinate.X is >= minCoordinateValue and <= maxCoordinateValue &&
+                    coordinate.Y is >= minCoordinateValue and <= maxCoordinateValue &&
                     HappensInTheFuture(hailstone1, coordinate) &&
                     HappensInTheFuture(hailstone2, coordinate))
                 {

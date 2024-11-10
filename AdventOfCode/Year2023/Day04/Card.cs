@@ -4,11 +4,11 @@ internal class Card
 {
     public int Id { get; private set; }
 
-    public IReadOnlyList<int> WinningNumbers { get; private set; } = [];
+    public IReadOnlyList<int> WinningNumbers { get; private init; } = [];
 
-    public IReadOnlyList<int> YourNumbers { get; private set; } = [];
+    public IReadOnlyList<int> YourNumbers { get; private init; } = [];
 
-    internal static readonly string[] _splitSeparator = [": ", "|"];
+    private static readonly string[] _splitSeparator = [": ", "|"];
 
     public int CountMatches()
     {
@@ -19,7 +19,7 @@ internal class Card
     {
         var splits = input.Split(_splitSeparator, StringSplitOptions.RemoveEmptyEntries);
 
-        var card = new Card()
+        var card = new Card
         {
             Id = int.Parse(splits[0]["Card ".Length..]),
             WinningNumbers = splits[1].Split(' ', StringSplitOptions.RemoveEmptyEntries)

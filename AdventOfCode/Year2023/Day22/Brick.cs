@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2023.Day22;
 
 internal class Brick
 {
-    public int Id { get; private set; } // Good for debugging
+    public int Id { get; private init; } // Good for debugging
     public Coordinate3D Start { get; private set; }
     public Coordinate3D End { get; private set; }
 
@@ -14,11 +14,11 @@ internal class Brick
 
     public Brick CleanClone()
     {
-        var clone = new Brick()
+        var clone = new Brick
         {
             Id = Id,
             Start = Start,
-            End = End,
+            End = End
         };
 
         return clone;
@@ -26,12 +26,11 @@ internal class Brick
 
     public void DropToZ(long z)
     {
-        if (Start.Z != z)
-        {
-            // NB! Set End before Start, because End uses Start
-            End = new Coordinate3D(End.X, End.Y, End.Z - Start.Z + z);
-            Start = new Coordinate3D(Start.X, Start.Y, z);
-        }
+        if (Start.Z == z) return;
+        
+        // NB! Set End before Start, because End uses Start
+        End = new Coordinate3D(End.X, End.Y, End.Z - Start.Z + z);
+        Start = new Coordinate3D(Start.X, Start.Y, z);
     }
 
     public override int GetHashCode()
@@ -71,7 +70,7 @@ internal class Brick
         {
             Id = id,
             Start = coordinates[0],
-            End = coordinates[1],
+            End = coordinates[1]
         };
     }
 
@@ -81,7 +80,7 @@ internal class Brick
         {
             Id = 0,
             Start = new Coordinate3D(0, 0, 0),
-            End = new Coordinate3D(maxX, maxY, 0),
+            End = new Coordinate3D(maxX, maxY, 0)
         };
     }
 }

@@ -14,11 +14,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = 2019L;
-        foreach (var technique in _techniques)
-        {
-            answer = technique.Apply(answer, 10007);
-        }
+        var answer = _techniques.Aggregate(2019L, (current, technique) => technique.Apply(current, 10007));
 
         return new PuzzleAnswer(answer, 3377);
     }

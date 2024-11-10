@@ -54,17 +54,16 @@ public class Day09PuzzleSolver : IPuzzleSolver
                     var rowDistance = knotCoordinates[knotIndex - 1].Row - knotCoordinates[knotIndex].Row;
                     var columnDistance = knotCoordinates[knotIndex - 1].Column - knotCoordinates[knotIndex].Column;
 
-                    if (Math.Abs(rowDistance) > 1 || Math.Abs(columnDistance) > 1)
+                    if (Math.Abs(rowDistance) <= 1 && Math.Abs(columnDistance) <= 1) continue;
+                    
+                    var rowStep = Math.Sign(rowDistance);
+                    var columnStep = Math.Sign(columnDistance);
+
+                    knotCoordinates[knotIndex] = new GridCoordinate(knotCoordinates[knotIndex].Row + rowStep, knotCoordinates[knotIndex].Column + columnStep);
+
+                    if (knotIndex == knotCount - 1)
                     {
-                        var rowStep = Math.Sign(rowDistance);
-                        var columnStep = Math.Sign(columnDistance);
-
-                        knotCoordinates[knotIndex] = new GridCoordinate(knotCoordinates[knotIndex].Row + rowStep, knotCoordinates[knotIndex].Column + columnStep);
-
-                        if (knotIndex == knotCount - 1)
-                        {
-                            tailCoordinates.Add(knotCoordinates[knotIndex]);
-                        }
+                        tailCoordinates.Add(knotCoordinates[knotIndex]);
                     }
                 }
             }

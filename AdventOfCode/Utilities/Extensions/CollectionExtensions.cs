@@ -86,7 +86,7 @@ internal static class CollectionExtensions
     {
         var clone = (T[])array.Clone();
 
-        for (int i = 0; i < clone.Length - 1; i++)
+        for (var i = 0; i < clone.Length - 1; i++)
         {
             (clone[i], clone[i + sequence[i]]) = (clone[i + sequence[i]], clone[i]);
         }

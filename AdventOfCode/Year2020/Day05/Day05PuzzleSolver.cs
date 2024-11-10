@@ -31,11 +31,10 @@ public class Day05PuzzleSolver : IPuzzleSolver
         for (var i = 0; i < seatIds.Count - 1; i++)
         {
             var diff = seatIds[i + 1] - seatIds[i];
-            if (diff > 1)
-            {
-                answer = seatIds[i] + 1;
-                break;
-            }
+            if (diff <= 1) continue;
+            
+            answer = seatIds[i] + 1;
+            break;
         }
 
         return new PuzzleAnswer(answer, 557);

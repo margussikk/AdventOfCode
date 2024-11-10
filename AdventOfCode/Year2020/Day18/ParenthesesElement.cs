@@ -1,18 +1,16 @@
 ﻿namespace AdventOfCode.Year2020.Day18;
 
-internal class ParenthesesElement(bool open) : IElement
+internal class ParenthesesElement : IElement
 {
-    public bool Open { get; } = open;
+    public bool Open { get; }
 
+    public ParenthesesElement(bool open)
+    {
+        Open = open;
+    }
+    
     public override string ToString()
     {
-        if (Open)
-        {
-            return "(";
-        }
-        else
-        {
-            return ")";
-        }
+        return Open ? "(" : ")";
     }
 }

@@ -4,5 +4,5 @@ internal enum GraphVertexPort
 {
     Any,
     Left,
-    Right,
+    Right
 }

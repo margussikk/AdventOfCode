@@ -1,12 +1,17 @@
 ﻿namespace AdventOfCode.Year2022.Day21;
 
-internal class OperationMonkey(string name, Operation operation) : Monkey(name)
+internal class OperationMonkey : Monkey
 {
-    public Operation Operation { get; } = operation;
+    public Operation Operation { get; }
 
     public Monkey? LeftMonkey { get; private set; }
 
     public Monkey? RightMonkey { get; private set; }
+    
+    public OperationMonkey(string name, Operation operation) : base(name)
+    {
+        Operation = operation;
+    }
 
     public void SetLeftMonkey(Monkey monkey)
     {

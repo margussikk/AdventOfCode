@@ -3,29 +3,36 @@ using System.Numerics;
 
 namespace AdventOfCode.Year2019.Day22;
 
-internal class ReverseTechnique(long deckSize)
+internal class ReverseTechnique
 {
     public BigInteger Increment { get; private set; } = 1;
     public BigInteger Offset { get; private set; } = 0;
-    public long DeckSize { get; } = deckSize;
+    public long DeckSize { get; }
 
+    public ReverseTechnique(long deckSize)
+    {
+        DeckSize = deckSize;
+    }
+    
     public void Combine(Technique technique)
     {
-        if (technique is DealIntoNewStackTechnique)
+        switch (technique)
         {
-            Increment = -Increment;
-            Offset = -Offset -1;
-        }
-        else if (technique is CutCardsTechnique cutCardsTechnique)
-        {
-            Offset += cutCardsTechnique.Amount;
-        }
-        else if (technique is DealWithIncrementTechnique dealWithIncrementTechnique)
-        {
-            var modInverse = MathFunctions.ModularMultiplicativeInverse(dealWithIncrementTechnique.Increment, DeckSize);
+            case DealIntoNewStackTechnique:
+                Increment = -Increment;
+                Offset = -Offset -1;
+                break;
+            case CutCardsTechnique cutCardsTechnique:
+                Offset += cutCardsTechnique.Amount;
+                break;
+            case DealWithIncrementTechnique dealWithIncrementTechnique:
+            {
+                var modInverse = MathFunctions.ModularMultiplicativeInverse(dealWithIncrementTechnique.Increment, DeckSize);
 
-            Increment *= modInverse;
-            Offset *= modInverse;
+                Increment *= modInverse;
+                Offset *= modInverse;
+                break;
+            }
         }
 
         Increment = MathFunctions.Modulo(Increment, DeckSize);

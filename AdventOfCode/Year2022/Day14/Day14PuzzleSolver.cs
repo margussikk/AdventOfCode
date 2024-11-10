@@ -6,11 +6,11 @@ namespace AdventOfCode.Year2022.Day14;
 [Puzzle(2022, 14, "Regolith Reservoir")]
 public class Day14PuzzleSolver : IPuzzleSolver
 {
-    static readonly GridDirection[] _dropDirections =
+    private static readonly GridDirection[] _dropDirections =
     [
         GridDirection.Down,
         GridDirection.DownLeft,
-        GridDirection.DownRight,
+        GridDirection.DownRight
     ];
 
     private readonly HashSet<GridCoordinate> _rockLocations = [];
@@ -62,11 +62,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        var tiles = new Dictionary<GridCoordinate, Tile>();
-        foreach (var location in _rockLocations)
-        {
-            tiles.Add(location, Tile.Rock);
-        }
+        var tiles = _rockLocations.ToDictionary(location => location, _ => Tile.Rock);
 
         var sandStack = new Stack<GridCoordinate>();
         sandStack.Push(new GridCoordinate(0, 500));
@@ -83,11 +79,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        var tiles = new Dictionary<GridCoordinate, Tile>();
-        foreach (var location in _rockLocations)
-        {
-            tiles.Add(location, Tile.Rock);
-        }
+        var tiles = _rockLocations.ToDictionary(location => location, _ => Tile.Rock);
 
         var sandStack = new Stack<GridCoordinate>();
         sandStack.Push(new GridCoordinate(0, 500));
@@ -146,7 +138,8 @@ public class Day14PuzzleSolver : IPuzzleSolver
             {
                 return dropCoordinate;
             }
-            else if (tiles.GetValueOrDefault(nextCoordinate, Tile.Air) == Tile.Air)
+
+            if (tiles.GetValueOrDefault(nextCoordinate, Tile.Air) == Tile.Air)
             {
                 return nextCoordinate;
             }

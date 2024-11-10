@@ -1,7 +1,13 @@
 ﻿namespace AdventOfCode.Year2023.Day01;
 
-internal sealed class SpelledDigit(string spelling, int digit)
+internal class SpelledDigit
 {
-    public string Spelling { get; } = spelling;
-    public int Digit { get; } = digit;
+    public string Spelling { get; }
+    public int Digit { get; }
+
+    public SpelledDigit(string spelling, int digit)
+    {
+        Spelling = spelling;
+        Digit = digit;
+    }
 }

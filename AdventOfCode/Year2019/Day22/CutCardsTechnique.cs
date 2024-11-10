@@ -1,9 +1,14 @@
 ﻿
 namespace AdventOfCode.Year2019.Day22;
 
-internal class CutCardsTechnique(int amount) : Technique
+internal class CutCardsTechnique : Technique
 {
-    public int Amount { get; } = amount;
+    public int Amount { get; }
+
+    public CutCardsTechnique(int amount)
+    {
+        Amount = amount;
+    }
 
     public override List<int> ApplyFull(List<int> deck)
     {
@@ -13,12 +18,10 @@ internal class CutCardsTechnique(int amount) : Technique
                        .Concat(deck.Take(Amount))
                        .ToList();
         }
-        else
-        {
-            return deck.Skip(deck.Count + Amount)
-                       .Concat(deck.Take(deck.Count + Amount))
-                       .ToList();
-        }
+
+        return deck.Skip(deck.Count + Amount)
+            .Concat(deck.Take(deck.Count + Amount))
+            .ToList();
     }
 
     public override long Apply(long index, long deckSize)

@@ -122,19 +122,18 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 }
             }
 
-            if (idle)
+            if (!idle) continue;
+            
+            if (lastNatY == natY)
             {
-                if (lastNatY == natY)
-                {
-                    answer = natY;
-                    break;
-                }
-
-                computerInputs[0].Add(natX);
-                computerInputs[0].Add(natY);
-
-                lastNatY = natY;                
+                answer = natY;
+                break;
             }
+
+            computerInputs[0].Add(natX);
+            computerInputs[0].Add(natY);
+
+            lastNatY = natY;
         }
 
 

@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct Coordinate4D(long x, long y, long z, long w)
+internal readonly struct Coordinate4D(long x, long y, long z, long w) : IEquatable<Coordinate4D>
 {
     public long X { get; } = x;
 
@@ -19,15 +19,6 @@ internal readonly struct Coordinate4D(long x, long y, long z, long w)
                           .ToList();
 
         return new Coordinate4D(values[0], values[1], values[2], values[3]);
-    }
-
-    public override bool Equals([NotNullWhen(true)] object? obj)
-    {
-        return obj is Coordinate4D otherCoordinate &&
-            X == otherCoordinate.X &&
-            Y == otherCoordinate.Y &&
-            Z == otherCoordinate.Z &&
-            W == otherCoordinate.W;
     }
 
     public override int GetHashCode()
@@ -68,5 +59,19 @@ internal readonly struct Coordinate4D(long x, long y, long z, long w)
     public static bool operator !=(Coordinate4D left, Coordinate4D right)
     {
         return !(left == right);
+    }
+
+    public bool Equals(Coordinate4D other)
+    {
+        return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is Coordinate4D otherCoordinate &&
+            X == otherCoordinate.X &&
+            Y == otherCoordinate.Y &&
+            Z == otherCoordinate.Z &&
+            W == otherCoordinate.W;
     }
 }

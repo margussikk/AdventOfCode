@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Numerics;
-using Microsoft.Diagnostics.Tracing.Parsers.IIS_Trace;
 
 namespace AdventOfCode.Year2020.Day24;
 
@@ -67,7 +66,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
                 if (cell.Object)
                 {
-                    if (blackNeighbors == 0 || blackNeighbors > 2)
+                    if (blackNeighbors is 0 or > 2)
                     {
                         cellUpdates.Add(new HexGridCell<bool>(cell.Coordinate, false));
                     }

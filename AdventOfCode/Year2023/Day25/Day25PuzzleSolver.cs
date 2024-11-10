@@ -32,14 +32,14 @@ public class Day25PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var numberOfWiresToCut = 3;
+        const int numberOfWiresToCut = 3;
 
-        int answer = 0;
+        var answer = 0;
 
         var notEnoughWires = _components.Any(v => v.Edges.Count <= numberOfWiresToCut);
         if (notEnoughWires)
         {
-            throw new InvalidOperationException($"Solution requires all components to have more than 3 wires. There needs to be at least 1 extra path exiting the start component but not reaching the end component.");
+            throw new InvalidOperationException("Solution requires all components to have more than 3 wires. There needs to be at least 1 extra path exiting the start component but not reaching the end component.");
         }
 
         // Find all the paths from the first component to all the other components. Keep track of wires used and don't use them on the next run.
@@ -49,7 +49,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
         var startComponent = _components[0];
         foreach (var endComponent in _components.Skip(1))
         {
-            var found = false;
+            bool found;
             var visitedComponentIds = new HashSet<int>();
             var usedWireIds = new HashSet<int>();
             var pathsFound = 0;
@@ -82,12 +82,10 @@ public class Day25PuzzleSolver : IPuzzleSolver
                         break;
                     }
 
-                    if (visitedComponentIds.Contains(componentVisitor.Component.Id))
+                    if (!visitedComponentIds.Add(componentVisitor.Component.Id))
                     {
                         continue;
                     }
-
-                    visitedComponentIds.Add(componentVisitor.Component.Id);
 
                     foreach (var wire in componentVisitor.Component.Edges.Where(w => !usedWireIds.Contains(w.Id)))
                     {
@@ -99,20 +97,19 @@ public class Day25PuzzleSolver : IPuzzleSolver
                 }
             } while (found);
 
-            if (pathsFound == numberOfWiresToCut)
-            {
-                //For debugging
-                //var groupComponents = visitedComponentIds.ToList();
-                //var wiresToCut = _wires // Find wires which connect two groups
-                //    .Where(x => (groupComponents.Contains(x.SourceVertex.Id) && !groupComponents.Contains(x.DestinationVertex.Id)) ||
-                //                (groupComponents.Contains(x.DestinationVertex.Id) && !groupComponents.Contains(x.SourceVertex.Id)))
-                //    .ToList();
-                //var wireNames = string.Join(", ", wiresToCut.Select(w => $"{w.SourceVertex.Name}-{w.DestinationVertex.Name}"));
-                //Console.WriteLine($"Wires to cut: {wireNames}"); // rcn-xkf, dht-xmv, cms-thk
+            if (pathsFound != numberOfWiresToCut) continue;
+            
+            //For debugging
+            //var groupComponents = visitedComponentIds.ToList();
+            //var wiresToCut = _wires // Find wires which connect two groups
+            //    .Where(x => (groupComponents.Contains(x.SourceVertex.Id) && !groupComponents.Contains(x.DestinationVertex.Id)) ||
+            //                (groupComponents.Contains(x.DestinationVertex.Id) && !groupComponents.Contains(x.SourceVertex.Id)))
+            //    .ToList();
+            //var wireNames = string.Join(", ", wiresToCut.Select(w => $"{w.SourceVertex.Name}-{w.DestinationVertex.Name}"));
+            //Console.WriteLine($"Wires to cut: {wireNames}"); // rcn-xkf, dht-xmv, cms-thk
 
-                answer = visitedComponentIds.Count * (_components.Count - visitedComponentIds.Count);
-                break;
-            }
+            answer = visitedComponentIds.Count * (_components.Count - visitedComponentIds.Count);
+            break;
         }
 
         return new PuzzleAnswer(answer, 543036);

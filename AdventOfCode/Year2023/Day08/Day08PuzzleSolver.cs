@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 namespace AdventOfCode.Year2023.Day08;
 
 // Input is designed such that LCM is the correct answer and not generalizable for other inputs.
-// Since instructions list loops, nodes lists must also loops for LCM to work.
+// Since instructions list loops, nodes lists must also loop for LCM to work.
 // Nodes form loops and the cycle length is the same as the steps to get from xxA to the xxZ.
-// xxA node is outside of the loop.
+// xxA node is outside the loop.
 // Loops don't intersect and every loop has only one xxZ.
 // xxA -> ... -> ... -> XXX -> ... -> ... -> xxZ -> ... -> XXX
 
@@ -69,7 +69,7 @@ public partial class Day08PuzzleSolver : IPuzzleSolver
             .Select(vertex => (long)CountSteps(vertex, v => v.Name[^1] != 'Z'))
             .ToList();
 
-        var answer = MathFunctions.LeastCommonMultiple(stepCounts);
+        var answer = stepCounts.LeastCommonMultiple();
 
         return new PuzzleAnswer(answer, 18024643846273L);
     }
@@ -91,6 +91,6 @@ public partial class Day08PuzzleSolver : IPuzzleSolver
         return steps;
     }
 
-    [GeneratedRegex("([0-9A-Z]{3}) = \\(([0-9A-Z]{3}), ([0-9A-Z]{3})\\)")]
+    [GeneratedRegex(@"([0-9A-Z]{3}) = \(([0-9A-Z]{3}), ([0-9A-Z]{3})\)")]
     private static partial Regex InputLineRegex();
 }

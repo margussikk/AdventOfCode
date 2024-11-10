@@ -17,10 +17,10 @@ public class Day08PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartOneAnswer()
     {
         var answer = _treeHeights.Count(gridCell =>
-            (gridCell.Coordinate.Row == 0) ||
-            (gridCell.Coordinate.Row == _treeHeights.LastRowIndex) ||
-            (gridCell.Coordinate.Column == 0) ||
-            (gridCell.Coordinate.Column == _treeHeights.LastColumnIndex) ||
+            gridCell.Coordinate.Row == 0 ||
+            gridCell.Coordinate.Row == _treeHeights.LastRowIndex ||
+            gridCell.Coordinate.Column == 0 ||
+            gridCell.Coordinate.Column == _treeHeights.LastColumnIndex ||
             IsVisible(gridCell.Coordinate, GridDirection.Up) ||
             IsVisible(gridCell.Coordinate, GridDirection.Down) ||
             IsVisible(gridCell.Coordinate, GridDirection.Left) ||
@@ -62,7 +62,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
     private int GetViewingDistance(GridCoordinate coordinate, GridDirection direction)
     {
-        int distance = 0;
+        var distance = 0;
 
         var testCoordinate = coordinate.Move(direction);
         while (_treeHeights.InBounds(testCoordinate))

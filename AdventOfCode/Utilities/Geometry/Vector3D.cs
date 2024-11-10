@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Utilities.Geometry;
 
-internal readonly struct Vector3D(long dX, long dY, long dZ)
+internal readonly struct Vector3D(long dX, long dY, long dZ) : IEquatable<Vector3D>
 {
     public static readonly Vector3D UnitX = new(1, 0, 0);
 
@@ -13,4 +13,19 @@ internal readonly struct Vector3D(long dX, long dY, long dZ)
     public long DY { get; } = dY;
 
     public long DZ { get; } = dZ;
+
+    public bool Equals(Vector3D other)
+    {
+        return DX == other.DX && DY == other.DY && DZ == other.DZ;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector3D other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(DX, DY, DZ);
+    }
 }

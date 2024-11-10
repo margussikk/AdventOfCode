@@ -2,37 +2,34 @@
 
 internal static class GridDirectionExtensions
 {
-    private static readonly GridDirection _upDownDirection = GridDirection.Up | GridDirection.Down;
-    private static readonly GridDirection _leftRightDirection = GridDirection.Left | GridDirection.Right;
-
     public static GridDirection Flip(this GridDirection gridDirection)
     {
-        GridDirection newGridDirection = GridDirection.None;
+        var newGridDirection = GridDirection.None;
 
-        var upDownDirection = gridDirection & _upDownDirection;
+        var upDownDirection = gridDirection & GridDirection.UpAndDown;
         if (upDownDirection != GridDirection.None)
         {
-            if (upDownDirection == _upDownDirection)
+            if (upDownDirection == GridDirection.UpAndDown)
             {
-                newGridDirection |= _upDownDirection;
+                newGridDirection |= GridDirection.UpAndDown;
             }
             else
             {
-                newGridDirection |= (gridDirection ^ _upDownDirection) & _upDownDirection;
+                newGridDirection |= (gridDirection ^ GridDirection.UpAndDown) & GridDirection.UpAndDown;
             }
         }
 
-        var leftRightDirection = gridDirection & _leftRightDirection;
-        if (leftRightDirection != GridDirection.None)
+        var leftRightDirection = gridDirection & GridDirection.LeftAndRight;
+        switch (leftRightDirection)
         {
-            if (leftRightDirection == _leftRightDirection)
-            {
-                newGridDirection |= _leftRightDirection;
-            }
-            else
-            {
-                newGridDirection |= (gridDirection ^ _leftRightDirection) & _leftRightDirection;
-            }
+            case GridDirection.None:
+                return newGridDirection;
+            case GridDirection.LeftAndRight:
+                newGridDirection |= GridDirection.LeftAndRight;
+                break;
+            default:
+                newGridDirection |= (gridDirection ^ GridDirection.LeftAndRight) & GridDirection.LeftAndRight;
+                break;
         }
 
 

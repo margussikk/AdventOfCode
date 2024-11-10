@@ -10,15 +10,11 @@ internal abstract class Command
     public static Command Parse(string line)
     {
         var splits = line.Split(' ');
-        if (splits[1] == "cd")
+        return splits[1] switch
         {
-            return new ChangeDirectoryCommand(splits[2]);
-        }
-        else if (splits[1] == "ls")
-        {
-            return new ListCommand();
-        }
-
-        throw new InvalidOperationException();
+            "cd" => new ChangeDirectoryCommand(splits[2]),
+            "ls" => new ListCommand(),
+            _ => throw new InvalidOperationException()
+        };
     }
 }

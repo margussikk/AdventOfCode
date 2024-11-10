@@ -14,11 +14,13 @@ internal abstract class Technique
         {
             return new DealIntoNewStackTechnique();
         }
-        else if (input.StartsWith("cut "))
+
+        if (input.StartsWith("cut "))
         {
             return new CutCardsTechnique(int.Parse(input["cut ".Length..]));
         }
-        else if (input.StartsWith("deal with increment "))
+
+        if (input.StartsWith("deal with increment "))
         {
             return new DealWithIncrementTechnique(int.Parse(input["deal with increment ".Length..]));
         }

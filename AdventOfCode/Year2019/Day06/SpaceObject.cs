@@ -4,19 +4,12 @@ internal class SpaceObject(string name)
 {
     public string Name { get; } = name;
 
-    public SpaceObject? Orbits { get; set; } = null;
+    public SpaceObject? Orbits { get; set; }
 
     public List<SpaceObject> OrbitedBy { get; } = [];
 
     public int CountOrbits(int level)
     {
-        var totalLevel = level;
-
-        foreach (var obj in OrbitedBy)
-        {
-            totalLevel += obj.CountOrbits(level + 1);
-        }
-
-        return totalLevel;
+        return level + OrbitedBy.Sum(obj => obj.CountOrbits(level + 1));
     }
 }

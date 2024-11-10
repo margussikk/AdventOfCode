@@ -9,17 +9,17 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _bytes = new byte[inputLines[0].Length / 2 + (inputLines[0].Length % 2)];
+        _bytes = new byte[inputLines[0].Length / 2 + inputLines[0].Length % 2];
 
         for (var i = 0; i < inputLines[0].Length; i++)
         {
             if (i % 2 == 0)
             {
-                _bytes[i / 2] |= Convert.ToByte(inputLines[0][i].ToString() + "0", 16);
+                _bytes[i / 2] |= Convert.ToByte(inputLines[0][i] + "0", 16);
             }
             else
             {
-                _bytes[i / 2] |= Convert.ToByte("0" + inputLines[0][i].ToString(), 16);
+                _bytes[i / 2] |= Convert.ToByte("0" + inputLines[0][i], 16);
             }
         }
     }

@@ -37,7 +37,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
     }
 
 
-    public int GetAnswer(bool duplicateSmallCaveAllowed)
+    private int GetAnswer(bool duplicateSmallCaveAllowed)
     {
         var answer = 0;
 
@@ -65,7 +65,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
                     }
                     else
                     {
-                        // Visit small cave only once
+                        // Visit the small cave only once
                         continue;
                     }
                 }
@@ -76,11 +76,10 @@ public class Day12PuzzleSolver : IPuzzleSolver
             foreach (var edge in caveWalker.CurrentVertex.Edges)
             {
                 var destinationVertex = edge.SourceVertex == caveWalker.CurrentVertex ? edge.DestinationVertex : edge.SourceVertex;
-                if (destinationVertex.Name != "start")
-                {
-                    var newCaveWalker = new CaveWalker(destinationVertex, caveWalker.VisitedBitMask, caveWalker.DuplicateSmallCaveAllowed);
-                    queue.Enqueue(newCaveWalker);
-                }
+                if (destinationVertex.Name == "start") continue;
+                
+                var newCaveWalker = new CaveWalker(destinationVertex, caveWalker.VisitedBitMask, caveWalker.DuplicateSmallCaveAllowed);
+                queue.Enqueue(newCaveWalker);
             }
         }
 

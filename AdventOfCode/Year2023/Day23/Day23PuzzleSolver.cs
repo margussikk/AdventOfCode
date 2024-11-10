@@ -8,9 +8,9 @@ namespace AdventOfCode.Year2023.Day23;
 [Puzzle(2023, 23, "A Long Walk")]
 public class Day23PuzzleSolver : IPuzzleSolver
 {
-    private GraphVertex? _startVertex = null;
+    private GraphVertex? _startVertex;
 
-    private GraphVertex? _endVertex = null;
+    private GraphVertex? _endVertex;
 
     public void ParseInput(string[] inputLines)
     {
@@ -29,11 +29,10 @@ public class Day23PuzzleSolver : IPuzzleSolver
         GridCoordinate? startCoordinate = null;
         for (var column = 0; column < tiles.Width; column++)
         {
-            if (tiles[0, column] == Tile.Path)
-            {
-                startCoordinate = new GridCoordinate(0, column);
-                break;
-            }
+            if (tiles[0, column] != Tile.Path) continue;
+
+            startCoordinate = new GridCoordinate(0, column);
+            break;
         }
 
         if (startCoordinate is null)
@@ -45,11 +44,10 @@ public class Day23PuzzleSolver : IPuzzleSolver
         GridCoordinate? endCoordinate = null;
         for (var column = 0; column < tiles.Width; column++)
         {
-            if (tiles[tiles.LastRowIndex, column] == Tile.Path)
-            {
-                endCoordinate = new GridCoordinate(tiles.LastRowIndex, column);
-                break;
-            }
+            if (tiles[tiles.LastRowIndex, column] != Tile.Path) continue;
+            
+            endCoordinate = new GridCoordinate(tiles.LastRowIndex, column);
+            break;
         }
 
         if (endCoordinate is null)
@@ -113,15 +111,12 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
             vertexHiker.VisitedBitMask |= bitmask;
 
-            foreach (var edge in vertexHiker.CurrentVertex.Edges)
+            foreach (var edge in vertexHiker.CurrentVertex.Edges.Where(e => e.SourceVertex == vertexHiker.CurrentVertex || ignoreSlopes))
             {
-                if (edge.SourceVertex == vertexHiker.CurrentVertex || ignoreSlopes)
-                {
-                    var destinationVertex = edge.SourceVertex == vertexHiker.CurrentVertex ? edge.DestinationVertex : edge.SourceVertex;
+                var destinationVertex = edge.SourceVertex == vertexHiker.CurrentVertex ? edge.DestinationVertex : edge.SourceVertex;
 
-                    var newVertexHiker = new VertexHiker(destinationVertex, vertexHiker.Distance + edge.Weight, vertexHiker.VisitedBitMask);
-                    vertexHikers.Push(newVertexHiker);
-                }
+                var newVertexHiker = new VertexHiker(destinationVertex, vertexHiker.Distance + edge.Weight, vertexHiker.VisitedBitMask);
+                vertexHikers.Push(newVertexHiker);
             }
         }
 
@@ -179,11 +174,10 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
                     {
                         var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
-                        if (direction != hiker.Direction.Flip())
-                        {
-                            var newHiker = new GridWalker(hiker.CurrentCoordinate, neighborCell.Coordinate, direction, 1);
-                            hikers.Push(newHiker);
-                        }
+                        if (direction == hiker.Direction.Flip()) continue;
+                        
+                        var newHiker = new GridWalker(hiker.CurrentCoordinate, neighborCell.Coordinate, direction, 1);
+                        hikers.Push(newHiker);
                     }
 
                     visitedGrid[hiker.CurrentCoordinate] = true;
@@ -201,13 +195,12 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
                 {
                     var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
-                    if (direction != hiker.Direction.Flip())
-                    {
-                        var newHiker = hiker.Clone();
-                        newHiker.Move(direction);
+                    if (direction == hiker.Direction.Flip()) continue;
+                    
+                    var newHiker = hiker.Clone();
+                    newHiker.Move(direction);
 
-                        hikers.Push(newHiker);
-                    }
+                    hikers.Push(newHiker);
                 }
             }
         }

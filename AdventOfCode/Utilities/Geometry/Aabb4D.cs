@@ -55,12 +55,9 @@ internal class Aabb4D: IEnumerable<Aabb4DCell>
 
     public IEnumerable<Aabb4DCell> AroundNeighbors(Coordinate4D coordinate)
     {
-        foreach (var neighborCoordinate in coordinate.AroundNeighbors())
+        foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
         {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new Aabb4DCell(neighborCoordinate, _bitArray.Get(GetIndex(neighborCoordinate.X, neighborCoordinate.Y, neighborCoordinate.Z, neighborCoordinate.W)));
-            }
+            yield return new Aabb4DCell(neighborCoordinate,  this[neighborCoordinate]);
         }
     }
 
@@ -74,7 +71,8 @@ internal class Aabb4D: IEnumerable<Aabb4DCell>
                 {
                     for (var x = minCoordinate.X; x <= maxCoordinate.X; x++)
                     {
-                        yield return new Aabb4DCell(new Coordinate4D(x, y, z, w), _bitArray.Get(GetIndex(x, y, z, w)));
+                        var coordinate = new Coordinate4D(x, y, z, w);
+                        yield return new Aabb4DCell(coordinate, this[coordinate]);
                     }
                 }
             }

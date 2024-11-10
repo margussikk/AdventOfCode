@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Numerics;
-using Microsoft.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2022.Day15;
@@ -39,7 +38,7 @@ public partial class Day15PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var y = 2_000_000;
+        const int y = 2_000_000;
 
         var ranges = _sensors
             .Where(s => y >= s.TopCoordinate.Y && y <= s.BottomCoordinate.Y)
@@ -118,22 +117,22 @@ public partial class Day15PuzzleSolver : IPuzzleSolver
         {
             foreach (var positiveSlopeLine in positiveSlopeLines)
             {
-                if (negativeSlopeLine.TryFindIntersectionCoordinate(positiveSlopeLine, out var intersectionCoordinate) &&
-                    coordinateValueRange.Contains(intersectionCoordinate.X) && coordinateValueRange.Contains(intersectionCoordinate.Y))
-                {
-                    var notDetectable = _sensors.TrueForAll(s => !s.Detectable(intersectionCoordinate));
-                    if (notDetectable)
-                    {
-                        var answer = 4_000_000L * intersectionCoordinate.X + intersectionCoordinate.Y;
-                        return new PuzzleAnswer(answer, 12051287042458L);
-                    }
-                }
+                if (!negativeSlopeLine.TryFindIntersectionCoordinate(positiveSlopeLine,
+                        out var intersectionCoordinate) ||
+                    !coordinateValueRange.Contains(intersectionCoordinate.X) ||
+                    !coordinateValueRange.Contains(intersectionCoordinate.Y)) continue;
+                
+                var notDetectable = _sensors.TrueForAll(s => !s.Detectable(intersectionCoordinate));
+                if (!notDetectable) continue;
+                
+                var answer = 4_000_000L * intersectionCoordinate.X + intersectionCoordinate.Y;
+                return new PuzzleAnswer(answer, 12051287042458L);
             }
         }
 
         return new PuzzleAnswer("ERROR", "NOT ERROR");
     }
 
-    [GeneratedRegex("Sensor at x=(\\-*\\d+), y=(\\-*\\d+): closest beacon is at x=(\\-*\\d+), y=(\\-*\\d+)")]
+    [GeneratedRegex(@"Sensor at x=(\-*\d+), y=(\-*\d+): closest beacon is at x=(\-*\d+), y=(\-*\d+)")]
     private static partial Regex InputLineRegex();
 }

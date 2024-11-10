@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Columns;
-
-namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.Geometry;
 
 // Q - West/East
 // R - Northwest/Southeast
@@ -9,11 +7,11 @@ namespace AdventOfCode.Utilities.Geometry;
 
 internal readonly struct HexCoordinate(int q, int r) : IEquatable<HexCoordinate>
 {
-    public readonly int Q { get; } = q;
+    public int Q { get; } = q;
 
-    public readonly int R { get; } = r;
+    public int R { get; } = r;
 
-    public readonly int S => -Q - R;
+    public int S => -Q - R;
 
     public IEnumerable<HexCoordinate> AroundNeighbors()
     {

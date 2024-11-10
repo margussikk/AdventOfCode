@@ -2,7 +2,7 @@
 
 internal class Elf
 {
-    public IReadOnlyCollection<int> Calories { get; private set; } = [];
+    public IReadOnlyCollection<int> Calories { get; private init; } = [];
 
     public int TotalCalories => Calories.Sum();
 

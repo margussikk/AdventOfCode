@@ -1,6 +1,11 @@
 ﻿namespace AdventOfCode.Year2022.Day11;
 
-internal class NumberOperand(int value) : Operand
+internal class NumberOperand : IOperand
 {
-    public int Value { get; } = value;
+    public int Value { get; }
+    
+    public NumberOperand(int value)
+    { 
+        Value = value;
+    }
 }

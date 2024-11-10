@@ -55,9 +55,9 @@ public class Day09PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 4023754L);
     }
 
-    public long FindInvalidNumber()
+    private long FindInvalidNumber()
     {
-        var preambleLength = 25;
+        const int preambleLength = 25;
 
         for (var index = preambleLength; index < _numbers.Count; index++)
         {

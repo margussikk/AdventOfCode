@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
-using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2020.Day20;
 
@@ -24,7 +23,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
             .ToList();
     }
 
-    // Solution assumes that every border bitmask (and its reversal) exists only once. We care only about corned tiles, no need to rearrange the tiles
+    // The Solution assumes that every border bitmask (and its reversal) exists only once. We care only about corned tiles, no need to rearrange the tiles
     public PuzzleAnswer GetPartOneAnswer()
     {
         var cornerTiles = new List<Tile>();
@@ -88,20 +87,20 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 {
                     for (var border = TileBorder.Top; border <= TileBorder.Left; border++)
                     {
-                        if (currentTileArrangement.Tile.BorderBitmasks[currentTileArrangement.Orientation, border] == neighborTile.BorderBitmasks[orientation, (border + 2) % 4])
+                        if (currentTileArrangement.Tile.BorderBitmasks[currentTileArrangement.Orientation, border] !=
+                            neighborTile.BorderBitmasks[orientation, (border + 2) % 4]) continue;
+                        
+                        var coordinate = border switch
                         {
-                            var coordinate = border switch
-                            {
-                                TileBorder.Top => currentTileArrangement.Coordinate.Move(GridDirection.Up),
-                                TileBorder.Right => currentTileArrangement.Coordinate.Move(GridDirection.Right),
-                                TileBorder.Bottom => currentTileArrangement.Coordinate.Move(GridDirection.Down),
-                                TileBorder.Left => currentTileArrangement.Coordinate.Move(GridDirection.Left),
-                                _ => throw new InvalidOperationException("Invalid tile border")
-                            };
+                            TileBorder.Top => currentTileArrangement.Coordinate.Move(GridDirection.Up),
+                            TileBorder.Right => currentTileArrangement.Coordinate.Move(GridDirection.Right),
+                            TileBorder.Bottom => currentTileArrangement.Coordinate.Move(GridDirection.Down),
+                            TileBorder.Left => currentTileArrangement.Coordinate.Move(GridDirection.Left),
+                            _ => throw new InvalidOperationException("Invalid tile border")
+                        };
 
-                            var newTileArrangement = new TileArrangement(neighborTile, coordinate, orientation);
-                            queue.Enqueue(newTileArrangement);
-                        }
+                        var newTileArrangement = new TileArrangement(neighborTile, coordinate, orientation);
+                        queue.Enqueue(newTileArrangement);
                     }
                 }
             }
@@ -141,29 +140,18 @@ public class Day20PuzzleSolver : IPuzzleSolver
             {
                 for (var column = 0; column < largeImage.Width - seaMonsterPattern.Width; column++)
                 {
-                    var found = true;
+                    var found = seaMonsterPattern.All(cell => !cell.Object || largeImage[cell.Coordinate.Row + row, cell.Coordinate.Column + column]);
+                    if (!found) continue;
+                    
+                    var coordinates = seaMonsterPattern
+                        .Where(c => c.Object)
+                        .Select(c => new GridCoordinate(c.Coordinate.Row + row, c.Coordinate.Column + column));
 
-                    foreach (var cell in seaMonsterPattern)
-                    {
-                        if (cell.Object && !largeImage[cell.Coordinate.Row + row, cell.Coordinate.Column + column])
-                        {
-                            found = false;
-                            break;
-                        }
-                    }
-
-                    if (found)
-                    {
-                        var coordinates = seaMonsterPattern
-                            .Where(c => c.Object)
-                            .Select(c => new GridCoordinate(c.Coordinate.Row + row, c.Coordinate.Column + column));
-
-                        seaMonsterCoordinates.UnionWith(coordinates);
-                    }
+                    seaMonsterCoordinates.UnionWith(coordinates);
                 }
             }
 
-            // Instead of rotating the large image, rotate the smaller sea monster pattern, it should take less operations
+            // Instead of rotating the large image, rotate the smaller sea monster pattern, it should take fewer operations
             if (orientation == 3)
             {
                 seaMonsterPattern = seaMonsterPattern

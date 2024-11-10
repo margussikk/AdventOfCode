@@ -3,5 +3,5 @@
 internal enum PushDirection
 {
     Left,
-    Right,
+    Right
 }

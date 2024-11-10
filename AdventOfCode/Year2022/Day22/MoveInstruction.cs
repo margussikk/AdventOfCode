@@ -1,6 +1,11 @@
 ﻿namespace AdventOfCode.Year2022.Day22;
 
-internal class MoveInstruction(int steps) : IInstruction
+internal class MoveInstruction : IInstruction
 {
-    public int Steps { get; } = steps;
+    public int Steps { get; }
+
+    public MoveInstruction(int steps)
+    {
+        Steps = steps;
+    }
 }

@@ -28,7 +28,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
                        "#"),
 
             Rock.Parse("##",
-                       "##"),
+                       "##")
         ];
 
         _pushDirections = inputLines[0]
@@ -86,11 +86,9 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
                 return naturalHeight + heightFromCycles;
             }
-            else
-            {
-                states[key] = (index, currentTowerHeight);
-                towerHeightsHistory.Add(currentTowerHeight);
-            }
+
+            states[key] = (index, currentTowerHeight);
+            towerHeightsHistory.Add(currentTowerHeight);
 
             bool canMoveDown;
             do
@@ -98,14 +96,15 @@ public class Day17PuzzleSolver : IPuzzleSolver
                 var direction = _pushDirections[directionIndex];
                 directionIndex = (directionIndex + 1) % _pushDirections.Count;
 
-                // Jet pushes right or left
-                if (direction == PushDirection.Right && chamber.CanMoveRock(rock, 0, 1))
+                switch (direction)
                 {
-                    rock.Column++;
-                }
-                else if (direction == PushDirection.Left && chamber.CanMoveRock(rock, 0, -1))
-                {
-                    rock.Column--;
+                    // Jet pushes right or left
+                    case PushDirection.Right when chamber.CanMoveRock(rock, 0, 1):
+                        rock.Column++;
+                        break;
+                    case PushDirection.Left when chamber.CanMoveRock(rock, 0, -1):
+                        rock.Column--;
+                        break;
                 }
 
                 // Rock falls one unit

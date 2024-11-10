@@ -31,9 +31,9 @@ public class Day18PuzzleSolver : IPuzzleSolver
     {
         var answer = int.MinValue;
 
-        for (int i = 0; i < _snailfishNumbers.Count; i++)
+        for (var i = 0; i < _snailfishNumbers.Count; i++)
         {
-            for (int j = 0; i != j && j < _snailfishNumbers.Count; j++)
+            for (var j = 0; i != j && j < _snailfishNumbers.Count; j++)
             {
                 var sum = _snailfishNumbers[i]
                     .DeepCopy()

@@ -58,7 +58,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 new NumberRange<long>(1, 4000), // X
                 new NumberRange<long>(1, 4000), // M
                 new NumberRange<long>(1, 4000), // A
-                new NumberRange<long>(1, 4000), // S
+                new NumberRange<long>(1, 4000)  // S
             ]
         };
 
@@ -71,26 +71,30 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 var nextWorkItem = new WorkItem
                 {
                     WorkflowName = rule.WorkflowName,
-                    RatingNumberRanges = [.. currentWorkItem.RatingNumberRanges],
+                    RatingNumberRanges = [.. currentWorkItem.RatingNumberRanges]
                 };
 
-                if (rule is LessThanRule lessThanRule)
+                switch (rule)
                 {
-                    var ranges = currentWorkItem.RatingNumberRanges[lessThanRule.Rating].SplitBefore(lessThanRule.Number);
+                    case LessThanRule lessThanRule:
+                    {
+                        var ranges = currentWorkItem.RatingNumberRanges[lessThanRule.Rating].SplitBefore(lessThanRule.Number);
 
-                    nextWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[0];
-                    currentWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[1];
-                }
-                else if (rule is GreaterThanRule greaterThanRule)
-                {
-                    var ranges = currentWorkItem.RatingNumberRanges[greaterThanRule.Rating].SplitAfter(greaterThanRule.Number);
+                        nextWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[0];
+                        currentWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[1];
+                        break;
+                    }
+                    case GreaterThanRule greaterThanRule:
+                    {
+                        var ranges = currentWorkItem.RatingNumberRanges[greaterThanRule.Rating].SplitAfter(greaterThanRule.Number);
 
-                    currentWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[0];
-                    nextWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[1];
-                }
-                else if (rule is NoConditionRule)
-                {
-                    // Do nothing
+                        currentWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[0];
+                        nextWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[1];
+                        break;
+                    }
+                    case NoConditionRule:
+                        // Do nothing
+                        break;
                 }
 
                 if (nextWorkItem.WorkflowName == WorkflowName.Accepted)

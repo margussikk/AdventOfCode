@@ -41,31 +41,37 @@ public class Day22PuzzleSolver : IPuzzleSolver
         var span = chunks[1][0].AsSpan();
         while (span.Length > 0)
         {
-            if (span[0] == 'L')
+            switch (span[0])
             {
-                _instructions.Add(new TurnInstruction(GridDirection.Left));
-                span = span[1..];
-            }
-            else if (span[0] == 'R')
-            {
-                _instructions.Add(new TurnInstruction(GridDirection.Right));
-                span = span[1..];
-            }
-            else if (char.IsDigit(span[0]))
-            {
-                var lastindex = span.IndexOfAnyExceptInRange('0', '9');
-                if (lastindex == -1)
+                case 'L':
+                    _instructions.Add(new TurnInstruction(GridDirection.Left));
+                    span = span[1..];
+                    break;
+                case 'R':
+                    _instructions.Add(new TurnInstruction(GridDirection.Right));
+                    span = span[1..];
+                    break;
+                default:
                 {
-                    lastindex = span.Length;
-                }
+                    if (char.IsDigit(span[0]))
+                    {
+                        var lastIndex = span.IndexOfAnyExceptInRange('0', '9');
+                        if (lastIndex == -1)
+                        {
+                            lastIndex = span.Length;
+                        }
 
-                var steps = int.Parse(span[..lastindex]);
-                _instructions.Add(new MoveInstruction(steps));
-                span = span[lastindex..];
-            }
-            else
-            {
-                throw new InvalidOperationException("Failed to parse instruction");
+                        var steps = int.Parse(span[..lastIndex]);
+                        _instructions.Add(new MoveInstruction(steps));
+                        span = span[lastIndex..];
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Failed to parse instruction");
+                    }
+
+                    break;
+                }
             }
         }
     }
@@ -76,28 +82,21 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
         foreach (var instruction in _instructions)
         {
-            if (instruction is TurnInstruction turnInstruction)
+            switch (instruction)
             {
-                if (turnInstruction.Direction is GridDirection.Left)
-                {
+                case TurnInstruction { Direction: GridDirection.Left }:
                     walker.TurnLeft();
-                }
-                else if (turnInstruction.Direction is GridDirection.Right)
-                {
+                    break;
+                case TurnInstruction { Direction: GridDirection.Right }:
                     walker.TurnRight();
-                }
-                else
-                {
+                    break;
+                case TurnInstruction:
                     throw new InvalidOperationException("Invalid turn direction");
-                }
-            }
-            else if (instruction is MoveInstruction moveInstruction)
-            {
-                walker.Move(moveInstruction.Steps);
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                case MoveInstruction moveInstruction:
+                    walker.Move(moveInstruction.Steps);
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
         }
 
@@ -112,28 +111,21 @@ public class Day22PuzzleSolver : IPuzzleSolver
 
         foreach (var instruction in _instructions)
         {
-            if (instruction is TurnInstruction turnInstruction)
+            switch (instruction)
             {
-                if (turnInstruction.Direction is GridDirection.Left)
-                {
+                case TurnInstruction { Direction: GridDirection.Left }:
                     walker.TurnLeft();
-                }
-                else if (turnInstruction.Direction is GridDirection.Right)
-                {
+                    break;
+                case TurnInstruction { Direction: GridDirection.Right }:
                     walker.TurnRight();
-                }
-                else
-                {
+                    break;
+                case TurnInstruction:
                     throw new InvalidOperationException("Invalid turn direction");
-                }
-            }
-            else if (instruction is MoveInstruction moveInstruction)
-            {
-                walker.Move(moveInstruction.Steps);
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                case MoveInstruction moveInstruction:
+                    walker.Move(moveInstruction.Steps);
+                    break;
+                default:
+                    throw new InvalidOperationException();
             }
         }
 

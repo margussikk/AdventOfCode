@@ -58,15 +58,14 @@ public class Day19PuzzleSolver : IPuzzleSolver
                     rightX = null;
                     break;
                 }
-                else if (IsInBeam(x, y))
+
+                if (IsInBeam(x, y))
                 {
                     leftX = x;
                     break;
                 }
-                else
-                {
-                    x++;
-                }            
+
+                x++;
             }
 
             // Right edge
@@ -82,15 +81,14 @@ public class Day19PuzzleSolver : IPuzzleSolver
                         rightX = 49;
                         break;
                     }
-                    else if (!IsInBeam(x + 1, y))
+
+                    if (!IsInBeam(x + 1, y))
                     {
                         rightX = x;
                         break;
                     }
-                    else
-                    {
-                        x++;
-                    }
+
+                    x++;
                 }
             }
 
@@ -158,7 +156,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
     {
         var leftCoordinates = new List<Coordinate2D>();
         var rightCoordinates = new List<Coordinate2D>();
-        var y = 9;
+        const int y = 9;
 
         // Left
         var leftX = 0;
@@ -222,13 +220,13 @@ public class Day19PuzzleSolver : IPuzzleSolver
             newY++;
         }
 
-        var leftBeam = new Beam()
+        var leftBeam = new Beam
         {
             Start = leftCoordinates[0],
             Vector = leftCoordinates[1] - leftCoordinates[0]
         };
 
-        var rightBeam = new Beam()
+        var rightBeam = new Beam
         {
             Start = rightCoordinates[0],
             Vector = rightCoordinates[1] - rightCoordinates[0]
