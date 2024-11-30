@@ -8,7 +8,7 @@ internal class ReplaceLensOperation : Operation
     {
         FocalLength = focalLength;
     }
-    
+
     public override string ToString()
     {
         return $"{Label}={FocalLength}";

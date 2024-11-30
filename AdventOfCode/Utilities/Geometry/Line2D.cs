@@ -19,7 +19,7 @@ internal readonly struct Line2D
         C = c;
 
         if (A >= 0) return;
-        
+
         A = -A;
         B = -B;
         C = -C;
@@ -37,7 +37,7 @@ internal readonly struct Line2D
         C = (long)bigC;
 
         if (A >= 0) return;
-        
+
         A = -A;
         B = -B;
         C = -C;
@@ -53,7 +53,7 @@ internal readonly struct Line2D
         C = (long)bigC;
 
         if (A >= 0) return;
-        
+
         A = -A;
         B = -B;
         C = -C;

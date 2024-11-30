@@ -73,10 +73,10 @@ public class Day12PuzzleSolver : IPuzzleSolver
             {
                 var elevationDifference = directionMultiplier * (neighborCell.Object - _grid[hillclimber.Coordinate]);
                 if (elevationDifference > 1) continue;
-                
+
                 var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
                 if (hillclimber.Steps + 1 >= currentDistance) continue;
-                
+
                 var newHillClimber = new HillClimber(neighborCell.Coordinate, hillclimber.Steps + 1);
                 hillClimbers.Enqueue(newHillClimber, newHillClimber.Steps);
             }

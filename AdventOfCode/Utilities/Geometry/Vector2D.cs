@@ -17,7 +17,7 @@ internal readonly record struct Vector2D
         DX = dX;
         DY = dY;
     }
-    
+
     public static Vector2D operator *(Vector2D vector, double scalar)
     {
         return new Vector2D(Convert.ToInt64(vector.DX * scalar), Convert.ToInt64(vector.DY * scalar));

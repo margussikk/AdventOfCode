@@ -50,7 +50,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 x = leftX.Value;
             }
 
-            while(true)
+            while (true)
             {
                 if (x >= 50)
                 {
@@ -114,7 +114,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
         // Find exact left beam X at row Y
         if (IsInBeam(x, y))
         {
-            while(IsInBeam(x - 1, y))
+            while (IsInBeam(x - 1, y))
             {
                 x--;
             }
@@ -126,9 +126,9 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 x++;
             }
         }
-        
+
         // Follow left beam
-        while(!IsInBeam(x + 99, y - 99))
+        while (!IsInBeam(x + 99, y - 99))
         {
             y++;
 

@@ -74,7 +74,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
                 var newTotalRisk = currentCaveWalker.Distance + neighbor.Object;
                 if (newTotalRisk >= currentLowestTotalRisk) continue;
-                
+
                 var newCaveWalker = new CaveWalker(neighbor.Coordinate, newTotalRisk);
 
                 var manhattan = MeasurementFunctions.ManhattanDistance(newCaveWalker.Coordinate, endCoordinate);

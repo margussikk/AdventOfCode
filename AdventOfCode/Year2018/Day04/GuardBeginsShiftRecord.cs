@@ -4,7 +4,7 @@
     {
         public int GuardId { get; }
 
-        public GuardBeginsShiftRecord(int month, int day, int hour, int minute, int guardId): base(month, day, hour, minute)
+        public GuardBeginsShiftRecord(int month, int day, int hour, int minute, int guardId) : base(month, day, hour, minute)
         {
             GuardId = guardId;
         }

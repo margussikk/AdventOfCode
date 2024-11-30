@@ -14,7 +14,7 @@ internal abstract partial class Operation
     {
         Label = label;
     }
-    
+
     public static Operation Parse(string input)
     {
         var matches = InputLineRegex().Matches(input);
@@ -26,18 +26,18 @@ internal abstract partial class Operation
         switch (matches[0].Groups[2].Value)
         {
             case "=":
-            {
-                var label = matches[0].Groups[1].Value;
-                var focalLength = int.Parse(matches[0].Groups[3].Value);
+                {
+                    var label = matches[0].Groups[1].Value;
+                    var focalLength = int.Parse(matches[0].Groups[3].Value);
 
-                return new ReplaceLensOperation(label, focalLength);
-            }
+                    return new ReplaceLensOperation(label, focalLength);
+                }
             case "-":
-            {
-                var label = matches[0].Groups[1].Value;
+                {
+                    var label = matches[0].Groups[1].Value;
 
-                return new RemoveLensOperation(label);
-            }
+                    return new RemoveLensOperation(label);
+                }
             default:
                 throw new InvalidOperationException();
         }

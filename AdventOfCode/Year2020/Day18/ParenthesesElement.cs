@@ -8,7 +8,7 @@ internal class ParenthesesElement : IElement
     {
         Open = open;
     }
-    
+
     public override string ToString()
     {
         return Open ? "(" : ")";

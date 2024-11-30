@@ -99,7 +99,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
             }
 
             if (rolledToRow == cell.Coordinate.Row) continue;
-            
+
             platform[rolledToRow, cell.Coordinate.Column] = Item.RoundedRock;
             platform[cell.Coordinate.Row, cell.Coordinate.Column] = Item.EmptySpace;
         }

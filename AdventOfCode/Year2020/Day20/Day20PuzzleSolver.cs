@@ -72,7 +72,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var currentTileArrangement = new TileArrangement(_tiles[0], new GridCoordinate(0, 0), 0);
 
         queue.Enqueue(currentTileArrangement);
-        while(queue.TryDequeue(out currentTileArrangement))
+        while (queue.TryDequeue(out currentTileArrangement))
         {
             if (tileArrangementsDict.ContainsKey(currentTileArrangement.Tile.Id))
             {
@@ -89,7 +89,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
                     {
                         if (currentTileArrangement.Tile.BorderBitmasks[currentTileArrangement.Orientation, border] !=
                             neighborTile.BorderBitmasks[orientation, (border + 2) % 4]) continue;
-                        
+
                         var coordinate = border switch
                         {
                             TileBorder.Top => currentTileArrangement.Coordinate.Move(GridDirection.Up),
@@ -108,7 +108,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
         // Build large image
         var tileArrangementsGrid = CreateTileArrangementsGrid(tileArrangementsDict.Values);
-      
+
         var smallerTileSize = _tiles[0].Image.Height - 2;
 
         var largeImage = new BitGrid(tileArrangementsGrid.Height * smallerTileSize, tileArrangementsGrid.Width * smallerTileSize);
@@ -142,7 +142,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 {
                     var found = seaMonsterPattern.All(cell => !cell.Object || largeImage[cell.Coordinate.Row + row, cell.Coordinate.Column + column]);
                     if (!found) continue;
-                    
+
                     var coordinates = seaMonsterPattern
                         .Where(c => c.Object)
                         .Select(c => new GridCoordinate(c.Coordinate.Row + row, c.Coordinate.Column + column));

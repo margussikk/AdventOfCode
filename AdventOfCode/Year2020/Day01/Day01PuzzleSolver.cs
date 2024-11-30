@@ -48,14 +48,14 @@ public class Day01PuzzleSolver : IPuzzleSolver
             if (summandCount == 1)
             {
                 if (currentSum + entry != 2020) continue;
-                
+
                 answer = entry;
                 return true;
             }
 
             var found = GetAnswer(entries, summandCount - 1, index + 1, currentSum + entry, out var answer1);
             if (!found) continue;
-            
+
             answer = entry * answer1;
             return found;
         }

@@ -27,7 +27,7 @@ public class Day04PuzzleSolver : IPuzzleSolver
             {
                 board.MarkNumber(number);
                 if (!board.IsWinner()) continue;
-                
+
                 var answer = board.SumOfUnmarkedNumbers() * number;
                 return new PuzzleAnswer(answer, 45031);
             }
@@ -59,7 +59,7 @@ public class Day04PuzzleSolver : IPuzzleSolver
             }
 
             if (winningBoards.Count == 0) continue;
-            
+
             if (boards.Count == 1)
             {
                 var answer = winningBoards[0].SumOfUnmarkedNumbers() * number;

@@ -106,7 +106,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                         };
 
                         if (neighbors.Any(coordinate => locationGrid[coordinate])) continue;
-                        
+
                         var proposedLocation = personalProposalIndex switch
                         {
                             0 => elf.Location.Move(GridDirection.Up), // N

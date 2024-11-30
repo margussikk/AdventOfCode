@@ -77,7 +77,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             {
                 var destinationVertex = edge.SourceVertex == caveWalker.CurrentVertex ? edge.DestinationVertex : edge.SourceVertex;
                 if (destinationVertex.Name == "start") continue;
-                
+
                 var newCaveWalker = new CaveWalker(destinationVertex, caveWalker.VisitedBitMask, caveWalker.DuplicateSmallCaveAllowed);
                 queue.Enqueue(newCaveWalker);
             }

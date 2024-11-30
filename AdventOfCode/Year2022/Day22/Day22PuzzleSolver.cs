@@ -52,26 +52,26 @@ public class Day22PuzzleSolver : IPuzzleSolver
                     span = span[1..];
                     break;
                 default:
-                {
-                    if (char.IsDigit(span[0]))
                     {
-                        var lastIndex = span.IndexOfAnyExceptInRange('0', '9');
-                        if (lastIndex == -1)
+                        if (char.IsDigit(span[0]))
                         {
-                            lastIndex = span.Length;
+                            var lastIndex = span.IndexOfAnyExceptInRange('0', '9');
+                            if (lastIndex == -1)
+                            {
+                                lastIndex = span.Length;
+                            }
+
+                            var steps = int.Parse(span[..lastIndex]);
+                            _instructions.Add(new MoveInstruction(steps));
+                            span = span[lastIndex..];
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Failed to parse instruction");
                         }
 
-                        var steps = int.Parse(span[..lastIndex]);
-                        _instructions.Add(new MoveInstruction(steps));
-                        span = span[lastIndex..];
+                        break;
                     }
-                    else
-                    {
-                        throw new InvalidOperationException("Failed to parse instruction");
-                    }
-
-                    break;
-                }
             }
         }
     }

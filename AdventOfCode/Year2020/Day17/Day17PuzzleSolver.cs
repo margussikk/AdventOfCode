@@ -23,7 +23,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
         var maxCoordinate = new Coordinate3D(_bitGrid.LastColumnIndex + totalCycles, _bitGrid.LastRowIndex + totalCycles, totalCycles);
         var aabb = new Aabb3D(minCoordinate, maxCoordinate);
 
-        foreach(var cell in _bitGrid.Where(c => c.Object))
+        foreach (var cell in _bitGrid.Where(c => c.Object))
         {
             aabb[cell.Coordinate.Column, cell.Coordinate.Row, 0] = true; // NB! Column is X, row is Y
         }
@@ -90,7 +90,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
             var windowMinCoordinate = new Coordinate4D(-cycle, -cycle, -cycle, -cycle);
             var windowMaxCoordinate = new Coordinate4D(_bitGrid.LastColumnIndex + cycle, _bitGrid.LastRowIndex + cycle, cycle, cycle);
 
-            foreach(var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
+            foreach (var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
             {
                 var activeNeighborsCount = aabb.AroundNeighbors(cell.Coordinate)
                                                 .Count(c => c.Active);

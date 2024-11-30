@@ -24,23 +24,23 @@ internal class Chamber
         switch (currentEmptyLineCount)
         {
             case > requiredEmptyLineCount:
-            {
-                // Remove empty lines
-                var excessEmptyLineCount = currentEmptyLineCount - requiredEmptyLineCount;
-                LineBitMasks.RemoveRange(LineBitMasks.Count - excessEmptyLineCount, excessEmptyLineCount);
-                break;
-            }
-            case < requiredEmptyLineCount:
-            {
-                // Add empty lines
-                var missingEmptyLineCount = requiredEmptyLineCount - currentEmptyLineCount;
-                for (var i = 0; i < missingEmptyLineCount; i++)
                 {
-                    LineBitMasks.Add(EmptyLine);
+                    // Remove empty lines
+                    var excessEmptyLineCount = currentEmptyLineCount - requiredEmptyLineCount;
+                    LineBitMasks.RemoveRange(LineBitMasks.Count - excessEmptyLineCount, excessEmptyLineCount);
+                    break;
                 }
+            case < requiredEmptyLineCount:
+                {
+                    // Add empty lines
+                    var missingEmptyLineCount = requiredEmptyLineCount - currentEmptyLineCount;
+                    for (var i = 0; i < missingEmptyLineCount; i++)
+                    {
+                        LineBitMasks.Add(EmptyLine);
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
 
         // Empty lines for rock

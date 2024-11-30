@@ -15,7 +15,7 @@ internal abstract class Rule
     {
         var destinationSplits = input.Split(':');
         if (destinationSplits.Length != 2) return new NoConditionRule(destinationSplits[0]);
-        
+
         var lessThanSplits = destinationSplits[0].Split('<');
         if (lessThanSplits.Length == 2)
         {

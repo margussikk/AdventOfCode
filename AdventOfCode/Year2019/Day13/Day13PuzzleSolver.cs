@@ -23,7 +23,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
         // ignore [0] X, Column
         // ignore [1] Y, Row
-        
+
         var answer = result.Outputs
             .Chunk(3)
             .Select(chunk => (Tile)chunk[2])
@@ -58,8 +58,8 @@ public class Day13PuzzleSolver : IPuzzleSolver
             var result = joystickTilt == -2
                 ? computer.Run()
                 : computer.Run(joystickTilt);
-            
-            foreach(var chunk in result.Outputs.Chunk(3))
+
+            foreach (var chunk in result.Outputs.Chunk(3))
             {
                 var column = (int)chunk[0];
                 var row = (int)chunk[1];
@@ -85,8 +85,8 @@ public class Day13PuzzleSolver : IPuzzleSolver
                             break;
                         case Tile.Ball:
                             ballCoordinate = coordinate;
-                            break;                        
-                    }                    
+                            break;
+                    }
                 }
             }
 
@@ -109,7 +109,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
         var result = computer.Run();
 
-        foreach(var chunk in result.Outputs.Chunk(3))
+        foreach (var chunk in result.Outputs.Chunk(3))
         {
             var column = chunk[0];
             var row = chunk[1];

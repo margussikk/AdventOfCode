@@ -46,7 +46,7 @@ internal class Board
     public bool IsSolved()
     {
         return !Rooms.Where((t, i) => Array.Exists(t, x => (int)x != i)).Any();
-    }    
+    }
 
     public static Board Parse(string[] lines)
     {
@@ -120,7 +120,7 @@ internal class Board
             }
 
             if (!CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, true)) continue;
-            
+
             var nextBoard = Copy();
             var roomSlot = Array.LastIndexOf(nextBoard.Rooms[roomIndex], State.Empty);
 
@@ -167,7 +167,7 @@ internal class Board
                     }
 
                     if (!CanMoveBetweenRoomAndHallway(roomIndex, hallwaySlot, false)) continue;
-                    
+
                     var newBoard = Copy();
 
                     newBoard.Energy = Energy + CalculateEnergy(amphipod, roomIndex, roomSlot, hallwaySlot);

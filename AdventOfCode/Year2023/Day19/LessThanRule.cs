@@ -11,7 +11,7 @@ internal class LessThanRule : Rule
         Rating = rating;
         Number = number;
     }
-    
+
     public override bool Matches(Part part)
     {
         return part.Ratings[Rating] < Number;

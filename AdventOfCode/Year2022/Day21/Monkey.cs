@@ -27,7 +27,7 @@ internal abstract class Monkey
             current = current.Parent;
         }
 
-        return [..stack];
+        return [.. stack];
     }
 
     public abstract long YellNumber();

@@ -54,7 +54,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
         var lastDigit = line[lastDigitIndex] - '0';
 
         if (!includeSpelledDigits) return 10 * firstDigit + lastDigit;
-        
+
         var startSpan = lineSpan[..firstDigitIndex];
         while (startSpan.Length > 0)
         {
@@ -63,7 +63,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
             foreach (var spelledDigit in _spelledDigits)
             {
                 if (!startSpan.StartsWith(spelledDigit.Spelling)) continue;
-                    
+
                 foundSpelledDigit = spelledDigit;
                 break;
             }
@@ -85,7 +85,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
             foreach (var spelledDigit in _spelledDigits)
             {
                 if (!endSpan.EndsWith(spelledDigit.Spelling)) continue;
-                    
+
                 foundSpelledDigit = spelledDigit;
                 break;
             }

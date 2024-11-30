@@ -12,7 +12,7 @@ internal class Board
         if (boardNumber != null)
         {
             boardNumber.Value.Object.Marked = true;
-        }        
+        }
     }
 
     public void Reset()

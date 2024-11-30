@@ -69,7 +69,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
                 }
 
                 if (gridWalker.Direction.TurnRight() != direction) continue;
-                
+
                 nextDirection = direction;
 
                 actions.Add("R");
@@ -206,7 +206,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
             }
 
             newMainRoutine.Add(function.Name);
-            
+
             var newMainRoutineLength = newMainRoutine.Count + (newMainRoutine.Count - 1); // Elements + commas
             if (newMainRoutineLength >= 20)
             {

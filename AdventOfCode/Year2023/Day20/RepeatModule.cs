@@ -2,8 +2,8 @@
 
 internal class RepeatModule : Module
 {
-    public RepeatModule(string name, string[] destinationModules) : base(name, destinationModules) {}
-    
+    public RepeatModule(string name, string[] destinationModules) : base(name, destinationModules) { }
+
     public override List<Signal> ProcessSignal(Signal signal)
     {
         return DestinationModules

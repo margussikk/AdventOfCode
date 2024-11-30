@@ -12,7 +12,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
     {
         _board1 = Board.Parse(inputLines);
 
-        var inputLines2 = new []
+        var inputLines2 = new[]
         {
             inputLines[0],
             inputLines[1],

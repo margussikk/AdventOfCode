@@ -20,7 +20,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
         var oneBitMask = 0L;
         var zeroBitMask = 0L;
 
-        foreach(var instruction in _instructions)
+        foreach (var instruction in _instructions)
         {
             switch (instruction)
             {
@@ -29,14 +29,14 @@ public class Day14PuzzleSolver : IPuzzleSolver
                     zeroBitMask = maskInstruction.ZeroBitMask;
                     break;
                 case MemInstruction memInstruction:
-                {
-                    var value = memInstruction.Value;
-                    value |= oneBitMask;
-                    value &= zeroBitMask;
+                    {
+                        var value = memInstruction.Value;
+                        value |= oneBitMask;
+                        value &= zeroBitMask;
 
-                    memory[memInstruction.Address] = value;
-                    break;
-                }
+                        memory[memInstruction.Address] = value;
+                        break;
+                    }
                 default:
                     throw new NotImplementedException();
             }
@@ -54,7 +54,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
         var memoryBitMask = 0L;
         var floatingBitMask = 0L;
 
-        foreach(var instruction in _instructions)
+        foreach (var instruction in _instructions)
         {
             switch (instruction)
             {
@@ -63,37 +63,37 @@ public class Day14PuzzleSolver : IPuzzleSolver
                     floatingBitMask = maskInstruction.FloatingBitMask;
                     break;
                 case MemInstruction memInstruction:
-                {
-                    var fixedAddress = memInstruction.Address | memoryBitMask;
-
-                    List<long> addresses = [fixedAddress];
-
-                    var bitMask = 1L << 36;
-                    while (bitMask != 0L)
                     {
-                        if ((floatingBitMask & bitMask) == bitMask)
-                        {
-                            var floatingAddresses = new List<long>();
+                        var fixedAddress = memInstruction.Address | memoryBitMask;
 
-                            foreach (var address in addresses)
+                        List<long> addresses = [fixedAddress];
+
+                        var bitMask = 1L << 36;
+                        while (bitMask != 0L)
+                        {
+                            if ((floatingBitMask & bitMask) == bitMask)
                             {
-                                floatingAddresses.Add(address | bitMask);
-                                floatingAddresses.Add(address & ~bitMask);
+                                var floatingAddresses = new List<long>();
+
+                                foreach (var address in addresses)
+                                {
+                                    floatingAddresses.Add(address | bitMask);
+                                    floatingAddresses.Add(address & ~bitMask);
+                                }
+
+                                addresses = floatingAddresses;
                             }
 
-                            addresses = floatingAddresses;
+                            bitMask >>= 1;
                         }
 
-                        bitMask >>= 1;
-                    }
+                        foreach (var address in addresses)
+                        {
+                            memory[address] = memInstruction.Value;
+                        }
 
-                    foreach (var address in addresses)
-                    {
-                        memory[address] = memInstruction.Value;
+                        break;
                     }
-
-                    break;
-                }
                 default:
                     throw new NotImplementedException();
             }

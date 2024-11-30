@@ -34,7 +34,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 var orRuleChildren = new List<Rule>();
                 var splits2 = splits1[1].Split(" | ");
 
-                foreach(var andRuleSplits in splits2)
+                foreach (var andRuleSplits in splits2)
                 {
                     var andRuleChildren = new List<Rule>();
 
@@ -90,7 +90,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var interestingRuleIds = new []
+        var interestingRuleIds = new[]
         {
             0, 8, 42, 11, 31
         };

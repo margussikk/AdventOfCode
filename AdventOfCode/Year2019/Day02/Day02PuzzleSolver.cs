@@ -25,11 +25,11 @@ public class Day02PuzzleSolver : IPuzzleSolver
     {
         for (var noun = 0; noun <= 99; noun++)
         {
-            for(var verb = 0; verb <= 99; verb++)
+            for (var verb = 0; verb <= 99; verb++)
             {
                 var memoryValue = GetAnswer(noun, verb);
                 if (memoryValue != 19690720) continue;
-                
+
                 var answer = 100 * noun + verb;
                 return new PuzzleAnswer(answer, 3146);
             }

@@ -3,9 +3,9 @@
 internal class NumberOperand : IOperand
 {
     public int Value { get; }
-    
+
     public NumberOperand(int value)
-    { 
+    {
         Value = value;
     }
 }

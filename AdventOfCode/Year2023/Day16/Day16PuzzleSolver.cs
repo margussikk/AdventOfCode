@@ -101,16 +101,16 @@ public class Day16PuzzleSolver : IPuzzleSolver
                         break;
                     case Tile.HorizontalSplitter when beam.Direction is GridDirection.Up or GridDirection.Down:
                     case Tile.VerticalSplitter when beam.Direction is GridDirection.Left or GridDirection.Right:
-                    {
-                        // New beam turns left
-                        var clone = beam.Clone();
-                        clone.TurnLeft();
-                        beams.Push(clone);
+                        {
+                            // New beam turns left
+                            var clone = beam.Clone();
+                            clone.TurnLeft();
+                            beams.Push(clone);
 
-                        // Current beam turns right
-                        beam.TurnRight();
-                        break;
-                    }
+                            // Current beam turns right
+                            beam.TurnRight();
+                            break;
+                        }
                     // Empty space or splitter in the passthrough orientation
                     default:
                         beam.Step();

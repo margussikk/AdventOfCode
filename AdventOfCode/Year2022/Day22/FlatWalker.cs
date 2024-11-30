@@ -15,12 +15,12 @@ internal class FlatWalker
     public FlatWalker(Grid<Tile> grid)
     {
         _grid = grid;
-        
+
         Location = grid.FindCoordinate(tile => tile == Tile.Open) ?? throw new InvalidOperationException("Flat walker stat location not found");
-        
+
         _cubeEdgeLength = int.Max(grid.Height, grid.Width) % int.Min(grid.Height, grid.Width);
     }
-    
+
     public void TurnLeft()
     {
         Direction = Direction.TurnLeft();
@@ -52,7 +52,7 @@ internal class FlatWalker
             {
                 nextLocation = nextLocation.Move(Direction, _cubeEdgeLength);
                 if (_grid.InBounds(nextLocation)) continue;
-                
+
                 var nextRow = MathFunctions.Modulo(nextLocation.Row, _grid.Height);
                 var nextColumn = MathFunctions.Modulo(nextLocation.Column, _grid.Width);
 

@@ -40,7 +40,7 @@ internal static class GraphFunctions
                 {
                     var newDistance = distances[i, k] + distances[k, j];
                     if (newDistance >= distances[i, j]) continue;
-                    
+
                     distances[i, j] = newDistance;
                     distances[j, i] = newDistance;
                 }

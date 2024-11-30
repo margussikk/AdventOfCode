@@ -81,7 +81,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
             if (state.MinutesLeft == 0)
             {
                 if (state.Geode <= maxGeodes) continue;
-                
+
                 maxGeodes = state.Geode;
                 maxState = state;
             }

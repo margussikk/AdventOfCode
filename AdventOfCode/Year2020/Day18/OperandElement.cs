@@ -8,7 +8,7 @@ internal class OperandElement : IElement
     {
         Value = value;
     }
-    
+
     public override string ToString()
     {
         return $"{Value}";

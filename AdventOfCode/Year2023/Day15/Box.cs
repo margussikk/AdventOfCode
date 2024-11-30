@@ -3,14 +3,14 @@
 internal class Box
 {
     public int Number { get; }
-    
+
     private readonly List<LensSlot> _slots = [];
 
     public Box(int number)
     {
         Number = number;
     }
-    
+
     public void RemoveLens(string label)
     {
         var slot = _slots.Find(x => x.Label == label);

@@ -106,7 +106,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
         void CollectTurnCoordinates(GridCoordinate coordinate)
         {
             if (!Array.Exists(_turnPipeDirections, direction => _pipeDirections[coordinate].HasFlag(direction))) return;
-            
+
             turnCoordinates.Add(coordinate);
         }
     }

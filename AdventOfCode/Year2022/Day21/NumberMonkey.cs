@@ -8,7 +8,7 @@ internal class NumberMonkey : Monkey
     {
         Number = number;
     }
-    
+
     public override long YellNumber()
     {
         return Number;

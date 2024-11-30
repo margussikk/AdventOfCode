@@ -10,7 +10,7 @@ internal static class ChineseRemainderTheoremSolver
         var prod = congruences.Aggregate(1L, (i, j) => i * j.Modulus);
         var sum = 0L;
 
-        foreach(var congruence in congruences)
+        foreach (var congruence in congruences)
         {
             var p = prod / congruence.Modulus;
             sum += congruence.Reminder * (long)MathFunctions.ModularMultiplicativeInverse(p, congruence.Modulus) * p;

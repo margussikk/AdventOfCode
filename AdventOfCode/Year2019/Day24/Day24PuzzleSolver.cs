@@ -84,15 +84,15 @@ public class Day24PuzzleSolver : IPuzzleSolver
         {
             var gridCellUpdates = new List<GridCellUpdate>();
 
-            for(var depth = zeroDepth - minutes; depth <= zeroDepth + minutes; depth++)
+            for (var depth = zeroDepth - minutes; depth <= zeroDepth + minutes; depth++)
             {
                 var grid = grids[depth];
 
-                foreach(var cell in grid.Where(cell => cell.Coordinate != centerCoordinate))
+                foreach (var cell in grid.Where(cell => cell.Coordinate != centerCoordinate))
                 {
                     var bugCount = 0;
 
-                    foreach(var neighborCoordinate in cell.Coordinate.SideNeighbors())
+                    foreach (var neighborCoordinate in cell.Coordinate.SideNeighbors())
                     {
                         if (neighborCoordinate == centerCoordinate)
                         {
@@ -151,7 +151,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
             }
 
             // Update grid cell values
-            foreach(var gridCellUpdate in gridCellUpdates)
+            foreach (var gridCellUpdate in gridCellUpdates)
             {
                 grids[gridCellUpdate.Depth][gridCellUpdate.Coordinate] = gridCellUpdate.Value;
             }

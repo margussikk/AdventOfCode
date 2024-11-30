@@ -42,7 +42,7 @@ public class Day05PuzzleSolver : IPuzzleSolver
 
             unitStack.Push(unit);
         }
-        
+
         return unitStack.Count;
     }
 }

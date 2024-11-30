@@ -62,7 +62,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
         double? laserDegree = null;
 
         var counter = 0;
-        while(queue.TryDequeue(out var vaporizationInfo))
+        while (queue.TryDequeue(out var vaporizationInfo))
         {
             if (laserDegree.HasValue && Math.Abs(vaporizationInfo.Degree - laserDegree.Value) < double.Epsilon) // Deal with it on the next round
             {
@@ -74,7 +74,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
                 counter++;
                 if (counter != 200) continue;
-                
+
                 answer = vaporizationInfo.Coordinate.X * 100 + vaporizationInfo.Coordinate.Y;
                 break;
             }
@@ -99,7 +99,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             }
 
             if (sightVectors.Count <= detected) continue;
-            
+
             detected = sightVectors.Count;
             coordinate = currentAsteroidCoordinate;
         }

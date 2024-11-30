@@ -46,7 +46,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
             var newCharacter = _dataStream[index] - 'a';
             counters[newCharacter]++;
             if (counters[newCharacter] != 1) continue;
-            
+
             uniqueCounter++;
             if (uniqueCounter == windowSize)
             {

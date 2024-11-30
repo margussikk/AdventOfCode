@@ -61,12 +61,12 @@ public class Day17PuzzleSolver : IPuzzleSolver
                 if ((newDirection == crucible.Direction || crucible.Steps < minSteps) &&
                     ((newDirection != crucible.Direction && crucible.Direction != GridDirection.None) ||
                      crucible.Steps >= maxSteps)) continue;
-                
+
                 var newSteps = newDirection != crucible.Direction ? 1 : crucible.Steps + 1;
                 var newHeatLoss = crucible.HeatLoss + neighborCell.Object;
 
                 var newCrucible = new Crucible(neighborCell.Coordinate, newDirection, newSteps, newHeatLoss);
-                
+
                 var distance = MeasurementFunctions.ManhattanDistance(neighborCell.Coordinate, endCoordinate);
                 crucibles.Enqueue(newCrucible, newHeatLoss + distance);
             }

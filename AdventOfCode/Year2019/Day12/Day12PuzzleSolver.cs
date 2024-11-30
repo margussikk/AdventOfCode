@@ -44,7 +44,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
         var zCycleLength = 0;
 
         var step = 0;
-        while(xCycleLength == 0 || yCycleLength == 0 || zCycleLength == 0)
+        while (xCycleLength == 0 || yCycleLength == 0 || zCycleLength == 0)
         {
             SimulateMoons(moons);
 

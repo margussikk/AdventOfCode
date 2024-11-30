@@ -30,53 +30,53 @@ public class Day07PuzzleSolver : IPuzzleSolver
                     currentDirectory = rootDirectory;
                     break;
                 case ChangeDirectoryCommand changeDirectoryCommand when currentDirectory != null:
-                {
-                    if (changeDirectoryCommand.Parameter == "..")
                     {
-                        currentDirectory = currentDirectory.Parent;
-                    }
-                    else
-                    {
-                        currentDirectory = currentDirectory.Directories
-                            .Find(d => d.Name == changeDirectoryCommand.Parameter);
-                    }
+                        if (changeDirectoryCommand.Parameter == "..")
+                        {
+                            currentDirectory = currentDirectory.Parent;
+                        }
+                        else
+                        {
+                            currentDirectory = currentDirectory.Directories
+                                .Find(d => d.Name == changeDirectoryCommand.Parameter);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case ChangeDirectoryCommand:
                     throw new InvalidOperationException("Change directory, but current directory is null");
                 case ListCommand when currentDirectory == null:
                     throw new InvalidOperationException("List command, but current directory is null");
                 case ListCommand:
-                {
-                    lineIndex++; // Skip the current list command line
-                    while (lineIndex < inputLines.Length)
                     {
-                        line = inputLines[lineIndex];
-
-                        if (Directory.IsDirectoryLine(line))
+                        lineIndex++; // Skip the current list command line
+                        while (lineIndex < inputLines.Length)
                         {
-                            var directory = Directory.Parse(line);
-                            directory.SetParent(currentDirectory);
-                            currentDirectory.Directories.Add(directory);
-                        }
-                        else
-                        {
-                            var file = File.Parse(line);
-                            currentDirectory.Files.Add(file);
+                            line = inputLines[lineIndex];
+
+                            if (Directory.IsDirectoryLine(line))
+                            {
+                                var directory = Directory.Parse(line);
+                                directory.SetParent(currentDirectory);
+                                currentDirectory.Directories.Add(directory);
+                            }
+                            else
+                            {
+                                var file = File.Parse(line);
+                                currentDirectory.Files.Add(file);
+                            }
+
+                            if (lineIndex + 1 < inputLines.Length &&
+                                Command.IsCommandLine(inputLines[lineIndex + 1]))
+                            {
+                                break; // End of current list command
+                            }
+
+                            lineIndex++;
                         }
 
-                        if (lineIndex + 1 < inputLines.Length &&
-                            Command.IsCommandLine(inputLines[lineIndex + 1]))
-                        {
-                            break; // End of current list command
-                        }
-
-                        lineIndex++;
+                        break;
                     }
-
-                    break;
-                }
                 default:
                     throw new InvalidOperationException("Unknown command");
             }

@@ -77,21 +77,21 @@ public class Day19PuzzleSolver : IPuzzleSolver
                 switch (rule)
                 {
                     case LessThanRule lessThanRule:
-                    {
-                        var ranges = currentWorkItem.RatingNumberRanges[lessThanRule.Rating].SplitBefore(lessThanRule.Number);
+                        {
+                            var ranges = currentWorkItem.RatingNumberRanges[lessThanRule.Rating].SplitBefore(lessThanRule.Number);
 
-                        nextWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[0];
-                        currentWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[1];
-                        break;
-                    }
+                            nextWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[0];
+                            currentWorkItem.RatingNumberRanges[lessThanRule.Rating] = ranges[1];
+                            break;
+                        }
                     case GreaterThanRule greaterThanRule:
-                    {
-                        var ranges = currentWorkItem.RatingNumberRanges[greaterThanRule.Rating].SplitAfter(greaterThanRule.Number);
+                        {
+                            var ranges = currentWorkItem.RatingNumberRanges[greaterThanRule.Rating].SplitAfter(greaterThanRule.Number);
 
-                        currentWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[0];
-                        nextWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[1];
-                        break;
-                    }
+                            currentWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[0];
+                            nextWorkItem.RatingNumberRanges[greaterThanRule.Rating] = ranges[1];
+                            break;
+                        }
                     case NoConditionRule:
                         // Do nothing
                         break;

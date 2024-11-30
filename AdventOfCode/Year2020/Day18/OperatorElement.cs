@@ -8,7 +8,7 @@ internal class OperatorElement : IElement
     {
         OperatorType = operatorType;
     }
-    
+
     public long Calculate(long value1, long value2)
     {
         return OperatorType switch

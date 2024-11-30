@@ -20,30 +20,30 @@ internal static class StringExtensions
                     sign = -1;
                     break;
                 case >= '0' and <= '9':
-                {
-                    value ??= 0;
+                    {
+                        value ??= 0;
 
-                    value = value * 10 + sign * (span[0] - '0');
-                    break;
-                }
+                        value = value * 10 + sign * (span[0] - '0');
+                        break;
+                    }
                 default:
-                {
-                    if (separators.Contains(span[0]))
                     {
-                        if (value.HasValue)
+                        if (separators.Contains(span[0]))
                         {
-                            items.Add(value.Value);
-                            value = null;
-                            sign = 1;
+                            if (value.HasValue)
+                            {
+                                items.Add(value.Value);
+                                value = null;
+                                sign = 1;
+                            }
                         }
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"Unexcpected characted '{span[0]}'");
-                    }
+                        else
+                        {
+                            throw new InvalidOperationException($"Unexcpected characted '{span[0]}'");
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             span = span[1..];
@@ -74,12 +74,12 @@ internal static class StringExtensions
                     sign = -1;
                     break;
                 case >= '0' and <= '9':
-                {
-                    value ??= 0;
+                    {
+                        value ??= 0;
 
-                    value = value * 10 + sign * (span[0] - '0');
-                    break;
-                }
+                        value = value * 10 + sign * (span[0] - '0');
+                        break;
+                    }
             }
 
             span = span[1..];

@@ -30,7 +30,7 @@ internal readonly struct Coordinate4D(long x, long y, long z, long w) : IEquatab
     {
         return $"{X},{Y},{Z},{W}";
     }
-    
+
     public IEnumerable<Coordinate4D> AroundNeighbors()
     {
         for (var dw = -1; dw <= 1; dw++)

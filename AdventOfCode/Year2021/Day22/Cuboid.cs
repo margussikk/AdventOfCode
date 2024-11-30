@@ -23,7 +23,7 @@ internal class Cuboid
         Z2 = z2;
         On = on;
     }
-    
+
     public bool Intersects(Cuboid other)
     {
         return !(other.X2 < X1 || other.X1 > X2 ||

@@ -21,7 +21,7 @@ internal class Moon
             VX = VX,
             VY = VY,
             VZ = VZ
-        };    
+        };
     }
 
     public void ApplyGravity(Moon other)
@@ -51,7 +51,7 @@ internal class Moon
 
     public static Moon Parse(string input)
     {
-        var separators = new []
+        var separators = new[]
         {
             "<x=", ", y=", ", z=", ">"
         };

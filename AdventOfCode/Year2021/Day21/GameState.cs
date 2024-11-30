@@ -14,7 +14,7 @@ internal readonly struct GameState : IEquatable<GameState>
         IdlePlayerPosition = idlePlayerPosition;
         IdlePlayerScore = idlePlayerScore;
     }
-    
+
     public bool Equals(GameState other)
     {
         return other.ActivePlayerPosition == ActivePlayerPosition

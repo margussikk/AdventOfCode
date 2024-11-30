@@ -114,71 +114,71 @@ internal class State
         switch (robotType)
         {
             case RobotType.OreRobot when OreRobots < blueprint.MaxOreNeededPerMinute:
-            {
-                // Ore robot
-                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.OreRobotCostOre, OreRobots);
-
-                var currentMinutesSpent = minutesUntilEnoughOre + 1;
-                if (MinutesLeft - currentMinutesSpent > 0)
                 {
-                    minutesSpent = currentMinutesSpent;
-                    oreCost = blueprint.OreRobotCostOre;
-                    builtOreRobots = 1;
-                }
+                    // Ore robot
+                    var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.OreRobotCostOre, OreRobots);
 
-                break;
-            }
+                    var currentMinutesSpent = minutesUntilEnoughOre + 1;
+                    if (MinutesLeft - currentMinutesSpent > 0)
+                    {
+                        minutesSpent = currentMinutesSpent;
+                        oreCost = blueprint.OreRobotCostOre;
+                        builtOreRobots = 1;
+                    }
+
+                    break;
+                }
             case RobotType.ClayRobot when ClayRobots < blueprint.ObsidianRobotCostClay:
-            {
-                // Clay robot
-                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ClayRobotCostOre, OreRobots);
-
-                var currentMinutesSpent = minutesUntilEnoughOre + 1;
-                if (MinutesLeft - currentMinutesSpent > 0)
                 {
-                    minutesSpent = currentMinutesSpent;
-                    oreCost = blueprint.ClayRobotCostOre;
-                    builtClayRobots = 1;
-                }
+                    // Clay robot
+                    var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ClayRobotCostOre, OreRobots);
 
-                break;
-            }
+                    var currentMinutesSpent = minutesUntilEnoughOre + 1;
+                    if (MinutesLeft - currentMinutesSpent > 0)
+                    {
+                        minutesSpent = currentMinutesSpent;
+                        oreCost = blueprint.ClayRobotCostOre;
+                        builtClayRobots = 1;
+                    }
+
+                    break;
+                }
             case RobotType.ObsidianRobot when ClayRobots > 0 && ObsidianRobots < blueprint.GeodeRobotCostObsidian:
-            {
-                // Obsidian robot
-                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ObsidianRobotCostOre, OreRobots);
-                var minutesUntilEnoughClay = CalculateMinutesUntilEnoughMaterials(Clay, blueprint.ObsidianRobotCostClay, ClayRobots);
-                var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughClay);
-
-                var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
-                if (MinutesLeft - currentMinutesSpent > 0)
                 {
-                    minutesSpent = currentMinutesSpent;
-                    oreCost = blueprint.ObsidianRobotCostOre;
-                    clayCost = blueprint.ObsidianRobotCostClay;
-                    builtObsidianRobots = 1;
-                }
+                    // Obsidian robot
+                    var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.ObsidianRobotCostOre, OreRobots);
+                    var minutesUntilEnoughClay = CalculateMinutesUntilEnoughMaterials(Clay, blueprint.ObsidianRobotCostClay, ClayRobots);
+                    var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughClay);
 
-                break;
-            }
+                    var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
+                    if (MinutesLeft - currentMinutesSpent > 0)
+                    {
+                        minutesSpent = currentMinutesSpent;
+                        oreCost = blueprint.ObsidianRobotCostOre;
+                        clayCost = blueprint.ObsidianRobotCostClay;
+                        builtObsidianRobots = 1;
+                    }
+
+                    break;
+                }
             case RobotType.GeodeRobot when ObsidianRobots > 0:
-            {
-                // Geode robot
-                var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.GeodeRobotCostOre, OreRobots);
-                var minutesUntilEnoughObsidian = CalculateMinutesUntilEnoughMaterials(Obsidian, blueprint.GeodeRobotCostObsidian, ObsidianRobots);
-                var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughObsidian);
-
-                var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
-                if (MinutesLeft - currentMinutesSpent > 0)
                 {
-                    minutesSpent = currentMinutesSpent;
-                    oreCost = blueprint.GeodeRobotCostOre;
-                    obsidianCost = blueprint.GeodeRobotCostObsidian;
-                    builtGeodeRobots = 1;
-                }
+                    // Geode robot
+                    var minutesUntilEnoughOre = CalculateMinutesUntilEnoughMaterials(Ore, blueprint.GeodeRobotCostOre, OreRobots);
+                    var minutesUntilEnoughObsidian = CalculateMinutesUntilEnoughMaterials(Obsidian, blueprint.GeodeRobotCostObsidian, ObsidianRobots);
+                    var minutesUntilEnoughMaterials = int.Max(minutesUntilEnoughOre, minutesUntilEnoughObsidian);
 
-                break;
-            }
+                    var currentMinutesSpent = minutesUntilEnoughMaterials + 1;
+                    if (MinutesLeft - currentMinutesSpent > 0)
+                    {
+                        minutesSpent = currentMinutesSpent;
+                        oreCost = blueprint.GeodeRobotCostOre;
+                        obsidianCost = blueprint.GeodeRobotCostObsidian;
+                        builtGeodeRobots = 1;
+                    }
+
+                    break;
+                }
         }
 
         var state = new State

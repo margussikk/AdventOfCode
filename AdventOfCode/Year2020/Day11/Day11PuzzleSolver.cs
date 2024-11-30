@@ -35,24 +35,24 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 switch (gridCell.Object)
                 {
                     case Tile.EmptySeat:
-                    {
-                        if (grid.AroundNeighbors(gridCell.Coordinate).All(gc => gc.Object != Tile.OccupiedSeat))
                         {
-                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
-                        }
+                            if (grid.AroundNeighbors(gridCell.Coordinate).All(gc => gc.Object != Tile.OccupiedSeat))
+                            {
+                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case Tile.OccupiedSeat:
-                    {
-                        var aroundOccupied = grid.AroundNeighbors(gridCell.Coordinate).Count(gc => gc.Object == Tile.OccupiedSeat);
-                        if (aroundOccupied >= 4)
                         {
-                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
-                        }
+                            var aroundOccupied = grid.AroundNeighbors(gridCell.Coordinate).Count(gc => gc.Object == Tile.OccupiedSeat);
+                            if (aroundOccupied >= 4)
+                            {
+                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
             }
 
@@ -70,7 +70,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var directions = new []
+        var directions = new[]
         {
             GridDirection.UpLeft, GridDirection.Up, GridDirection.UpRight,
             GridDirection.Left, GridDirection.Right,
@@ -90,25 +90,25 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 switch (gridCell.Object)
                 {
                     case Tile.EmptySeat:
-                    {
-                        var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
-                        if (occupiedSeatCount == 0)
                         {
-                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
-                        }
+                            var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
+                            if (occupiedSeatCount == 0)
+                            {
+                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case Tile.OccupiedSeat:
-                    {
-                        var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
-                        if (occupiedSeatCount >= 5)
                         {
-                            updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
-                        }
+                            var occupiedSeatCount = directions.Count(direction => SeesOccupiedSeat(grid, gridCell.Coordinate, direction));
+                            if (occupiedSeatCount >= 5)
+                            {
+                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
             }
 

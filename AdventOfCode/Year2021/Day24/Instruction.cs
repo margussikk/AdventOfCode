@@ -75,41 +75,41 @@ internal class Instruction
 
                 break;
             case InstructionCode.Div when ParameterB != null:
-            {
-                switch (ParameterB)
                 {
-                    case VariableParameter variableParameterB:
-                        return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {Convert.ToChar('w' + variableParameterB.Variable)}";
-                    case NumberParameter numberParameterB:
-                        return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {numberParameterB.Number}";
-                }
+                    switch (ParameterB)
+                    {
+                        case VariableParameter variableParameterB:
+                            return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                        case NumberParameter numberParameterB:
+                            return $"div {Convert.ToChar('w' + variableParameterA.Variable)} /= {numberParameterB.Number}";
+                    }
 
-                break;
-            }
+                    break;
+                }
             case InstructionCode.Mod when ParameterB != null:
-            {
-                switch (ParameterB)
                 {
-                    case VariableParameter variableParameterB:
-                        return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {Convert.ToChar('w' + variableParameterB.Variable)}";
-                    case NumberParameter numberParameterB:
-                        return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {numberParameterB.Number}";
-                }
+                    switch (ParameterB)
+                    {
+                        case VariableParameter variableParameterB:
+                            return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                        case NumberParameter numberParameterB:
+                            return $"mod {Convert.ToChar('w' + variableParameterA.Variable)} %= {numberParameterB.Number}";
+                    }
 
-                break;
-            }
+                    break;
+                }
             case InstructionCode.Eql when ParameterB != null:
-            {
-                switch (ParameterB)
                 {
-                    case VariableParameter variableParameterB:
-                        return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {Convert.ToChar('w' + variableParameterB.Variable)}";
-                    case NumberParameter numberParameterB:
-                        return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {numberParameterB.Number}";
-                }
+                    switch (ParameterB)
+                    {
+                        case VariableParameter variableParameterB:
+                            return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {Convert.ToChar('w' + variableParameterB.Variable)}";
+                        case NumberParameter numberParameterB:
+                            return $"eql {Convert.ToChar('w' + variableParameterA.Variable)} c= {numberParameterB.Number}";
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
 
         return string.Empty;

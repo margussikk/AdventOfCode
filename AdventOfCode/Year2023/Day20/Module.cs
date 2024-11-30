@@ -11,7 +11,7 @@ internal abstract class Module
         Name = name;
         DestinationModules = destinationModules;
     }
-    
+
     public abstract List<Signal> ProcessSignal(Signal signal);
 
     public abstract void Reset();

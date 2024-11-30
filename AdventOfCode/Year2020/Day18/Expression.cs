@@ -23,17 +23,17 @@ internal class Expression
                     break;
                 // Close parentheses
                 case ParenthesesElement:
-                {
-                    ProcessStacks(operandValuesStack, operatorAndParenthesesStack);
-
-                    if (operatorAndParenthesesStack.Count > 0 &&
-                        operatorAndParenthesesStack.Peek() is ParenthesesElement { Open: true })
                     {
-                        operatorAndParenthesesStack.Pop();
-                    }
+                        ProcessStacks(operandValuesStack, operatorAndParenthesesStack);
 
-                    break;
-                }
+                        if (operatorAndParenthesesStack.Count > 0 &&
+                            operatorAndParenthesesStack.Peek() is ParenthesesElement { Open: true })
+                        {
+                            operatorAndParenthesesStack.Pop();
+                        }
+
+                        break;
+                    }
                 case OperatorElement operatorElement:
                     ProcessStacks(operandValuesStack, operatorAndParenthesesStack, previousOperatorType => precedence(previousOperatorType, operatorElement.OperatorType));
 
@@ -48,12 +48,12 @@ internal class Expression
         return operandValuesStack.Pop();
     }
 
-    public static Expression Parse (string input)
+    public static Expression Parse(string input)
     {
         var expression = new Expression();
 
         var span = input.AsSpan();
-        while(span.Length > 0)
+        while (span.Length > 0)
         {
             switch (span[0])
             {
@@ -78,26 +78,26 @@ internal class Expression
                     span = span[1..];
                     break;
                 default:
-                {
-                    if (char.IsDigit(span[0]))
                     {
-                        var index = span.IndexOfAnyExceptInRange('0', '9');
-                        if (index < 0)
+                        if (char.IsDigit(span[0]))
                         {
-                            index = span.Length;
+                            var index = span.IndexOfAnyExceptInRange('0', '9');
+                            if (index < 0)
+                            {
+                                index = span.Length;
+                            }
+
+                            var value = long.Parse(span[..index]);
+                            expression.Elements.Add(new OperandElement(value));
+                            span = span[index..];
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Invalid expression character");
                         }
 
-                        var value = long.Parse(span[..index]);
-                        expression.Elements.Add(new OperandElement(value));
-                        span = span[index..];
+                        break;
                     }
-                    else
-                    {
-                        throw new InvalidOperationException("Invalid expression character");
-                    }
-
-                    break;
-                }
             }
         }
 

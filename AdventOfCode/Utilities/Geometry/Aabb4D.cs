@@ -3,7 +3,7 @@
 namespace AdventOfCode.Utilities.Geometry;
 
 // Axis aligned bounding box 4D
-internal class Aabb4D: IEnumerable<Aabb4DCell>
+internal class Aabb4D : IEnumerable<Aabb4DCell>
 {
     private readonly BitArray _bitArray;
 
@@ -57,7 +57,7 @@ internal class Aabb4D: IEnumerable<Aabb4DCell>
     {
         foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
         {
-            yield return new Aabb4DCell(neighborCoordinate,  this[neighborCoordinate]);
+            yield return new Aabb4DCell(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 

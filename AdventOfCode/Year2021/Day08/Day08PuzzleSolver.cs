@@ -18,7 +18,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
         var answer = _entries.Sum(entry =>
         {
             var digitSignals = GetDigitSignals(entry);
-            var digitSignals1478 = new []
+            var digitSignals1478 = new[]
             {
                 digitSignals[1], digitSignals[4], digitSignals[7], digitSignals[8]
             };

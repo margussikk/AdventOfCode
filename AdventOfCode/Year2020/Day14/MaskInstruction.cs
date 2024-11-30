@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Year2020.Day14;
 
-internal class MaskInstruction: Instruction
+internal class MaskInstruction : Instruction
 {
     // For part one
     public long OneBitMask { get; private set; }

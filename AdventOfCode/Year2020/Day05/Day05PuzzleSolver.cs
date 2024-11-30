@@ -32,7 +32,7 @@ public class Day05PuzzleSolver : IPuzzleSolver
         {
             var diff = seatIds[i + 1] - seatIds[i];
             if (diff <= 1) continue;
-            
+
             answer = seatIds[i] + 1;
             break;
         }

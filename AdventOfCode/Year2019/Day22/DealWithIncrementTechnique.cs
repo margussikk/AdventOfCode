@@ -16,7 +16,7 @@ internal class DealWithIncrementTechnique : Technique
 
         var index = 0;
 
-        foreach(var card in deck)
+        foreach (var card in deck)
         {
             newDeck[index] = card;
 

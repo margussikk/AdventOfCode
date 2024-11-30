@@ -37,7 +37,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
         var totalFuel = 0;
         var fuel = moduleMass;
 
-        while(fuel > 0)
+        while (fuel > 0)
         {
             fuel = CalculateFuelRequirement(fuel);
 
@@ -48,5 +48,5 @@ public class Day01PuzzleSolver : IPuzzleSolver
         }
 
         return totalFuel;
-    }    
+    }
 }

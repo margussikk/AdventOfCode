@@ -28,7 +28,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
         var approximateFuel = maxOres / GetConsumedOre(1L);
 
         var range = new NumberRange<long>(approximateFuel, approximateFuel * 2); // Assume that 1 * approximation is too low and 2 * approximations are too high. The Answer is somewhere in the middle.
-        while(range.Length > 2)
+        while (range.Length > 2)
         {
             var fuel = (range.Start + range.End) / 2;
 
@@ -65,7 +65,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
             var required = productInventory.Consumed - productInventory.Produced;
             if (required <= 0) continue;
-            
+
             var reaction = _reactions[productName];
 
             var units = Convert.ToInt64(Math.Ceiling(Convert.ToDouble(required) / reaction.Product.Quantity));

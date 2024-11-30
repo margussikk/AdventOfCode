@@ -42,47 +42,47 @@ public class Day21PuzzleSolver : IPuzzleSolver
             {
                 // Deal with the current monkey
                 case NumberMonkey numberMonkey:
-                {
-                    if (numberMonkey.Name == "humn")
                     {
-                        _humanMonkey = numberMonkey;
-                    }
+                        if (numberMonkey.Name == "humn")
+                        {
+                            _humanMonkey = numberMonkey;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case OperationMonkey when parseResult.LeftMonkeyName == null || parseResult.RightMonkeyName == null:
                     throw new InvalidOperationException();
                 case OperationMonkey operationMonkey:
-                {
-                    // Left monkey
-                    if (knownMonkeys.TryGetValue(parseResult.LeftMonkeyName, out var leftMonkey))
                     {
-                        operationMonkey.SetLeftMonkey(leftMonkey);
-                        leftMonkey.SetParent(operationMonkey);
-                    }
-                    else
-                    {
-                        leftDependantsOnMonkey.Add(parseResult.LeftMonkeyName, operationMonkey);
-                    }
+                        // Left monkey
+                        if (knownMonkeys.TryGetValue(parseResult.LeftMonkeyName, out var leftMonkey))
+                        {
+                            operationMonkey.SetLeftMonkey(leftMonkey);
+                            leftMonkey.SetParent(operationMonkey);
+                        }
+                        else
+                        {
+                            leftDependantsOnMonkey.Add(parseResult.LeftMonkeyName, operationMonkey);
+                        }
 
-                    // Right monkey
-                    if (knownMonkeys.TryGetValue(parseResult.RightMonkeyName, out var rightMonkey))
-                    {
-                        operationMonkey.SetRightMonkey(rightMonkey);
-                        rightMonkey.SetParent(operationMonkey);
-                    }
-                    else
-                    {
-                        rightDependantsOnMonkey.Add(parseResult.RightMonkeyName, operationMonkey);
-                    }
+                        // Right monkey
+                        if (knownMonkeys.TryGetValue(parseResult.RightMonkeyName, out var rightMonkey))
+                        {
+                            operationMonkey.SetRightMonkey(rightMonkey);
+                            rightMonkey.SetParent(operationMonkey);
+                        }
+                        else
+                        {
+                            rightDependantsOnMonkey.Add(parseResult.RightMonkeyName, operationMonkey);
+                        }
 
-                    if (operationMonkey.Name == "root")
-                    {
-                        _rootMonkey = operationMonkey;
-                    }
+                        if (operationMonkey.Name == "root")
+                        {
+                            _rootMonkey = operationMonkey;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
     }

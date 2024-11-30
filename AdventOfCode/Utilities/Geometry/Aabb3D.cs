@@ -3,7 +3,7 @@
 namespace AdventOfCode.Utilities.Geometry;
 
 // Axis aligned bounding box 3D
-internal class Aabb3D: IEnumerable<Aabb3DCell>
+internal class Aabb3D : IEnumerable<Aabb3DCell>
 {
     private readonly BitArray _bitArray;
 

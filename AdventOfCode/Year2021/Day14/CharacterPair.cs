@@ -10,7 +10,7 @@ internal readonly struct CharacterPair : IEquatable<CharacterPair>
         Left = left;
         Right = right;
     }
-    
+
     public bool Equals(CharacterPair other)
     {
         return other.Left == Left && other.Right == Right;

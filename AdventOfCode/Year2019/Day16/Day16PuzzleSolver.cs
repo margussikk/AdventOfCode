@@ -5,7 +5,7 @@ namespace AdventOfCode.Year2019.Day16;
 [Puzzle(2019, 16, "Flawed Frequency Transmission")]
 public class Day16PuzzleSolver : IPuzzleSolver
 {
-    private readonly int[] _baseNumbers = [ 0, 1, 0, -1 ];
+    private readonly int[] _baseNumbers = [0, 1, 0, -1];
 
     private List<int> _numbers = [];
 

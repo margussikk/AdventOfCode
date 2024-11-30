@@ -8,7 +8,7 @@ internal class HandComparer : IComparer<Hand>
     {
         _cardSequence = cardSequence;
     }
-    
+
     public int Compare(Hand? firstHand, Hand? secondHand)
     {
         ArgumentNullException.ThrowIfNull(firstHand);

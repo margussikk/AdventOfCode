@@ -13,26 +13,26 @@ internal class ReverseTechnique
     {
         DeckSize = deckSize;
     }
-    
+
     public void Combine(Technique technique)
     {
         switch (technique)
         {
             case DealIntoNewStackTechnique:
                 Increment = -Increment;
-                Offset = -Offset -1;
+                Offset = -Offset - 1;
                 break;
             case CutCardsTechnique cutCardsTechnique:
                 Offset += cutCardsTechnique.Amount;
                 break;
             case DealWithIncrementTechnique dealWithIncrementTechnique:
-            {
-                var modInverse = MathFunctions.ModularMultiplicativeInverse(dealWithIncrementTechnique.Increment, DeckSize);
+                {
+                    var modInverse = MathFunctions.ModularMultiplicativeInverse(dealWithIncrementTechnique.Increment, DeckSize);
 
-                Increment *= modInverse;
-                Offset *= modInverse;
-                break;
-            }
+                    Increment *= modInverse;
+                    Offset *= modInverse;
+                    break;
+                }
         }
 
         Increment = MathFunctions.Modulo(Increment, DeckSize);
@@ -50,6 +50,6 @@ internal class ReverseTechnique
         var increment = BigInteger.ModPow(Increment, times, DeckSize);
         var offset = MathFunctions.ModularGeometricSum(Offset, Increment, times, DeckSize);
 
-        return (long)MathFunctions.Modulo(increment * index + offset, DeckSize);       
+        return (long)MathFunctions.Modulo(increment * index + offset, DeckSize);
     }
 }

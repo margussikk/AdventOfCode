@@ -34,7 +34,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var minR = int.MaxValue;
         var maxR = int.MinValue;
 
-        foreach(var coordinate in blackTileCoordinates)
+        foreach (var coordinate in blackTileCoordinates)
         {
             minQ = int.Min(coordinate.Q, minQ);
             maxQ = int.Max(coordinate.Q, maxQ);
@@ -47,7 +47,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var rRange = new NumberRange<int>(minR - 100, maxR + 100);
 
         var grid = new HexBitGrid(qRange, rRange);
-        foreach(var coordinate in blackTileCoordinates)
+        foreach (var coordinate in blackTileCoordinates)
         {
             grid[coordinate] = true;
         }

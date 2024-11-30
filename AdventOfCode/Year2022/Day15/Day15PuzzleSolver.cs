@@ -121,10 +121,10 @@ public partial class Day15PuzzleSolver : IPuzzleSolver
                         out var intersectionCoordinate) ||
                     !coordinateValueRange.Contains(intersectionCoordinate.X) ||
                     !coordinateValueRange.Contains(intersectionCoordinate.Y)) continue;
-                
+
                 var notDetectable = _sensors.TrueForAll(s => !s.Detectable(intersectionCoordinate));
                 if (!notDetectable) continue;
-                
+
                 var answer = 4_000_000L * intersectionCoordinate.X + intersectionCoordinate.Y;
                 return new PuzzleAnswer(answer, 12051287042458L);
             }

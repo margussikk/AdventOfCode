@@ -27,7 +27,7 @@ internal class Brick
     public void DropToZ(long z)
     {
         if (Start.Z == z) return;
-        
+
         // NB! Set End before Start, because End uses Start
         End = new Coordinate3D(End.X, End.Y, End.Z - Start.Z + z);
         Start = new Coordinate3D(Start.X, Start.Y, z);

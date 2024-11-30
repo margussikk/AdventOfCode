@@ -114,7 +114,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
             while (queue.TryDequeue(out gridWalker))
             {
                 if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
-                
+
                 var tile = grid[gridWalker.CurrentCoordinate];
 
                 if (gridWalker.StartCoordinate != gridWalker.CurrentCoordinate && tile is Tile.Key or Tile.Door)
@@ -193,7 +193,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
             var state = (stateIds, walker.Keys);
             if (!visited.Add(state)) continue;
-            
+
             foreach (var vertex in walker.CurrentVertices)
             {
                 if (vertex.Object is VertexObject { Tile: Tile.Key } currentVertexObject)
@@ -215,7 +215,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
                         (destinationObject.Tile != Tile.Key &&
                          (destinationObject.Tile != Tile.Door ||
                           (walker.Keys & destinationObject.KeyBitMask) == 0))) continue;
-                    
+
                     GraphVertex[] newVertices = [.. walker.CurrentVertices];
 
                     newVertices[index] = edge.DestinationVertex;

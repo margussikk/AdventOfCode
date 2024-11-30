@@ -19,7 +19,7 @@ namespace AdventOfCode.Year2018.Day04
             Hour = hour;
             Minute = minute;
         }
-        
+
         public static Record Parse(string input)
         {
             if (input.Contains("begins shift"))

@@ -11,7 +11,7 @@ internal class Instruction
         var directions = new List<GridDirection>();
 
         var span = input.AsSpan();
-        while(span.Length > 0)
+        while (span.Length > 0)
         {
             switch (span[0])
             {
@@ -24,29 +24,29 @@ internal class Instruction
                     span = span[1..];
                     break;
                 default:
-                {
-                    switch (span[..2])
                     {
-                        case "se":
-                            directions.Add(GridDirection.DownRight);
-                            break;
-                        case "sw":
-                            directions.Add(GridDirection.DownLeft);
-                            break;
-                        case "ne":
-                            directions.Add(GridDirection.UpRight);
-                            break;
-                        case "nw":
-                            directions.Add(GridDirection.UpLeft);
-                            break;
-                        default:
-                            throw new InvalidOperationException("Failed to parse direction");
+                        switch (span[..2])
+                        {
+                            case "se":
+                                directions.Add(GridDirection.DownRight);
+                                break;
+                            case "sw":
+                                directions.Add(GridDirection.DownLeft);
+                                break;
+                            case "ne":
+                                directions.Add(GridDirection.UpRight);
+                                break;
+                            case "nw":
+                                directions.Add(GridDirection.UpLeft);
+                                break;
+                            default:
+                                throw new InvalidOperationException("Failed to parse direction");
+                        }
+
+                        span = span[2..];
+
+                        break;
                     }
-
-                    span = span[2..];
-
-                    break;
-                }
             }
         }
 

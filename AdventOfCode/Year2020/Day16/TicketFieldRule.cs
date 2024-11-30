@@ -4,7 +4,7 @@ namespace AdventOfCode.Year2020.Day16;
 
 internal class TicketFieldRule
 {
-    public string FieldName {  get; private init; } = string.Empty;
+    public string FieldName { get; private init; } = string.Empty;
 
     public NumberRange<int>[] Ranges { get; private init; } = [];
 
@@ -29,7 +29,7 @@ internal class TicketFieldRule
             [
                 NumberRange<int>.Parse(splits[1]),
                 NumberRange<int>.Parse(splits[2])
-            ] 
+            ]
         };
 
         return ticketFieldRule;

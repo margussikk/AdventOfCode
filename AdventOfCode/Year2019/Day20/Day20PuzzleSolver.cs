@@ -31,45 +31,45 @@ public class Day20PuzzleSolver : IPuzzleSolver
                         _grid[row, column] = Tile.Wall;
                         break;
                     case >= 'A' and <= 'Z':
-                    {
-                        var portalName = string.Empty;
+                        {
+                            var portalName = string.Empty;
 
-                        // Portal
-                        if (_grid.InBounds(row, column - 1) && inputLines[row][column - 1] == '.') // Right of passage tile
-                        {
-                            portalName = $"{inputLines[row][column]}{inputLines[row][column + 1]}";
-                        }
-                        else if (_grid.InBounds(row - 1, column) && inputLines[row - 1][column] == '.') // Below passage tile
-                        {
-                            portalName = $"{inputLines[row][column]}{inputLines[row + 1][column]}";
-                        }
-                        else if (_grid.InBounds(row, column + 1) && inputLines[row][column + 1] == '.') // Left of passage tile
-                        {
-                            portalName = $"{inputLines[row][column - 1]}{inputLines[row][column]}";
-                        }
-                        else if (_grid.InBounds(row + 1, column) && inputLines[row + 1][column] == '.') // Above passage tile
-                        {
-                            portalName = $"{inputLines[row - 1][column]}{inputLines[row][column]}";
-                        }
-
-                        if (!string.IsNullOrEmpty(portalName))
-                        {
-                            if (!_portalCoordinates.TryGetValue(portalName, out var coordinates))
+                            // Portal
+                            if (_grid.InBounds(row, column - 1) && inputLines[row][column - 1] == '.') // Right of passage tile
                             {
-                                coordinates = [];
-                                _portalCoordinates[portalName] = coordinates;
+                                portalName = $"{inputLines[row][column]}{inputLines[row][column + 1]}";
+                            }
+                            else if (_grid.InBounds(row - 1, column) && inputLines[row - 1][column] == '.') // Below passage tile
+                            {
+                                portalName = $"{inputLines[row][column]}{inputLines[row + 1][column]}";
+                            }
+                            else if (_grid.InBounds(row, column + 1) && inputLines[row][column + 1] == '.') // Left of passage tile
+                            {
+                                portalName = $"{inputLines[row][column - 1]}{inputLines[row][column]}";
+                            }
+                            else if (_grid.InBounds(row + 1, column) && inputLines[row + 1][column] == '.') // Above passage tile
+                            {
+                                portalName = $"{inputLines[row - 1][column]}{inputLines[row][column]}";
                             }
 
-                            coordinates.Add(new GridCoordinate(row, column));
-                            _grid[row, column] = Tile.Portal;
-                        }
-                        else
-                        {
-                            _grid[row, column] = Tile.Empty;
-                        }
+                            if (!string.IsNullOrEmpty(portalName))
+                            {
+                                if (!_portalCoordinates.TryGetValue(portalName, out var coordinates))
+                                {
+                                    coordinates = [];
+                                    _portalCoordinates[portalName] = coordinates;
+                                }
 
-                        break;
-                    }
+                                coordinates.Add(new GridCoordinate(row, column));
+                                _grid[row, column] = Tile.Portal;
+                            }
+                            else
+                            {
+                                _grid[row, column] = Tile.Empty;
+                            }
+
+                            break;
+                        }
                     default:
                         throw new InvalidOperationException($"Invalid tile character {character}");
                 }
@@ -98,7 +98,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var mazeWalker = new Part1MazeWalker(startCoordinate, 0);
         queue.Enqueue(mazeWalker, mazeWalker.Steps);
 
-        while(queue.TryDequeue(out mazeWalker, out _))
+        while (queue.TryDequeue(out mazeWalker, out _))
         {
             if (visited[mazeWalker.Coordinate])
             {
@@ -106,7 +106,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
             }
 
             visited[mazeWalker.Coordinate] = true;
-            
+
             if (mazeWalker.Coordinate == endCoordinate)
             {
                 answer = mazeWalker.Steps;
@@ -118,32 +118,32 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 switch (neighbor.Object)
                 {
                     case Tile.Passage:
-                    {
-                        var newMazeWalker = new Part1MazeWalker(neighbor.Coordinate, mazeWalker.Steps + 1);
-                        queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
-                        break;
-                    }
-                    case Tile.Portal:
-                    {
-                        var exitPortalCoordinate = _portalCoordinates.Values
-                            .First(x => x.Contains(neighbor.Coordinate))
-                            .Cast<GridCoordinate?>()
-                            .FirstOrDefault(x => x != neighbor.Coordinate);
-
-                        if (exitPortalCoordinate is not null)
                         {
-                            var exitCoordinate = _grid
-                                .SideNeighbors(exitPortalCoordinate.Value)
-                                .First(cell => cell.Object == Tile.Passage)
-                                .Coordinate;
-
-                            var newMazeWalker = new Part1MazeWalker(exitCoordinate, mazeWalker.Steps + 1);
-
+                            var newMazeWalker = new Part1MazeWalker(neighbor.Coordinate, mazeWalker.Steps + 1);
                             queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
+                            break;
                         }
+                    case Tile.Portal:
+                        {
+                            var exitPortalCoordinate = _portalCoordinates.Values
+                                .First(x => x.Contains(neighbor.Coordinate))
+                                .Cast<GridCoordinate?>()
+                                .FirstOrDefault(x => x != neighbor.Coordinate);
 
-                        break;
-                    }
+                            if (exitPortalCoordinate is not null)
+                            {
+                                var exitCoordinate = _grid
+                                    .SideNeighbors(exitPortalCoordinate.Value)
+                                    .First(cell => cell.Object == Tile.Passage)
+                                    .Coordinate;
+
+                                var newMazeWalker = new Part1MazeWalker(exitCoordinate, mazeWalker.Steps + 1);
+
+                                queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
+                            }
+
+                            break;
+                        }
                 }
             }
         }
@@ -198,50 +198,50 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 switch (neighbor.Object)
                 {
                     case Tile.Passage:
-                    {
-                        var newMazeWalker = new Part2MazeWalker(mazeWalker.Level, neighbor.Coordinate, mazeWalker.Steps + 1);
-                        queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
-                        break;
-                    }
-                    case Tile.Portal:
-                    {
-                        var exitPortalCoordinate = _portalCoordinates.Values
-                            .First(x => x.Contains(neighbor.Coordinate))
-                            .Cast<GridCoordinate?>()
-                            .FirstOrDefault(x => x != neighbor.Coordinate);
-
-                        if (exitPortalCoordinate is not null)
                         {
-                            var entranceDistance = Math.Max(Math.Abs(neighbor.Coordinate.Row - gridCenter.Row), Math.Abs(neighbor.Coordinate.Column - gridCenter.Column));
-                            var exitDistance = Math.Max(Math.Abs(exitPortalCoordinate.Value.Row - gridCenter.Row), Math.Abs(exitPortalCoordinate.Value.Column - gridCenter.Column));
+                            var newMazeWalker = new Part2MazeWalker(mazeWalker.Level, neighbor.Coordinate, mazeWalker.Steps + 1);
+                            queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
+                            break;
+                        }
+                    case Tile.Portal:
+                        {
+                            var exitPortalCoordinate = _portalCoordinates.Values
+                                .First(x => x.Contains(neighbor.Coordinate))
+                                .Cast<GridCoordinate?>()
+                                .FirstOrDefault(x => x != neighbor.Coordinate);
 
-                            if (entranceDistance < exitDistance) // Entrance is closer to center
+                            if (exitPortalCoordinate is not null)
                             {
-                                if (mazeWalker.Level < _portalCoordinates.Count) // Little speed up, do not go deeper than the number of portals
+                                var entranceDistance = Math.Max(Math.Abs(neighbor.Coordinate.Row - gridCenter.Row), Math.Abs(neighbor.Coordinate.Column - gridCenter.Column));
+                                var exitDistance = Math.Max(Math.Abs(exitPortalCoordinate.Value.Row - gridCenter.Row), Math.Abs(exitPortalCoordinate.Value.Column - gridCenter.Column));
+
+                                if (entranceDistance < exitDistance) // Entrance is closer to center
+                                {
+                                    if (mazeWalker.Level < _portalCoordinates.Count) // Little speed up, do not go deeper than the number of portals
+                                    {
+                                        var exitCoordinate = _grid
+                                            .SideNeighbors(exitPortalCoordinate.Value)
+                                            .First(cell => cell.Object == Tile.Passage)
+                                            .Coordinate;
+
+                                        var newMazeWalker = new Part2MazeWalker(mazeWalker.Level + 1, exitCoordinate, mazeWalker.Steps + 1);
+                                        queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
+                                    }
+                                }
+                                else if (mazeWalker.Level > 0)
                                 {
                                     var exitCoordinate = _grid
                                         .SideNeighbors(exitPortalCoordinate.Value)
                                         .First(cell => cell.Object == Tile.Passage)
                                         .Coordinate;
 
-                                    var newMazeWalker = new Part2MazeWalker(mazeWalker.Level + 1, exitCoordinate, mazeWalker.Steps + 1);
+                                    var newMazeWalker = new Part2MazeWalker(mazeWalker.Level - 1, exitCoordinate, mazeWalker.Steps + 1);
                                     queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
                                 }
                             }
-                            else if (mazeWalker.Level > 0)
-                            {
-                                var exitCoordinate = _grid
-                                    .SideNeighbors(exitPortalCoordinate.Value)
-                                    .First(cell => cell.Object == Tile.Passage)
-                                    .Coordinate;
 
-                                var newMazeWalker = new Part2MazeWalker(mazeWalker.Level - 1, exitCoordinate, mazeWalker.Steps + 1);
-                                queue.Enqueue(newMazeWalker, newMazeWalker.Steps);
-                            }                       
+                            break;
                         }
-
-                        break;
-                    }
                 }
             }
         }

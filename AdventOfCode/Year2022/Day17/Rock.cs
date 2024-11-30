@@ -13,7 +13,7 @@ internal class Rock
         set
         {
             if (_column == value) return;
-            
+
             _column = value;
             BitMasks = InitialBitMasks.Select(x => x >> _column).ToArray();
         }

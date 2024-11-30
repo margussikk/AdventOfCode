@@ -80,8 +80,8 @@ public class Day03PuzzleSolver : IPuzzleSolver
             {
                 if (!wire1LineSegment.TryFindOverlap(wire2LineSegment, out var overlapLineSegment) ||
                     overlapLineSegment.Start == Coordinate2D.Zero) continue;
-                
-                foreach(var coordinate in overlapLineSegment)
+
+                foreach (var coordinate in overlapLineSegment)
                 {
                     intersections.Add(coordinate);
                 }
@@ -95,7 +95,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
     {
         var stepCounts = new Dictionary<Coordinate2D, long>();
         var steps = 0L;
-        
+
         foreach (var lineSegment in lineSegments)
         {
             foreach (var coordinate in intersections)

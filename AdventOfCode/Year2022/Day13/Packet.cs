@@ -101,26 +101,26 @@ internal abstract class Packet : IComparable<Packet>
                 currentPacket.AddPacket(packet);
             }
             else switch (line[index])
-            {
-                case ',' when currentPacket != null:
-                    // Ignore
-                    break;
-                case ']' when currentPacket != null:
                 {
-                    if (stack.Count != 0)
-                    {
-                        currentPacket = stack.Pop();
-                    }
-                    else
-                    {
-                        return currentPacket;
-                    }
+                    case ',' when currentPacket != null:
+                        // Ignore
+                        break;
+                    case ']' when currentPacket != null:
+                        {
+                            if (stack.Count != 0)
+                            {
+                                currentPacket = stack.Pop();
+                            }
+                            else
+                            {
+                                return currentPacket;
+                            }
 
-                    break;
+                            break;
+                        }
+                    default:
+                        throw new InvalidOperationException();
                 }
-                default:
-                    throw new InvalidOperationException();
-            }
 
             index++;
         }

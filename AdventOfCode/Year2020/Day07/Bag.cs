@@ -12,7 +12,7 @@ internal class Bag
     {
         Color = color;
     }
-    
+
     public void AddContainer(Bag bag)
     {
         Containers.Add(bag);

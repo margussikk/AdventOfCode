@@ -36,7 +36,7 @@ internal class IntCodeComputer
     {
         var stringBuilder = new StringBuilder();
 
-        foreach(var input in inputs)
+        foreach (var input in inputs)
         {
             stringBuilder.Append($"{input}\n");
         }
@@ -61,7 +61,7 @@ internal class IntCodeComputer
         var inputIndex = 0;
         var outputs = new List<long>();
 
-        while(true)
+        while (true)
         {
             var instruction = PrepareInstruction(_instructionPointer);
             switch (instruction.OpCode)

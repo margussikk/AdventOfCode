@@ -39,7 +39,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
             var terminatedNormally = RunProgram(fixedInstructions, out var accumulator);
             if (!terminatedNormally) continue;
-            
+
             answer = accumulator;
             break;
         }

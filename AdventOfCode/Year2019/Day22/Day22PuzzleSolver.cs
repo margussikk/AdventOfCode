@@ -23,7 +23,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
     {
         const long deckSize = 119315717514047L;
         const long times = 101741582076661L;
-        
+
         var reverseTechnique = new ReverseTechnique(deckSize);
 
         foreach (var technique in _techniques.Reverse<Technique>())
@@ -34,5 +34,5 @@ public class Day22PuzzleSolver : IPuzzleSolver
         var answer = reverseTechnique.Apply(2020, times);
 
         return new PuzzleAnswer(answer, 29988879027217L);
-    }   
+    }
 }

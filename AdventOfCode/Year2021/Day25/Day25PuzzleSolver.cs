@@ -52,7 +52,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
             var nextCoordinate = new GridCoordinate(gridCell.Coordinate.Row, nextColumn);
 
             if (_grid[nextCoordinate] != GridDirection.None) continue;
-            
+
             updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
             updatedDirections.Add((nextCoordinate, GridDirection.Right));
         }
@@ -75,7 +75,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
             var nextCoordinate = new GridCoordinate(nextRow, gridCell.Coordinate.Column);
 
             if (_grid[nextCoordinate] != GridDirection.None) continue;
-            
+
             updatedDirections.Add((gridCell.Coordinate, GridDirection.None));
             updatedDirections.Add((nextCoordinate, GridDirection.Down));
         }

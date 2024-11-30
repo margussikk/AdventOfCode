@@ -51,7 +51,7 @@ internal class Tile
         tile.BorderBitmasks = new uint[8, 4];
 
         // Orientation 0, input
-        for(var column = 0; column <= tile.Image.LastColumnIndex; column++)
+        for (var column = 0; column <= tile.Image.LastColumnIndex; column++)
         {
             // Top
             tile.BorderBitmasks[0, TileBorder.Top] <<= 1;

@@ -46,9 +46,9 @@ public class Day16PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        foreach(var ticketNumbers in _nearbyTicketNumbersList)
+        foreach (var ticketNumbers in _nearbyTicketNumbersList)
         {
-            foreach(var ticketNumber in ticketNumbers)
+            foreach (var ticketNumber in ticketNumbers)
             {
                 var valid = _ticketFieldRules.Exists(rule => rule.IsValid(ticketNumber));
                 if (!valid)

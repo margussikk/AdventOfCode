@@ -29,7 +29,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         }
 
         // Exchange packets
-        while(true)
+        while (true)
         {
             for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
             {
@@ -44,7 +44,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 var result = computer.Run(inputs);
                 inputs.Clear();
 
-                foreach(var chunk in result.Outputs.Chunk(3))
+                foreach (var chunk in result.Outputs.Chunk(3))
                 {
                     var destination = chunk[0];
                     var x = chunk[1];
@@ -71,7 +71,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         for (var computerIndex = 0; computerIndex < computers.Length; computerIndex++)
         {
             var computer = new IntCodeComputer(_program);
-            
+
             computers[computerIndex] = computer;
             computerInputs[computerIndex] = [computerIndex];
         }
@@ -101,7 +101,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 var result = computer.Run(inputs);
                 inputs.Clear();
 
-                foreach(var chunk in result.Outputs.Chunk(3))
+                foreach (var chunk in result.Outputs.Chunk(3))
                 {
                     idle = false;
 
@@ -123,7 +123,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             }
 
             if (!idle) continue;
-            
+
             if (lastNatY == natY)
             {
                 answer = natY;

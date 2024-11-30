@@ -44,7 +44,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                     lastSeenNumberIndexes[lastNumber] = numberIndex;
                 }
             }
-            else if(lastSeenNumberIndexes.TryGetValue(lastNumber, out var lastSeenNumberIndex))
+            else if (lastSeenNumberIndexes.TryGetValue(lastNumber, out var lastSeenNumberIndex))
             {
                 lastSeenNumberIndexes[lastNumber] = numberIndex - 1;
                 lastNumber = numberIndex - 1 - lastSeenNumberIndex;

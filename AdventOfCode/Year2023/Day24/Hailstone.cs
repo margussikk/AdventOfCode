@@ -18,7 +18,7 @@ internal class Hailstone
         DY = dY;
         DZ = dZ;
     }
-    
+
     public static Hailstone Parse(string input)
     {
         var splits = input.Split('@');

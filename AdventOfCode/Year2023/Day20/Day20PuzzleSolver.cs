@@ -52,7 +52,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 }
 
                 if (!_modules.TryGetValue(signal.DestinationModule, out var module)) continue;
-                
+
                 var newSignals = module.ProcessSignal(signal);
                 foreach (var newSignal in newSignals)
                 {
@@ -93,7 +93,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
                 }
 
                 if (!_modules.TryGetValue(signal.DestinationModule, out var module)) continue;
-                
+
                 var newSignals = module.ProcessSignal(signal);
                 foreach (var newSignal in newSignals)
                 {

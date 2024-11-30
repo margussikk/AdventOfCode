@@ -47,10 +47,10 @@ public class Day08PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var stringBuilder = new StringBuilder();
-        
+
         for (var row = 0; row <= _layers[0].LastRowIndex; row++)
         {
-            for(var column = 0; column <= _layers[0].LastColumnIndex; column++)
+            for (var column = 0; column <= _layers[0].LastColumnIndex; column++)
             {
                 var layer = _layers.Find(l => l[row, column] != Pixel.Transparent);
                 if (layer != null)

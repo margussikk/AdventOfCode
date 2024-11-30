@@ -45,7 +45,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         for (var column = 0; column < tiles.Width; column++)
         {
             if (tiles[tiles.LastRowIndex, column] != Tile.Path) continue;
-            
+
             endCoordinate = new GridCoordinate(tiles.LastRowIndex, column);
             break;
         }
@@ -175,7 +175,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     {
                         var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
                         if (direction == hiker.Direction.Flip()) continue;
-                        
+
                         var newHiker = new GridWalker(hiker.CurrentCoordinate, neighborCell.Coordinate, direction, 1);
                         hikers.Push(newHiker);
                     }
@@ -196,7 +196,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                 {
                     var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
                     if (direction == hiker.Direction.Flip()) continue;
-                    
+
                     var newHiker = hiker.Clone();
                     newHiker.Move(direction);
 

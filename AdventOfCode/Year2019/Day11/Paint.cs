@@ -3,5 +3,5 @@
 internal static class Paint
 {
     public const long Black = 0;
-    public const long White = 1; 
+    public const long White = 1;
 }

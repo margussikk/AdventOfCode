@@ -92,7 +92,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
         }
 
         // Move to security checkpoint room
-        foreach(var direction in pathToSecurityCheckpoint)
+        foreach (var direction in pathToSecurityCheckpoint)
         {
             computer.Run(direction);
         }

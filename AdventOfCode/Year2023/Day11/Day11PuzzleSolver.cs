@@ -66,7 +66,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
                     var expandingColumnsBetween = _expandingColumns.Count(x => x > minColumn && x < maxColumn);
 
                     var expandedDistance = (expandingRowsBetween + expandingColumnsBetween) * (expansionFactor - 1);
-                    
+
                     // Total
                     return directDistance + expandedDistance;
                 });

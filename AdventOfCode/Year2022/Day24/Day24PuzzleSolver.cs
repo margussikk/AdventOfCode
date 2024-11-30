@@ -141,7 +141,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
             {
                 // Allow staying at the start, but not come back
                 if (valleyWalker.Coordinate != startLocation && movementLocation == startLocation) continue;
-                
+
                 var newValleyWalker = new ValleyWalker(movementLocation, valleyWalker.Minute + 1);
 
                 distance = MeasurementFunctions.ManhattanDistance(newValleyWalker.Coordinate, endLocation);

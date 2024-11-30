@@ -33,7 +33,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var gridWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
         stack.Push(gridWalker);
 
-        while(stack.TryPop(out gridWalker))
+        while (stack.TryPop(out gridWalker))
         {
             if (gridWalker.CurrentCoordinate == oxygenSystemCoordinate)
             {
@@ -42,7 +42,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
             }
 
             if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
-            
+
             foreach (var neighbor in grid.SideNeighbors(gridWalker.CurrentCoordinate).Where(c => c.Object != Tile.Wall))
             {
                 var nextGridWalker = gridWalker.Clone();
@@ -70,17 +70,17 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         var answer = -1;
 
-        while(oxygenSpreaders.Count > 0)
+        while (oxygenSpreaders.Count > 0)
         {
             var newOxygenSpreaders = new List<GridCoordinate>();
 
-            foreach(var oxygenSpreader in oxygenSpreaders.Where(os => visited.Add(os)))
+            foreach (var oxygenSpreader in oxygenSpreaders.Where(os => visited.Add(os)))
             {
                 var neighborCoordinates = grid
                     .SideNeighbors(oxygenSpreader)
                     .Where(cell => cell.Object != Tile.Wall && !visited.Contains(cell.Coordinate))
                     .Select(cell => cell.Coordinate);
-                
+
                 newOxygenSpreaders.AddRange(neighborCoordinates);
             }
 
@@ -185,7 +185,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
             {
                 var direction = stack.Pop();
                 if (direction == GridDirection.Start) continue;
-                
+
                 var backDirection = direction.Flip();
                 var robotDirection = GetRobotDirection(backDirection);
 

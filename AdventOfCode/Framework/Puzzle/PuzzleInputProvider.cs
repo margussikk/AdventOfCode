@@ -49,7 +49,7 @@ public sealed class PuzzleInputProvider
         var inputFile = Path.Combine(assemblyPath!, "Inputs", $"{puzzleAttribute.Year}", $"Day{puzzleAttribute.Day:00}.txt");
         Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
         if (File.Exists(inputFile)) return File.ReadAllLines(inputFile);
-        
+
         try
         {
             var response = _httpClient.GetAsync($"{puzzleAttribute.Year}/day/{puzzleAttribute.Day}/input")

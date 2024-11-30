@@ -83,7 +83,7 @@ internal class CubeWalker
             {
                 var location = current.Location.Move(direction);
                 if (!cubeFaceLocations.Contains(location)) continue;
-                
+
                 var directionIndex = Array.IndexOf(_directions, direction);
                 var newFaceIndex = MathFunctions.Modulo(directionIndex - offset, 4);
                 var newFace = _cubeFaceNeighbors[current.Face][newFaceIndex];

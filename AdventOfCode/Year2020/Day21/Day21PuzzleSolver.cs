@@ -33,7 +33,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
         var ingredientAllergenMatches = new List<IngredientAllergenMatch>();
 
-        while(allergenIngredients.Count > 0)
+        while (allergenIngredients.Count > 0)
         {
             var allergenWithOneIngredient = allergenIngredients.FirstOrDefault(kvp => kvp.Value.Count == 1);
             if (allergenWithOneIngredient.Key is null)
@@ -46,10 +46,10 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
             allergenIngredients.Remove(ingredientAllergenMatch.Allergen);
 
-            foreach(var value in allergenIngredients.Values)
+            foreach (var value in allergenIngredients.Values)
             {
                 value.Remove(ingredientAllergenMatch.Ingredient);
-            }            
+            }
         }
 
         var answer = string.Join(',',
@@ -73,7 +73,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
                 }
                 else
                 {
-                    ingredients = [..food.Ingredients];
+                    ingredients = [.. food.Ingredients];
                 }
 
                 allergenIngredients[allergen] = ingredients;

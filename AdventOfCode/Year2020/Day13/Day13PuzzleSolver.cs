@@ -24,13 +24,13 @@ public class Day13PuzzleSolver : IPuzzleSolver
         var earliestBusId = 0;
         var leastWaitingTime = int.MaxValue;
 
-        foreach(var busId in _indexedBusIds.Select(x => x.BusId))
+        foreach (var busId in _indexedBusIds.Select(x => x.BusId))
         {
             var mod = _timestamp % busId;
             var waitingTime = mod == 0 ? 0 : busId - mod;
 
             if (waitingTime >= leastWaitingTime) continue;
-            
+
             earliestBusId = busId;
             leastWaitingTime = waitingTime;
         }

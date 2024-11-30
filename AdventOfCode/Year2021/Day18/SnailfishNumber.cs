@@ -231,7 +231,7 @@ internal class SnailfishNumber
             }
 
             if (line[index] != ']') throw new InvalidOperationException();
-            
+
             indexRef++;
             return snailfishNumber;
         }

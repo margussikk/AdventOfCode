@@ -16,7 +16,7 @@ internal class Rule
     {
         Id = id;
     }
-    
+
     public void MakeItCharacterRule(char character)
     {
         RuleType = RuleType.Character;
@@ -53,66 +53,66 @@ internal class Rule
                 // Do not continue
             }
             else switch (currentRule.RuleType)
-            {
-                case RuleType.Character:
                 {
-                    if (message[currentIndex] == currentRule.Character)
-                    {
-                        yield return (true, currentIndex + 1);
-                    }
-
-                    break;
-                }
-                case RuleType.And:
-                {
-                    List<int> currentIndexes = [currentIndex];
-
-                    foreach (var rule in currentRule.AndRules)
-                    {
-                        ruleDepth++;
-
-                        var nextIndexes = new List<int>();
-
-                        foreach (var index in currentIndexes)
+                    case RuleType.Character:
                         {
-                            var results = LocalMatches(rule, ruleDepth, message, index);
-                            foreach (var (matches, nextIndex) in results)
+                            if (message[currentIndex] == currentRule.Character)
                             {
-                                if (matches)
+                                yield return (true, currentIndex + 1);
+                            }
+
+                            break;
+                        }
+                    case RuleType.And:
+                        {
+                            List<int> currentIndexes = [currentIndex];
+
+                            foreach (var rule in currentRule.AndRules)
+                            {
+                                ruleDepth++;
+
+                                var nextIndexes = new List<int>();
+
+                                foreach (var index in currentIndexes)
                                 {
-                                    nextIndexes.Add(nextIndex);
+                                    var results = LocalMatches(rule, ruleDepth, message, index);
+                                    foreach (var (matches, nextIndex) in results)
+                                    {
+                                        if (matches)
+                                        {
+                                            nextIndexes.Add(nextIndex);
+                                        }
+                                    }
+                                }
+
+                                currentIndexes = nextIndexes;
+                            }
+
+                            foreach (var index in currentIndexes)
+                            {
+                                yield return (true, index);
+                            }
+
+                            break;
+                        }
+                    case RuleType.Or:
+                        {
+                            foreach (var rule in currentRule.OrRules)
+                            {
+                                var results = LocalMatches(rule, ruleDepth + 1, message, currentIndex);
+                                foreach (var result in results)
+                                {
+                                    if (result.Matches)
+                                    {
+                                        yield return (result.Matches, result.NextIndex);
+                                    }
                                 }
                             }
+
+                            break;
                         }
-
-                        currentIndexes = nextIndexes;
-                    }
-
-                    foreach (var index in currentIndexes)
-                    {
-                        yield return (true, index);
-                    }
-
-                    break;
+                    default: throw new InvalidOperationException();
                 }
-                case RuleType.Or:
-                {
-                    foreach (var rule in currentRule.OrRules)
-                    {
-                        var results = LocalMatches(rule, ruleDepth + 1, message, currentIndex);
-                        foreach (var result in results)
-                        {
-                            if (result.Matches)
-                            {
-                                yield return (result.Matches, result.NextIndex);
-                            }
-                        }
-                    }
-
-                    break;
-                }
-                default: throw new InvalidOperationException();
-            }
         }
     }
 }

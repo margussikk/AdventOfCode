@@ -54,7 +54,7 @@ internal static class Ocr
 
         if (textLines.Length != _largeLetterPatternLines.Length)
             throw new InvalidOperationException("Unexpected text height");
-        
+
         // Large letters
         var largeLetterWidth = _largeLetterPatternLines[0].Length / LargeLetters.Length;
         if (textLines[0].Length % largeLetterWidth != 0)
@@ -98,7 +98,7 @@ internal static class Ocr
                 }
 
                 if (!matched) continue;
-                
+
                 stringBuilder.Append(letters[letterIndex]);
                 parsed = true;
             }

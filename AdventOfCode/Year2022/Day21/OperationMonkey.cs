@@ -7,7 +7,7 @@ internal class OperationMonkey : Monkey
     public Monkey? LeftMonkey { get; private set; }
 
     public Monkey? RightMonkey { get; private set; }
-    
+
     public OperationMonkey(string name, Operation operation) : base(name)
     {
         Operation = operation;

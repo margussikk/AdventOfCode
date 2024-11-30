@@ -35,7 +35,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
         foreach (var policy in _passwordPolicies)
         {
-            var indexes = new []
+            var indexes = new[]
             {
                 policy.FirstNumber - 1,
                 policy.SecondNumber - 1

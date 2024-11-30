@@ -6,7 +6,7 @@ namespace AdventOfCode.Year2019.Day04;
 [Puzzle(2019, 4, "Secure Container")]
 public class Day04PuzzleSolver : IPuzzleSolver
 {
-    private NumberRange<int> _passwordRange = new (0, 0);
+    private NumberRange<int> _passwordRange = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
@@ -30,16 +30,16 @@ public class Day04PuzzleSolver : IPuzzleSolver
     private int CountPasswords(int baseValue, int divider, Func<int, bool> adjacentDigitsCheck)
     {
         var count = 0;
-        
-        var minBaseValue = _passwordRange.Start / divider * divider;       
-        var maxBaseValue = _passwordRange.End / divider * divider;        
+
+        var minBaseValue = _passwordRange.Start / divider * divider;
+        var maxBaseValue = _passwordRange.End / divider * divider;
 
         var minDigit = baseValue / (divider * 10) % 10;
         for (var digit = minDigit; digit <= 9; digit++)
         {
             var newBaseValue = baseValue + digit * divider;
             if (newBaseValue < minBaseValue || newBaseValue > maxBaseValue) continue;
-            
+
             if (divider == 1)
             {
                 if (adjacentDigitsCheck(newBaseValue))

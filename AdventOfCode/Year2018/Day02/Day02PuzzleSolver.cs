@@ -22,7 +22,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
         {
             var counts = new int['z' - 'a' + 1];
 
-            foreach(var letter in boxId)
+            foreach (var letter in boxId)
             {
                 counts[letter - 'a']++;
             }

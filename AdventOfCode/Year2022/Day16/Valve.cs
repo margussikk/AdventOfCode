@@ -9,7 +9,7 @@ internal class Valve
     public int FlowRate { get; }
 
     public int OpenBitmask { get; }
-    
+
     public List<Tunnel> Tunnels { get; } = [];
 
     public Valve(int id, string name, int flowRate)

@@ -8,6 +8,6 @@ internal abstract class Operation
     {
         Operand = operand;
     }
-    
+
     public abstract long CalculateWorryLevel(long oldWorryLevel);
 }

@@ -98,7 +98,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
             } while (found);
 
             if (pathsFound != numberOfWiresToCut) continue;
-            
+
             //For debugging
             //var groupComponents = visitedComponentIds.ToList();
             //var wiresToCut = _wires // Find wires which connect two groups

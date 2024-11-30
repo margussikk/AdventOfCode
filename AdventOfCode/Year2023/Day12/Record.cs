@@ -10,7 +10,7 @@ internal class Record
         Springs = springs;
         Groups = groups;
     }
-    
+
     public static Record Parse(string input)
     {
         var splits = input.Split(' ');
@@ -24,7 +24,7 @@ internal class Record
 
         return new Record(springs, groups);
     }
-    
+
     public Record Unfolded()
     {
         var springs1 = new List<Spring>(Springs);

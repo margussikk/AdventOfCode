@@ -127,7 +127,7 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
         {
             var sourceValve = valves.Find(v => v.Name == vertices[i].Name);
             if (sourceValve == null) continue;
-            
+
             for (var j = 0; j < vertices.Count; j++)
             {
                 if (i == j || vertices[j].Name == "AA")
@@ -137,7 +137,7 @@ public partial class Day16PuzzleSolver : IPuzzleSolver
 
                 var destinationValve = valves.Find(v => v.Name == vertices[j].Name);
                 if (destinationValve == null) continue;
-                
+
                 var tunnel = new Tunnel(destinationValve, distances[i, j]);
                 sourceValve.Tunnels.Add(tunnel);
             }

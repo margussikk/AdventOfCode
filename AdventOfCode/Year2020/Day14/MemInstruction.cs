@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Year2020.Day14;
 
-internal partial class MemInstruction: Instruction
+internal partial class MemInstruction : Instruction
 {
     public long Address { get; private set; }
 

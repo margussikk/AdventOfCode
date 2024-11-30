@@ -16,7 +16,7 @@ internal readonly struct Coordinate2D : IEquatable<Coordinate2D>
         Y = y;
     }
 
-    public Coordinate2D (GridCoordinate gridCoordinate)
+    public Coordinate2D(GridCoordinate gridCoordinate)
     {
         X = -gridCoordinate.Row;
         Y = gridCoordinate.Column;

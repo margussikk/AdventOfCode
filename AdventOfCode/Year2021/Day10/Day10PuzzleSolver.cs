@@ -92,7 +92,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             }
 
             if (corrupt || stack.Count == 0) continue;
-            
+
             var answer1 = 0L;
 
             while (stack.Count != 0)

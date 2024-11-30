@@ -18,7 +18,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
     {
         var computer = new IntCodeComputer(_program);
 
-        var inputs = new []
+        var inputs = new[]
         {
             "OR A J",  // J = A is ground
             "AND B J", // J = A and B is ground
@@ -39,7 +39,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
     {
         var computer = new IntCodeComputer(_program);
 
-        var inputs = new []
+        var inputs = new[]
         {
             "OR A J",  // J = A is ground
             "AND B J", // J = A and B is ground
