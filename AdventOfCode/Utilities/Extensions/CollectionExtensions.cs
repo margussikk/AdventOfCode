@@ -115,7 +115,7 @@ internal static class CollectionExtensions
 
         for (var index1 = 0; index1 < array.Length - 1; index1++)
         {
-            for (var index2 = index1; index2 < array.Length; index2++)
+            for (var index2 = index1 + 1; index2 < array.Length; index2++)
             {
                 yield return (array[index1], array[index2]);
             }
