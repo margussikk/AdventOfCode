@@ -22,6 +22,14 @@ namespace AdventOfCode.Utilities.Geometry
             YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
         }
 
+        public bool InBounds(Coordinate2D coordinate)
+        {
+            return coordinate.X >= MinCoordinate.X &&
+                   coordinate.X <= MaxCoordinate.X &&
+                   coordinate.Y >= MinCoordinate.Y &&
+                   coordinate.Y <= MaxCoordinate.Y;
+        }
+
         public bool TryFindOverlap(Area2D other, [MaybeNullWhen(false)] out Area2D overlapArea)
         {
             if (Overlaps(other))

@@ -73,4 +73,17 @@ internal readonly struct Coordinate2D : IEquatable<Coordinate2D>
     {
         return obj is Coordinate2D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y;
     }
+
+    public IEnumerable<Coordinate2D> ManhattanCoordinates(int manhattanDistance)
+    {
+        for (int offset = 0; offset < manhattanDistance; offset++)
+        {
+            var invOffset = manhattanDistance - offset;
+
+            yield return new Coordinate2D(X + offset, Y + invOffset);
+            yield return new Coordinate2D(X + invOffset, Y - offset);
+            yield return new Coordinate2D(X - offset, Y - invOffset);
+            yield return new Coordinate2D(X - invOffset, Y + offset);
+        }
+    }
 }
