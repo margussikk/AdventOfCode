@@ -15,9 +15,9 @@ namespace AdventOfCode.Year2018.Day03
             return ClaimArea.TryFindOverlap(other.ClaimArea, out overlapArea);
         }
 
-        public static Elf Parse(string line)
+        public static Elf Parse(string input)
         {
-            var matches = InputLineRegex().Matches(line);
+            var matches = InputLineRegex().Matches(input);
             if (matches.Count != 1)
             {
                 throw new InvalidOperationException("Failed to parse input line");
