@@ -1,40 +1,39 @@
-﻿namespace AdventOfCode.Year2018.Day09
+﻿namespace AdventOfCode.Year2018.Day09;
+
+internal class Marble
 {
-    internal class Marble
+    public long Worth { get; }
+
+    public Marble ClockwiseMarble { get; set; }
+
+    public Marble CounterClockwiseMarble { get; set; }
+
+    public Marble(long worth)
     {
-        public long Worth { get; }
+        Worth = worth;
 
-        public Marble ClockwiseMarble { get; set; }
+        CounterClockwiseMarble = this;
+        ClockwiseMarble = this;
+    }
 
-        public Marble CounterClockwiseMarble { get; set; }
+    public void AddClockwise(Marble marble)
+    {
+        var before = this;
+        var after = ClockwiseMarble;
 
-        public Marble(long worth)
-        {
-            Worth = worth;
+        marble.CounterClockwiseMarble = before;
+        marble.ClockwiseMarble = after;
 
-            CounterClockwiseMarble = this;
-            ClockwiseMarble = this;            
-        }
+        before.ClockwiseMarble = marble;
+        after.CounterClockwiseMarble = marble;
+    }
 
-        public void AddClockwise(Marble marble)
-        {
-            var before = this;
-            var after = ClockwiseMarble;
+    public void Remove()
+    {
+        var before = CounterClockwiseMarble;
+        var after = ClockwiseMarble;
 
-            marble.CounterClockwiseMarble = before;
-            marble.ClockwiseMarble = after;
-
-            before.ClockwiseMarble = marble;
-            after.CounterClockwiseMarble = marble;
-        }
-
-        public void Remove()
-        {
-            var before = CounterClockwiseMarble;
-            var after = ClockwiseMarble;
-
-            before.ClockwiseMarble = after;
-            after.CounterClockwiseMarble = before;
-        }
+        before.ClockwiseMarble = after;
+        after.CounterClockwiseMarble = before;
     }
 }

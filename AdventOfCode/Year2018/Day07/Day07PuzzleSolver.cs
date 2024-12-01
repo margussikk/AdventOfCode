@@ -89,7 +89,7 @@ public partial class Day07PuzzleSolver : IPuzzleSolver
                 break;
             }
 
-            while(true)
+            while (true)
             {
                 var worker = workers.Find(w => !w.IsWorking);
                 if (worker == null)

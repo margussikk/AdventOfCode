@@ -1,9 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
-using Microsoft.Diagnostics.Runtime.Utilities;
-using Spectre.Console;
-using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AdventOfCode.Year2018.Day11;
 
@@ -80,7 +76,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
         var cell = previousSizeGrid.MaxBy(x => x.Object);
         var result = new TotalPowerResult(cell.Coordinate, 1, cell.Object);
-       
+
         for (var size = 2; size <= 300; size++)
         {
             var currentSizeGrid = new Grid<int>(300, 300);
@@ -94,7 +90,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
                     var coordinate = new GridCoordinate(outerRow, outerColumn);
 
                     var previousSizeSquarePower = previousSizeGrid[coordinate];
-                    
+
                     var expansionRowPower = Enumerable.Range(outerColumn, previousSize)
                                                       .Sum(c => _grid[outerRow + previousSize, c]);
 
