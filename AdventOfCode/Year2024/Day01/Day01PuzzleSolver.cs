@@ -31,9 +31,9 @@ public class Day01PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var frequencies = _rightLocationIds.ToLookup(x => x);
+        var occurencies = _rightLocationIds.ToLookup(x => x);
 
-        var answer = _leftLocationIds.Sum(x => x * frequencies[x].Count());
+        var answer = _leftLocationIds.Sum(x => x * occurencies[x].Count());
 
         return new PuzzleAnswer(answer, 18997088);
     }
