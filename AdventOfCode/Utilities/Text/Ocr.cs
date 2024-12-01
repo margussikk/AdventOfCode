@@ -32,6 +32,8 @@ internal static class Ocr
         "#    #  #####    ####   ######  #        ### #  #    #   ###    #    #  ######  #    #  #       #    #  #    #  ######  "
     ];
 
+    public static readonly int LargeLetterHeight = _largeLetterPatternLines.Length;
+
     public static string Parse(string text)
     {
         var textLines = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToArray();
