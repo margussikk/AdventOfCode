@@ -8,7 +8,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 {
     private int _serialNumber;
 
-    private Grid<int> _grid = new Grid<int>(300, 300);
+    private readonly Grid<int> _grid = new Grid<int>(300, 300);
 
     public void ParseInput(string[] inputLines)
     {
