@@ -90,10 +90,10 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
             GridDirection.Left => new GridCoordinate(Row, Column - steps),
             GridDirection.Right => new GridCoordinate(Row, Column + steps),
 
-            GridDirection.UpLeft => new GridCoordinate(Row - steps, Column - 1),
-            GridDirection.UpRight => new GridCoordinate(Row - steps, Column + 1),
-            GridDirection.DownLeft => new GridCoordinate(Row + steps, Column - 1),
-            GridDirection.DownRight => new GridCoordinate(Row + steps, Column + 1),
+            GridDirection.UpLeft => new GridCoordinate(Row - steps, Column - steps),
+            GridDirection.UpRight => new GridCoordinate(Row - steps, Column + steps),
+            GridDirection.DownLeft => new GridCoordinate(Row + steps, Column - steps),
+            GridDirection.DownRight => new GridCoordinate(Row + steps, Column + steps),
 
             GridDirection.None => this,
             _ => throw new InvalidOperationException("Unexpected direction")
