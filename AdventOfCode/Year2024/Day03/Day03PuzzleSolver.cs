@@ -34,11 +34,11 @@ public partial class Day03PuzzleSolver : IPuzzleSolver
         {
             var command = matches[i].Value;
 
-            if (command == "do")
+            if (command == "do()")
             {
                 doMultiply = true;
             }
-            else if (command == "don't")
+            else if (command == "don't()")
             {
                 doMultiply = false;
             }
@@ -62,6 +62,6 @@ public partial class Day03PuzzleSolver : IPuzzleSolver
     [GeneratedRegex(@"mul\(\d{1,3}\,\d{1,3}\)")]
     private static partial Regex PartOneInputLineRegex();
 
-    [GeneratedRegex(@"(mul\(\d{1,3}\,\d{1,3}\))|(don't)|(do)")]
+    [GeneratedRegex(@"(mul\(\d{1,3}\,\d{1,3}\))|(do\(\))|(don't\(\))")]
     private static partial Regex PartTwoInputLineRegex();
 }
