@@ -1,13 +1,12 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
-using System.Linq;
 
 namespace AdventOfCode.Year2024.Day05;
 
 [Puzzle(2024, 5, "Print Queue")]
 public class Day05PuzzleSolver : IPuzzleSolver
 {
-    private ILookup<int, int> _pageOrderingRules = new Dictionary<int, int>().ToLookup(kvp => kvp.Key, kvp => kvp.Value);
+    private ILookup<int, int> _pageOrderingRules = Array.Empty<int>().ToLookup(kvp => kvp);
     private List<List<int>> _updates = [];
 
     public void ParseInput(string[] inputLines)
@@ -33,8 +32,10 @@ public class Day05PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
+        var comparer = new PageNumberComparer(_pageOrderingRules);
+
         var answer = _updates.Where(x => !IsCorrectlyOrdered(x))
-                             .Select(x => FixUpdate(x).FixedUpdate)
+                             .Select(x => x.OrderBy(x => x, comparer).ToList())
                              .Sum(x => x[x.Count / 2]);
 
         return new PuzzleAnswer(answer, 5833);
@@ -44,32 +45,5 @@ public class Day05PuzzleSolver : IPuzzleSolver
     {
         return update.Select((pageNumber1, index) => update.Skip(index + 1).All(pageNumber2 => _pageOrderingRules[pageNumber1].Contains(pageNumber2)))
                      .All(x => x);
-    }
-
-    public (bool Success, List<int> FixedUpdate) FixUpdate(List<int> update)
-    {
-        if (update.Count == 1)
-        {
-            return (true, [update[0]]);
-        }
-
-        foreach (var pageNumber1 in update)
-        {
-            var otherPageNumbers = update.Where(x => x != pageNumber1).ToList();
-
-            var isCorrect = otherPageNumbers.TrueForAll(pageNumber2 => _pageOrderingRules[pageNumber1].Contains(pageNumber2));
-            if (!isCorrect)
-            {
-                continue;
-            }
-
-            var (Success, FixedUpdate) = FixUpdate(otherPageNumbers);
-            if (Success)
-            {
-                return (true, [pageNumber1, .. FixedUpdate]);
-            }
-        }
-
-        return (false, []);
     }
 }
