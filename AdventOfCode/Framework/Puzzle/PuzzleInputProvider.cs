@@ -65,7 +65,7 @@ public sealed class PuzzleInputProvider
         }
         catch
         {
-            Console.WriteLine("Failed to download puzzle input, make sure you have set correct session cookie value");
+            Console.WriteLine("Failed to download puzzle input, make sure you have set the correct session cookie value");
             throw;
         }
 
