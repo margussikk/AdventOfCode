@@ -40,6 +40,17 @@ internal static class MathFunctions
         return result;
     }
 
+    public static long Power10(int number)
+    {
+        long power = 1;
+
+        for (int i = 0; i < number; i++)
+        {
+            power *= 10;
+        }
+
+        return power;
+    }
 
     /// <summary>
     /// Extended Euclidean Algorithm (EEA) to obtain the modular multiplicative inverse of a mod m, m does not have to be a prime
