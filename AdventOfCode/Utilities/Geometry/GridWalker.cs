@@ -10,6 +10,8 @@ internal class GridWalker
 
     public int Steps { get; private set; }
 
+    public List<GridCoordinate> Breadcrumbs { get; private set; } = [];
+
     public GridWalker(GridCoordinate startCoordinate, GridCoordinate currentCoordinate, GridDirection direction, int steps)
     {
         StartCoordinate = startCoordinate;
