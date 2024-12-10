@@ -18,7 +18,6 @@ internal class BucketList<T> : IList<T> where T : notnull
 
     public bool IsReadOnly => throw new NotImplementedException();
 
-
     private readonly int _bucketSize;
 
     public readonly Dictionary<T, int> BucketIndexes = [];

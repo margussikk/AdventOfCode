@@ -1,6 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Collections;
-using System;
 
 namespace AdventOfCode.Year2024.Day09;
 
@@ -58,7 +57,7 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var emptyRegions = new List<DiskRegion>();
+        var emptyRegions = new ListOfLists<DiskRegion>(100);
         var fileRegions = new Stack<DiskRegion>();
 
         var position = 0;
@@ -69,7 +68,7 @@ public class Day09PuzzleSolver : IPuzzleSolver
             {
                 continue;
             }
-            
+
             if (index % 2 == 0) // File
             {
                 fileRegions.Push(new DiskRegion
@@ -81,13 +80,15 @@ public class Day09PuzzleSolver : IPuzzleSolver
             }
             else
             {
-                emptyRegions.Add(new DiskRegion // Empty
+                var emptyDiskRegion = new DiskRegion
                 {
                     Position = position,
                     FileId = default,
                     Length = length
-                });
-            }            
+                };
+
+                emptyRegions.Add(emptyDiskRegion);
+            }
 
             position += length;
         }
@@ -96,14 +97,14 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
         while (fileRegions.TryPop(out var file))
         {
-            var emptySpace = emptyRegions.FirstOrDefault(x => x.Position < file.Position && x.Length >= file.Length);
-            if (emptySpace != null)
+            var emptySpaceIndex = emptyRegions.Find(x => x.Position < file.Position && x.Length >= file.Length, out var emptySpace);
+            if (emptySpaceIndex.IsValid)
             {
-                file.Position = emptySpace.Position;
+                file.Position = emptySpace!.Position;
 
                 if (emptySpace.Length == file.Length)
                 {
-                    emptyRegions.Remove(emptySpace);
+                    emptyRegions.RemoveAt(emptySpaceIndex);
                 }
                 else
                 {
