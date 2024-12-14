@@ -36,6 +36,11 @@ internal static class GridDirectionExtensions
         return newGridDirection;
     }
 
+    public static GridDirection Clear(this GridDirection gridDirection, GridDirection clearDirection)
+    {
+        return gridDirection & (~clearDirection);
+    }
+
     public static GridDirection TurnLeft(this GridDirection gridDirection)
     {
         return gridDirection switch
