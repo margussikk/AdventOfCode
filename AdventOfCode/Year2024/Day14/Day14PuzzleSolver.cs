@@ -1,7 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Mathematics;
-using System.Globalization;
 
 namespace AdventOfCode.Year2024.Day14;
 
@@ -40,7 +38,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
             var quadrant = x > betweenX ? 1 : 0;
             quadrant += y > betweenY ? 2 : 0;
 
-            robotsInQuadrants[quadrant]++;            
+            robotsInQuadrants[quadrant]++;
         }
 
         var answer = robotsInQuadrants.Aggregate(1L, (agg, curr) => agg *  curr);
@@ -67,6 +65,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
                       .Distinct()
                       .Count() == robots.Count)
             {
+                // Tracking the lowest safety factor also works
                 answer = seconds;
                 break;
             }
