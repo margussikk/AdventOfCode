@@ -96,7 +96,7 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
             GridDirection.DownRight => new GridCoordinate(Row + steps, Column + steps),
 
             GridDirection.None => this,
-            _ => throw new InvalidOperationException("Unexpected direction")
+            _ => throw new InvalidOperationException($"Unexpected direction: {direction}")
         };
     }
 
