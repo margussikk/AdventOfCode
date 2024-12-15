@@ -203,4 +203,21 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
 
         Console.WriteLine(stringBuilder.ToString());
     }
+
+    public void PrintToFile(string path, Func<T, char> mapper)
+    {
+        var stringBuilder = new StringBuilder();
+
+        for (var row = 0; row <= LastRowIndex; row++)
+        {
+            for (var column = 0; column <= LastColumnIndex; column++)
+            {
+                var character = mapper(_array[row, column]);
+                stringBuilder.Append(character);
+            }
+            stringBuilder.AppendLine();
+        }
+
+        File.WriteAllText(path, stringBuilder.ToString());
+    }
 }
