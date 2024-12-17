@@ -274,7 +274,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var direction = walker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
 
                 var newWalker = walker.Clone();
-                newWalker.Breadcrumbs.AddRange(walker.Breadcrumbs);                
+                newWalker.Breadcrumbs.AddRange(walker.Breadcrumbs);
 
                 newWalker.Move(direction);
                 walkerQueue.Enqueue(newWalker, newWalker.Steps);
