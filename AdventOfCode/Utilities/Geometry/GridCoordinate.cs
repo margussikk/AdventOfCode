@@ -139,4 +139,11 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
     {
         return $"{Row}, {Column}";
     }
+
+    public static GridCoordinate Parse(string input)
+    {
+        var splits = input.Split(',');
+
+        return new GridCoordinate(int.Parse(splits[1]), int.Parse(splits[0]));
+    }
 }
