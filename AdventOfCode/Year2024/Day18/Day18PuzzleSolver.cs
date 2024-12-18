@@ -32,26 +32,6 @@ public class Day18PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 370);
     }
 
-    public PuzzleAnswer GetPartTwoAnswerOld()
-    {
-        var grid = new BitGrid(71, 71);
-
-        GridCoordinate answer = new (0, 0);
-        foreach (var coordinate in _byteCoordinates)
-        {
-            grid[coordinate] = true;
-
-            var steps = FindFewestSteps(grid);
-            if (steps == int.MaxValue)
-            {
-                answer = coordinate;
-                break;
-            }
-        }
-
-        return new PuzzleAnswer($"{answer.Column},{answer.Row}", "65,6");
-    }
-
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var numberRange = new NumberRange<int>(0, _byteCoordinates.Count - 1);
