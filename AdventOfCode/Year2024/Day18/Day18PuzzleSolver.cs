@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Numerics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace AdventOfCode.Year2024.Day18;
 
