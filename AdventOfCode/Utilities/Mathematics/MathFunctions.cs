@@ -52,6 +52,33 @@ internal static class MathFunctions
         return power;
     }
 
+    public static List<long> GetDivisors(long number)
+    {
+        var divisors = new List<long>();
+
+        for (int i = 1; i <= Math.Sqrt(number); i++)
+        {
+            if (number % i == 0)
+            {
+                // If divisors are equal, take only one
+                if (number / i == i)
+                {
+                    divisors.Add(i);
+                }
+                // Otherwise take both
+                else
+                {
+                    divisors.Add(i);
+                    divisors.Add(number / i);
+                }
+            }
+        }
+
+        divisors.Sort();
+
+        return divisors;
+    }
+
     /// <summary>
     /// Extended Euclidean Algorithm (EEA) to obtain the modular multiplicative inverse of a mod m, m does not have to be a prime
     /// If modulus is a prime, Fermat's Little Theorem can be used and then result = BigInteger.ModPow(a, m - 2, m);

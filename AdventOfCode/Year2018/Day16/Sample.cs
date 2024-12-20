@@ -1,15 +1,27 @@
-﻿namespace AdventOfCode.Year2018.Day16;
+﻿using AdventOfCode.Year2018.Common;
+
+namespace AdventOfCode.Year2018.Day16;
+
 internal class Sample
 {
     public int[] BeforeRegisters { get; private set; } = new int[4];
-    public int[] Instruction { get; private set; } = new int[4];
+    public int[] InstructionValues { get; private set; } = new int[4];
     public int[] AfterRegisters { get; private set; } = new int[4];
 
     public bool BehavesLikeOpcode(OpCode opCode)
     {
         var device = new Device(BeforeRegisters);
 
-        return device.TryExecute(opCode, Instruction) && device.Registers.SequenceEqual(AfterRegisters);
+        var instruction = Instruction.Parse(InstructionValues);
+        instruction.ChangeOpCode(opCode);
+
+        if (!instruction.IsValid(4))
+        {
+            return false;
+        }
+
+        device.RunInstruction(instruction);
+        return device.Registers.SequenceEqual(AfterRegisters);
     }
 
     public bool BehavesLikeThreeOpCodes()
@@ -34,7 +46,7 @@ internal class Sample
             .ToArray();
 
         // Instruction
-        sample.Instruction = inputLines[1]
+        sample.InstructionValues = inputLines[1]
             .Split(' ')
             .Select(int.Parse)
             .ToArray();

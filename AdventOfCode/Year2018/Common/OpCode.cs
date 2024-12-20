@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Year2018.Day16;
+﻿namespace AdventOfCode.Year2018.Common;
 internal enum OpCode
 {
     AddR,
     AddI,
-    Mulr,
+    MulR,
     MulI,
     BanR,
     BanI,

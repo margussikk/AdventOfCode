@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Year2018.Common;
 
 namespace AdventOfCode.Year2018.Day16;
 
@@ -7,7 +8,7 @@ namespace AdventOfCode.Year2018.Day16;
 public class Day16PuzzleSolver : IPuzzleSolver
 {
     private List<Sample> _samples = [];
-    private List<int[]> _instructions = [];
+    private List<int[]> _instructionValues = [];
 
     public void ParseInput(string[] inputLines)
     {
@@ -17,11 +18,11 @@ public class Day16PuzzleSolver : IPuzzleSolver
                          .Select(Sample.Parse)
                          .ToList();
 
-        _instructions = chunks.TakeLast(1)
-                              .SelectMany(x => x.Select(y => y.Split(' ')
-                                                              .Select(int.Parse)
-                                                              .ToArray()))
-                              .ToList();
+        _instructionValues = chunks.TakeLast(1)
+                                   .SelectMany(x => x.Select(y => y.Split(' ')
+                                                                   .Select(int.Parse)
+                                                                   .ToArray()))
+                                   .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -45,7 +46,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             {
                 if (!sample.BehavesLikeOpcode(opCode))
                 {
-                    opCodePossibilities[sample.Instruction[0]].Remove(opCode);
+                    opCodePossibilities[sample.InstructionValues[0]].Remove(opCode);
                 }
             }
         }
@@ -77,15 +78,14 @@ public class Day16PuzzleSolver : IPuzzleSolver
         // Execute instructions
         var device = new Device([0, 0, 0, 0]);
 
-        foreach (var instruction in _instructions)
+        foreach (var instructionValue in _instructionValues)
         {
-            var opCode = opCodePossibilities[instruction[0]][0];
+            var opCode = opCodePossibilities[instructionValue[0]][0];
 
-            var success = device.TryExecute(opCode, instruction);
-            if (!success)
-            {
-                throw new NotImplementedException();
-            }
+            var instruction = Instruction.Parse(instructionValue);
+            instruction.ChangeOpCode(opCode);
+
+            device.RunInstruction(instruction);
         }
 
         var answer = device.Registers[0];
