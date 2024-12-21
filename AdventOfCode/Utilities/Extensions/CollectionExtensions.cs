@@ -66,6 +66,21 @@ internal static class CollectionExtensions
         return grid;
     }
 
+    public static BitGrid SelectToBitGrid(this string[] lines, Func<char, GridCoordinate, bool> func)
+    {
+        var grid = new BitGrid(lines.Length, lines[0].Length);
+
+        for (var row = 0; row < grid.Height; row++)
+        {
+            for (var column = 0; column < grid.Width; column++)
+            {
+                grid[row, column] = func(lines[row][column], new GridCoordinate(row, column));
+            }
+        }
+
+        return grid;
+    }
+
     public static IEnumerable<IEnumerable<T>> GetPermutations<T>(this IEnumerable<T> enumerable)
     {
         var array = enumerable as T[] ?? enumerable.ToArray();

@@ -110,6 +110,19 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
         return new GridCoordinate(-Column, Row);
     }
 
+    public IEnumerable<GridCoordinate> ManhattanCoordinates(int manhattanDistance)
+    {
+        for (int offset = 0; offset < manhattanDistance; offset++)
+        {
+            var invOffset = manhattanDistance - offset;
+
+            yield return new GridCoordinate(Row + offset, Column + invOffset);
+            yield return new GridCoordinate(Row + invOffset, Column - offset);
+            yield return new GridCoordinate(Row - offset, Column - invOffset);
+            yield return new GridCoordinate(Row - invOffset, Column + offset);
+        }
+    }
+
     public static bool operator ==(GridCoordinate coordinate1, GridCoordinate coordinate2)
     {
         return coordinate1.Equals(coordinate2);

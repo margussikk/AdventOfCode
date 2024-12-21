@@ -72,6 +72,11 @@ internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
         }
     }
 
+    public GridCell<T> Cell(GridCoordinate coordinate)
+    {
+        return new GridCell<T>(coordinate, _array[coordinate.Row, coordinate.Column]);
+    }
+
     public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
     {
         var neighborCoordinates = new List<GridCoordinate>();
