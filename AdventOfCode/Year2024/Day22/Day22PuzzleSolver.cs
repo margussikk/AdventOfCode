@@ -6,17 +6,17 @@ namespace AdventOfCode.Year2024.Day22;
 [Puzzle(2024, 22, "Monkey Market")]
 public class Day22PuzzleSolver : IPuzzleSolver
 {
-    private List<long> _secretNubers = [];
+    private List<long> _secretNumbers = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _secretNubers = inputLines.Select(long.Parse)
+        _secretNumbers = inputLines.Select(long.Parse)
                                   .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = _secretNubers.Sum(x => Enumerable.Range(0, 2000)
+        var answer = _secretNumbers.Sum(x => Enumerable.Range(0, 2000)
                                                       .Aggregate(x, (secret, _) => GenerateSecretNumber(secret)));
 
         return new PuzzleAnswer(answer, 14082561342L);
@@ -26,7 +26,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
     {
         var totalPatternBananas = new Dictionary<(long, long, long, long), long>();
 
-        foreach (var secretNumber in _secretNubers)
+        foreach (var secretNumber in _secretNumbers)
         {
             var seenPatterns = new HashSet<(long, long, long, long)>();
 
