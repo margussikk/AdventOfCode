@@ -136,4 +136,21 @@ internal static class CollectionExtensions
             }
         }
     }
+
+    public static IEnumerable<(T CurrentItem, T NextItem)> SlidingPairs<T>(this IEnumerable<T> source)
+    {
+        using var iter = source.GetEnumerator();
+
+        if (!iter.MoveNext())
+            yield break;
+
+        var currentItem = iter.Current;
+        while (iter.MoveNext())
+        {
+            var nextItem = iter.Current;
+            yield return (currentItem, nextItem);
+
+            currentItem = nextItem;
+        }
+    }
 }
