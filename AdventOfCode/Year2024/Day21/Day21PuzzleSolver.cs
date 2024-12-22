@@ -15,47 +15,43 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var numericKeypadRobot = new NumericKeypadRobot();
-
-        var answer = 0;
-
-        var numericKeypadCache = new Dictionary<(char?, char?), List<List<GridDirection>>>();
-        var directionalKeypadCache = new Dictionary<(GridDirection?, GridDirection?), List<List<GridDirection>>>();
-
-        foreach (var doorCode in _doorCodes)
-        {
-            var directionsList = numericKeypadRobot.GetDirections(numericKeypadCache, doorCode);
-
-            for (var robot = 0; robot < 2; robot++)
-            {
-                var newDirectionsList = new List<List<GridDirection>>();
-
-                foreach (var directions in directionsList)
-                {
-                    var directionalKeypadRobot = new DirectionalKeypadRobot();
-                    var newDirections = directionalKeypadRobot.GetDirections(directionalKeypadCache, directions);
-
-                    newDirectionsList.AddRange(newDirections);
-                }
-
-                directionsList.Clear();
-
-                var shortest = newDirectionsList.Min(x => x.Count);
-                foreach (var direction in newDirectionsList.Where(x => x.Count == shortest))
-                {
-                    directionsList.Add(direction);
-                }
-            }
-
-            var complexity = directionsList[0].Count * int.Parse(doorCode[..^1]);
-            answer += complexity;
-        }
+        var answer = GetAnswer(2);
 
         return new PuzzleAnswer(answer, 242484);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        return new PuzzleAnswer("TODO", "TODO");
+        var answer = GetAnswer(25);
+
+        return new PuzzleAnswer(answer, 294209504640384L);
+    }
+
+    private long GetAnswer(int robots)
+    {
+        var answer = 0L;
+
+        var cache = new Dictionary<(char, char, int), long>();
+
+        var numericKeypadRobot = new KeypadRobot(true);
+
+        var currentRobot = numericKeypadRobot;
+
+        for (var counter = 0; counter < robots; counter++)
+        {
+            var newRobot = new KeypadRobot(false);
+            currentRobot.ControlledBy = newRobot;
+            currentRobot = newRobot;
+        }
+
+        foreach (var doorCode in _doorCodes)
+        {
+            var length = numericKeypadRobot.CalculateLength(cache, doorCode, 0);
+
+            var complexity = length * int.Parse(doorCode[..^1]);
+            answer += complexity;
+        }
+
+        return answer;
     }
 }
