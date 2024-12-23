@@ -35,7 +35,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     (vertexKvp.Key[0] == 't' || First.Name[0] == 't' || Second.Name[0] == 't'))
                 {
                     var set = new string[] { vertexKvp.Key, First.Name, Second.Name }
-                        .OrderBy(x => x)
+                        .OrderBy(x => x, StringComparer.InvariantCulture)
                         .ToList();
 
                     sets.Add((set[0], set[1], set[2]));
@@ -48,6 +48,12 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        return new PuzzleAnswer("TODO", "TODO");
+        var cliques = BronKerbosch.FindCliques([], _vertices.Values.ToList(), []);
+
+        var clique = cliques.OrderByDescending(x => x.Count).First();
+
+        var answer = string.Join(',', clique.Select(x => x.Name).OrderBy(x => x, StringComparer.InvariantCulture));
+
+        return new PuzzleAnswer(answer, "af,aq,ck,ee,fb,it,kg,of,ol,rt,sc,vk,zh");
     }
 }
