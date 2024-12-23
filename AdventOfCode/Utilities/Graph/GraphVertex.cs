@@ -9,4 +9,10 @@ internal class GraphVertex(int id, string name)
     public object? Object { get; set; }
 
     public List<GraphEdge> Edges { get; } = [];
+
+    public List<GraphVertex> AdjacentVertices()
+    {
+        return Edges.Select(x => x.SourceVertex == this ? x.DestinationVertex : x.SourceVertex)
+                    .ToList();
+    }
 }
