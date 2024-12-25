@@ -134,7 +134,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                     {
                         var oppositeMoveDirection = moveDirection.Flip();
 
-                        while(boxCoordinate != nextRobotCoordinate)
+                        while (boxCoordinate != nextRobotCoordinate)
                         {
                             var previousBoxCoordinate = boxCoordinate.Move(oppositeMoveDirection);
                             warehouseMap[boxCoordinate] = warehouseMap[previousBoxCoordinate];
@@ -155,7 +155,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                     var stack = new Stack<GridCoordinate[]>();
                     stack.Push(boxCoordinates);
 
-                    while(stack.TryPop(out boxCoordinates))
+                    while (stack.TryPop(out boxCoordinates))
                     {
                         if (!processedBoxLeftCoordinates.Add(boxCoordinates[0]))
                         {

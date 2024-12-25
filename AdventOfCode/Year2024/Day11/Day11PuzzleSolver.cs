@@ -12,7 +12,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _stones = inputLines[0].SelectToLongs(' ');
+        _stones = inputLines[0].SplitToNumbers<long>(' ');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -38,7 +38,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
         {
             var newStoneCounts = new Dictionary<long, long>();
 
-            foreach(var stoneCountKvp in stoneCounts)
+            foreach (var stoneCountKvp in stoneCounts)
             {
                 foreach (var newStone in TransformStone(stoneCountKvp.Key))
                 {

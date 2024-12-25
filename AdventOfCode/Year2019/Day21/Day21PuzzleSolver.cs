@@ -11,7 +11,7 @@ public class Day21PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _program = inputLines[0].SelectToLongs(',');
+        _program = inputLines[0].SplitToNumbers<long>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()

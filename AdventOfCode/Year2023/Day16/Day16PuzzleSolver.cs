@@ -75,40 +75,40 @@ public class Day16PuzzleSolver : IPuzzleSolver
         {
             beam = beams.Pop();
 
-            while (_tiles.InBounds(beam.CurrentCoordinate))
+            while (_tiles.InBounds(beam.Coordinate))
             {
-                var tile = _tiles[beam.CurrentCoordinate];
+                var tile = _tiles[beam.Coordinate];
 
                 // Check visited
                 var visitedDirection = GetVisitedDirection(tile, beam.Direction);
-                if (tileVisits[beam.CurrentCoordinate].HasFlag(visitedDirection))
+                if (tileVisits[beam.Coordinate].HasFlag(visitedDirection))
                 {
                     // Already visited the tile in that general direction (i.e. left to right is the same as right to left)
                     break;
                 }
 
-                tileVisits[beam.CurrentCoordinate] |= visitedDirection;
+                tileVisits[beam.Coordinate] |= visitedDirection;
 
                 switch (tile)
                 {
                     // Process beam's movement
                     case Tile.PositiveSlopeMirror or Tile.NegativeSlopeMirror when (tile == Tile.PositiveSlopeMirror && beam.Direction is GridDirection.Left or GridDirection.Right) ||
                         (tile == Tile.NegativeSlopeMirror && beam.Direction is GridDirection.Up or GridDirection.Down):
-                        beam.TurnLeft();
+                        beam.MoveLeft();
                         break;
                     case Tile.PositiveSlopeMirror or Tile.NegativeSlopeMirror:
-                        beam.TurnRight();
+                        beam.MoveRight();
                         break;
                     case Tile.HorizontalSplitter when beam.Direction is GridDirection.Up or GridDirection.Down:
                     case Tile.VerticalSplitter when beam.Direction is GridDirection.Left or GridDirection.Right:
                         {
                             // New beam turns left
                             var clone = beam.Clone();
-                            clone.TurnLeft();
+                            clone.MoveLeft();
                             beams.Push(clone);
 
                             // Current beam turns right
-                            beam.TurnRight();
+                            beam.MoveRight();
                             break;
                         }
                     // Empty space or splitter in the passthrough orientation

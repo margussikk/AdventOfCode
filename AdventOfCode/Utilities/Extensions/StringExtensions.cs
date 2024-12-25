@@ -1,60 +1,53 @@
-﻿namespace AdventOfCode.Utilities.Extensions;
+﻿using System.Numerics;
+
+namespace AdventOfCode.Utilities.Extensions;
 
 internal static class StringExtensions
 {
-    public static IReadOnlyList<long> SelectToLongs(this string source, params char[] separators)
+    public static T[] SplitToNumbers<T>(this string source, params char[] separators) where T : struct, IBinaryNumber<T>
     {
-        var sign = 1;
-        var items = new List<long>();
-        long? value = null;
+        var items = new List<T>();
 
-        var span = source.AsSpan();
+        int? startIndex = null;
 
-        while (span.Length > 0)
+        for (var index = 0; index < source.Length; index++)
         {
-            switch (span[0])
+            var character = source[index];
+
+            switch (character)
             {
-                case '-' when value.HasValue:
+                case '-' when startIndex.HasValue:
                     throw new InvalidOperationException("- in the middle of the number");
-                case '-':
-                    sign = -1;
+                case '-' or >= '0' and <= '9':
+                    if (!startIndex.HasValue)
+                    {
+                        startIndex = index;
+                    }
                     break;
-                case >= '0' and <= '9':
-                    {
-                        value ??= 0;
-
-                        value = value * 10 + sign * (span[0] - '0');
-                        break;
-                    }
                 default:
+                    if (separators.Contains(character))
                     {
-                        if (separators.Contains(span[0]))
+                        if (startIndex.HasValue)
                         {
-                            if (value.HasValue)
-                            {
-                                items.Add(value.Value);
-                                value = null;
-                                sign = 1;
-                            }
+                            items.Add(T.Parse(source[startIndex.Value..index].AsSpan(), provider: null));
+                            startIndex = null;
                         }
-                        else
-                        {
-                            throw new InvalidOperationException($"Unexcpected characted '{span[0]}'");
-                        }
-
-                        break;
                     }
+                    else
+                    {
+                        throw new InvalidOperationException($"Unexcpected character '{character}'");
+                    }
+
+                    break;
             }
-
-            span = span[1..];
         }
 
-        if (value.HasValue)
+        if (startIndex.HasValue)
         {
-            items.Add(value.Value);
+            items.Add(T.Parse(source[startIndex.Value..source.Length].AsSpan(), provider: null));
         }
 
-        return items;
+        return [.. items];
     }
 
     public static long SelectToOneLong(this string source)

@@ -2,6 +2,21 @@
 
 internal static class GridDirectionExtensions
 {
+    public static GridDirection[] SideDirections(this GridDirection _)
+    {
+        return [GridDirection.Left, GridDirection.Up, GridDirection.Right, GridDirection.Down];
+    }
+
+    public static GridDirection[] AroundDirections(this GridDirection _)
+    {
+        return
+        [
+            GridDirection.UpLeft, GridDirection.Up, GridDirection.UpRight,
+            GridDirection.Left, GridDirection.Right,
+            GridDirection.DownLeft, GridDirection.Down, GridDirection.DownRight
+        ];
+    }
+
     public static GridDirection Flip(this GridDirection gridDirection)
     {
         var newGridDirection = GridDirection.None;
@@ -38,7 +53,7 @@ internal static class GridDirectionExtensions
 
     public static GridDirection Clear(this GridDirection gridDirection, GridDirection clearDirection)
     {
-        return gridDirection & (~clearDirection);
+        return gridDirection & ~clearDirection;
     }
 
     public static GridDirection TurnLeft(this GridDirection gridDirection)

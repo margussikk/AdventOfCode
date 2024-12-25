@@ -12,7 +12,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _program = inputLines[0].SelectToLongs(',');
+        _program = inputLines[0].SplitToNumbers<long>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswerOld()

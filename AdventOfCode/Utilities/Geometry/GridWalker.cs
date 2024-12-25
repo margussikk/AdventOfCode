@@ -4,7 +4,7 @@ internal class GridWalker
 {
     public GridCoordinate StartCoordinate { get; }
 
-    public GridCoordinate CurrentCoordinate { get; private set; }
+    public GridCoordinate Coordinate { get; private set; }
 
     public GridDirection Direction { get; private set; }
 
@@ -15,14 +15,22 @@ internal class GridWalker
     public GridWalker(GridCoordinate startCoordinate, GridCoordinate currentCoordinate, GridDirection direction, int steps)
     {
         StartCoordinate = startCoordinate;
-        CurrentCoordinate = currentCoordinate;
+        Coordinate = currentCoordinate;
         Direction = direction;
         Steps = steps;
     }
 
+    public GridWalker(GridPosition position)
+    {
+        StartCoordinate = position.Coordinate;
+        Coordinate = position.Coordinate;
+        Direction = position.Direction;
+        Steps = 0;
+    }
+
     public void Move(GridDirection direction, int steps = 1)
     {
-        CurrentCoordinate = CurrentCoordinate.Move(direction, steps);
+        Coordinate = Coordinate.Move(direction, steps);
         Direction = direction;
         Steps += steps;
     }
@@ -34,16 +42,28 @@ internal class GridWalker
 
     public void TurnLeft()
     {
-        Move(Direction.TurnLeft());
+        Direction = Direction.TurnLeft();
+    }
+
+    public void MoveLeft()
+    {
+        Direction.TurnLeft();
+        Step();
+    }
+
+    public void MoveRight()
+    {
+        Direction.TurnRight();
+        Step();
     }
 
     public void TurnRight()
     {
-        Move(Direction.TurnRight());
+        Direction = Direction.TurnRight();
     }
 
     public GridWalker Clone()
     {
-        return new GridWalker(StartCoordinate, CurrentCoordinate, Direction, Steps);
+        return new GridWalker(StartCoordinate, Coordinate, Direction, Steps);
     }
 }

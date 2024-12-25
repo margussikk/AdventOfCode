@@ -47,6 +47,11 @@ internal readonly struct NumberRange<T>(T start, T end) : IEnumerable<T> where T
         return value >= Start && value <= End;
     }
 
+    public T Sum()
+    {
+        return (End * (End + T.One ) - (Start - T.One) * Start) / (T.One + T.One);
+    }
+
     public override string ToString()
     {
         return $"[{Start}..{End}]";

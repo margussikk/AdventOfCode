@@ -11,9 +11,9 @@ public class Day06PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        var times = inputLines[0]["Time:".Length..].SelectToLongs(' ');
+        var times = inputLines[0]["Time:".Length..].SplitToNumbers<long>(' ');
 
-        var distances = inputLines[1]["Distance:".Length..].SelectToLongs(' ');
+        var distances = inputLines[1]["Distance:".Length..].SplitToNumbers<long>(' ');
 
         _part1Races = times.Zip(distances)
                            .Select(z => new Race(z.First, z.Second))

@@ -1,7 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Year2022.Day16;
-using System;
-using System.Security.Cryptography;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2024.Day02;
 
@@ -12,9 +10,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _records = inputLines.Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                           .Select(int.Parse)
-                                           .ToArray())
+        _records = inputLines.Select(x => x.SplitToNumbers<int>(' '))
                              .ToList();
     }
 
@@ -32,7 +28,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 364);
     }
 
-    private static bool IsSafe(int[] record)
+    private static bool IsSafe(IList<int> record)
     {
         if (record[1] == record[0])
         {
@@ -43,7 +39,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
             ? (r1, r2) => r2 - r1
             : (r1, r2) => r1 - r2;
 
-        for (var i = 0; i < record.Length - 1; i++)
+        for (var i = 0; i < record.Count - 1; i++)
         {
             var diff = Diff(record[i], record[i + 1]);
             if (diff < 1 || diff > 3)
@@ -57,19 +53,12 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
     private static bool IsSafeUsingProblemDampener(int[] record)
     {
-        var isSafe = IsSafe(record);
-        if (isSafe)
-        {
-            return true;
-        }
-
         for (var index = 0; index < record.Length; index++)
         {
-            var newRecord = record.Where((v, i) => i != index)
-                                  .ToArray();
+            var newRecord = new List<int>(record);
+            newRecord.RemoveAt(index);
 
-            isSafe = IsSafe(newRecord);
-            if (isSafe)
+            if (IsSafe(newRecord))
             {
                 return true;
             }

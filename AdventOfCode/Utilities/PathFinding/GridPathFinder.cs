@@ -127,7 +127,7 @@ internal class GridPathFinder<T>
         if (mode == FindMode.FindShortestPaths && lowestCost != int.MaxValue)
         {
             shortestPaths = BuildPaths(coordinatePreviousCoordinates, startCoordinate, endCoordinate);
-        }       
+        }
     }
 
 

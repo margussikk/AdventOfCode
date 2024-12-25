@@ -5,7 +5,7 @@ internal static class NumericFunctions
 
     public static int DigitCount(this long number)
     {
-        var  length = 1;
+        var length = 1;
 
         if (number >= 10_000_000_000_000_000L)
         {

@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Collections;
+using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2024.Day09;
 
@@ -10,7 +11,7 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _diskMap = inputLines[0].Select(c => c - '0')
+        _diskMap = inputLines[0].Select(c => c.ParseToDigit())
                                 .ToList();
     }
 
@@ -57,7 +58,7 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var emptyRegions = new ListOfLists<DiskRegion>(100);
+        var emptyRegionQueues = Enumerable.Range(0, 9).Select(x => new PriorityQueue<DiskRegion, int>()).ToArray();
         var fileRegions = new Stack<DiskRegion>();
 
         var position = 0;
@@ -69,25 +70,21 @@ public class Day09PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
+            var diskRegion = new DiskRegion
+            {
+                Position = position,
+                Length = length
+            };
+
             if (index % 2 == 0) // File
             {
-                fileRegions.Push(new DiskRegion
-                {
-                    Position = position,
-                    FileId = index / 2,
-                    Length = length
-                });
+                diskRegion.FileId = index / 2;
+                fileRegions.Push(diskRegion);
             }
-            else
+            else // Empty
             {
-                var emptyDiskRegion = new DiskRegion
-                {
-                    Position = position,
-                    FileId = default,
-                    Length = length
-                };
-
-                emptyRegions.Add(emptyDiskRegion);
+                diskRegion.FileId = default;
+                emptyRegionQueues[diskRegion.Length - 1].Enqueue(diskRegion, diskRegion.Position);
             }
 
             position += length;
@@ -95,25 +92,26 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
         var processedFileRegions = new List<DiskRegion>();
 
-        while (fileRegions.TryPop(out var file))
+        while (fileRegions.TryPop(out var fileRegion))
         {
-            var emptySpaceIndex = emptyRegions.Find(x => x.Position < file.Position && x.Length >= file.Length, out var emptySpace);
-            if (emptySpaceIndex.IsValid)
+            var emptyRegionQueue = emptyRegionQueues.Where(x => x.TryPeek(out var emptyRegion, out _) &&
+                                                                emptyRegion.Position < fileRegion.Position &&
+                                                                emptyRegion.Length >= fileRegion.Length)
+                                                    .MinBy(x => x.Peek().Position);
+            if (emptyRegionQueue != null && emptyRegionQueue.TryDequeue(out var emptyRegion, out _))
             {
-                file.Position = emptySpace!.Position;
+                fileRegion.Position = emptyRegion!.Position;
 
-                if (emptySpace.Length == file.Length)
+                if (emptyRegion.Length != fileRegion.Length)
                 {
-                    emptyRegions.RemoveAt(emptySpaceIndex);
-                }
-                else
-                {
-                    emptySpace.Length -= file.Length;
-                    emptySpace.Position += file.Length;
+                    emptyRegion.Length -= fileRegion.Length;
+                    emptyRegion.Position += fileRegion.Length;
+
+                    emptyRegionQueues[emptyRegion.Length - 1].Enqueue(emptyRegion, emptyRegion.Position);
                 }
             }
 
-            processedFileRegions.Add(file);
+            processedFileRegions.Add(fileRegion);
         }
 
         var answer = processedFileRegions.Sum(x => x.Checksum);
@@ -127,6 +125,8 @@ public class Day09PuzzleSolver : IPuzzleSolver
         public int? FileId { get; set; }
         public int Length { get; set; }
 
-        public long Checksum => FileId.HasValue ? Enumerable.Range(Position, Length).Sum() * Convert.ToInt64(FileId.Value) : default;
+        public long Checksum => FileId.HasValue
+            ? new NumberRange<long>(Position, Position + Length - 1).Sum() * FileId.Value
+            : default;
     }
 }

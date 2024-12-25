@@ -9,32 +9,27 @@ public class Day08PuzzleSolver : IPuzzleSolver
 {
     private readonly Dictionary<char, List<Coordinate2D>> _antennas = [];
 
-    private int _areaWidth = 0;
-    private int _areaHeight = 0;
+    private Area2D _area = new(Coordinate2D.Zero, Coordinate2D.Zero);
 
     public void ParseInput(string[] inputLines)
     {
-        _areaHeight = inputLines.Length;
-        _areaWidth = inputLines[0].Length;
+        _area = new Area2D(Coordinate2D.Zero, new Coordinate2D(inputLines[0].Length - 1, inputLines.Length - 1)); // - 1 because the end coordinate is inclusive
 
-        for (var row = 0; row < _areaHeight; row++)
+        foreach (var coordinate in _area)
         {
-            for (var column = 0; column < _areaWidth; column++)
+            var character = inputLines[coordinate.Y][(int)coordinate.X];
+            if (character == '.')
             {
-                var symbol = inputLines[row][column];
-                if (symbol == '.')
-                {
-                    continue;
-                }
-
-                if (!_antennas.TryGetValue(symbol, out var antennaCoordinates))
-                {
-                    antennaCoordinates = [];
-                    _antennas[symbol] = antennaCoordinates;
-                }
-
-                antennaCoordinates.Add(new Coordinate2D(column, row));
+                continue;
             }
+
+            if (!_antennas.TryGetValue(character, out var antennaCoordinates))
+            {
+                antennaCoordinates = [];
+                _antennas[character] = antennaCoordinates;
+            }
+
+            antennaCoordinates.Add(coordinate);
         }
     }
 
@@ -44,7 +39,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
         foreach (var antenna in _antennas)
         {
-            foreach(var (first, second) in antenna.Value.GetPairs())
+            foreach (var (first, second) in antenna.Value.GetPairs())
             {
                 CollectAntinode(antinodeCoordinates, first, second, true);
                 CollectAntinode(antinodeCoordinates, second, first, true);
@@ -73,21 +68,15 @@ public class Day08PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(antinodeCoordinates.Count, 1147);
     }
 
-    private bool InBounds(Coordinate2D coordinate)
-    {
-        return coordinate.X >= 0 && coordinate.X < _areaWidth &&
-               coordinate.Y >= 0 && coordinate.Y < _areaHeight;
-    }
-
     private void CollectAntinode(HashSet<Coordinate2D> antinodeCoordinates, Coordinate2D coordinate1, Coordinate2D coordinate2, bool once)
     {
         var vector = coordinate2 - coordinate1;
 
         var coordinate = coordinate2 + vector;
-        while (InBounds(coordinate))
+        while (_area.InBounds(coordinate))
         {
             antinodeCoordinates.Add(coordinate);
-            
+
             if (once)
             {
                 return;

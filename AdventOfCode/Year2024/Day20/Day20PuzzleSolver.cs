@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2024.Day20;
 [Puzzle(2024, 20, "Race Condition")]
 public class Day20PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _racetrack = new (0, 0);
+    private BitGrid _racetrack = new(0, 0);
     private GridCoordinate _startCoordinate;
     private GridCoordinate _endCoordinate;
 
@@ -41,7 +41,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
         return new PuzzleAnswer(answer, 1008542);
     }
-    
+
     private int GetAnswer(int cheatDuration)
     {
         var answer = 0;

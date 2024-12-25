@@ -11,7 +11,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _initialState = inputLines[0]["initial state: ".Length ..] .Select(x => x == '#')
+        _initialState = inputLines[0]["initial state: ".Length..].Select(x => x == '#')
                                      .ToList();
 
         foreach (string line in inputLines.Skip(2))
@@ -63,7 +63,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
                                     .Take(previousStateEnd - previousStateStart + 1)
                                     .SequenceEqual(nextState.Skip(nextStateStart)
                                                             .Take(nextStateEnd - nextStateStart + 1));
-            
+
             if (same)
             {
                 var previousSumOfPots = SumOfPots(previousState, previousZeroIndex);
@@ -77,7 +77,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             previousState = nextState;
             previousZeroIndex = nextZeroIndex;
         }
-       
+
         return new PuzzleAnswer("ERROR", "ERROR");
     }
 

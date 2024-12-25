@@ -20,7 +20,7 @@ internal class History
     {
         var history = new History
         {
-            Sequence = [.. input.SelectToLongs(' ')]
+            Sequence = [.. input.SplitToNumbers<long>(' ')]
         };
 
         return history;

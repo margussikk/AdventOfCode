@@ -43,7 +43,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
         foreach (var instruction in instructions)
         {
             lagoonWalker.Move(instruction.Direction, instruction.Distance);
-            coordinates.Add(lagoonWalker.CurrentCoordinate);
+            coordinates.Add(lagoonWalker.Coordinate);
         }
 
         var area = MeasurementFunctions.ShoelaceFormula(coordinates);

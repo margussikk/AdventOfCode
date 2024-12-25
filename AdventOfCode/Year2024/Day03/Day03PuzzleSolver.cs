@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2024.Day03;
@@ -54,9 +55,8 @@ public partial class Day03PuzzleSolver : IPuzzleSolver
     private static int Multiply(string command)
     {
         return command["mul(".Length..^1]
-            .Split(',')
-            .Select(int.Parse)
-            .Aggregate(1, (acc, curr) => acc * curr);
+            .SplitToNumbers<int>(',')
+            .Aggregate((acc, curr) => acc * curr);
     }
 
     [GeneratedRegex(@"mul\(\d{1,3}\,\d{1,3}\)")]

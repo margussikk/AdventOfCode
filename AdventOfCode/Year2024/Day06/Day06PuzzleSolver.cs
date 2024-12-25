@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 
 namespace AdventOfCode.Year2024.Day06;
@@ -7,32 +8,19 @@ namespace AdventOfCode.Year2024.Day06;
 public class Day06PuzzleSolver : IPuzzleSolver
 {
     private BitGrid _obstacleGrid = new(0, 0);
-    private Guard _initialGuard = new();
+    private GridPosition _initialGuardPosition = new();
 
     public void ParseInput(string[] inputLines)
     {
-        _obstacleGrid = new BitGrid(inputLines.Length, inputLines[0].Length);
-
-        for (var row = 0; row < inputLines.Length; row++)
+        _obstacleGrid = inputLines.SelectToBitGrid((character, coordinate) =>
         {
-            for (var column = 0; column < inputLines[row].Length; column++)
+            if (character.IsGridDirection())
             {
-                var symbol = inputLines[row][column];
-
-                if (symbol == '#')
-                {
-                    _obstacleGrid[row, column] = true;
-                }
-                else if (symbol == '^')
-                {
-                    _initialGuard = new Guard
-                    {
-                        Coordinate = new GridCoordinate(row, column),
-                        Direction = GridDirection.Up
-                    };
-                }
+                _initialGuardPosition = new GridPosition(coordinate, character.ParseToGridDirection());
             }
-        }
+
+            return character == '#';
+        });
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -44,35 +32,29 @@ public class Day06PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var obstacleCoordinates = new HashSet<GridCoordinate>();
+        var answer = 0;
 
-        foreach (var coordinate in GetVisitedCoordinates())
+        Parallel.ForEach(GetVisitedCoordinates(), coordinate =>
         {
             var hitObstaclesGrid = new Grid<GridDirection>(_obstacleGrid.Height, _obstacleGrid.Width);
-            var guard = new Guard
-            {
-                Coordinate = _initialGuard.Coordinate,
-                Direction = _initialGuard.Direction,
-            };
+            var guard = new GridWalker(_initialGuardPosition);
 
             while (true)
             {
-                if (!TryMoveGuardFast(guard, coordinate, out var hitObstacleCoordinate))
+                if (!TryMoveGuardFast(ref guard, coordinate, out var hitObstacleCoordinate))
                 {
                     break;
                 }
 
                 if (hitObstaclesGrid[hitObstacleCoordinate].HasFlag(guard.Direction))
                 {
-                    obstacleCoordinates.Add(coordinate);
+                    Interlocked.Increment(ref answer);
                     break;
                 }
 
                 hitObstaclesGrid[hitObstacleCoordinate] |= guard.Direction;
             }
-        }
-
-        var answer = obstacleCoordinates.Count;
+        });
 
         return new PuzzleAnswer(answer, 1482);
     }
@@ -81,48 +63,38 @@ public class Day06PuzzleSolver : IPuzzleSolver
     {
         var visited = new HashSet<GridCoordinate>();
 
-        var guard = new Guard
-        {
-            Coordinate = _initialGuard.Coordinate,
-            Direction = _initialGuard.Direction,
-        };
+        var guard = new GridWalker(_initialGuardPosition);
 
-        while (true)
+        do
         {
             visited.Add(guard.Coordinate);
-
-            if (!TryMoveGuardSlow(guard))
-            {
-                break;
-            }
         }
+        while (TryMoveGuardSlow(ref guard));
 
         return [.. visited];
     }
 
-    private bool TryMoveGuardSlow(Guard guard)
+    private bool TryMoveGuardSlow(ref GridWalker guard)
     {
-        var nextDirection = guard.Direction;
-        var nextCoordinate = guard.Coordinate.Move(nextDirection);
+        var nextCoordinate = guard.Coordinate.Move(guard.Direction);
 
         if (!_obstacleGrid.InBounds(nextCoordinate))
         {
             return false;
         }
-        
-        while(_obstacleGrid[nextCoordinate])
+
+        while (_obstacleGrid[nextCoordinate])
         {
-            nextDirection = nextDirection.TurnRight();
-            nextCoordinate = guard.Coordinate.Move(nextDirection);
+            guard.TurnRight();
+            nextCoordinate = guard.Coordinate.Move(guard.Direction);
         }
 
-        guard.Direction = nextDirection;
-        guard.Coordinate = nextCoordinate;
+        guard.Step();
 
         return true;
     }
 
-    private bool TryMoveGuardFast(Guard guard, GridCoordinate obstacleCoordinate, out GridCoordinate hitObstacleCoordinate)
+    private bool TryMoveGuardFast(ref GridWalker guard, GridCoordinate obstacleCoordinate, out GridCoordinate hitObstacleCoordinate)
     {
         while (true)
         {
@@ -134,21 +106,14 @@ public class Day06PuzzleSolver : IPuzzleSolver
                 return false;
             }
 
-            if (_obstacleGrid[nextCoordinate])
+            if (_obstacleGrid[nextCoordinate] || nextCoordinate == obstacleCoordinate)
             {
                 hitObstacleCoordinate = nextCoordinate;
-                guard.Direction = guard.Direction.TurnRight();
+                guard.TurnRight();
                 return true;
             }
 
-            if (nextCoordinate == obstacleCoordinate)
-            {
-                hitObstacleCoordinate = obstacleCoordinate;
-                guard.Direction = guard.Direction.TurnRight();
-                return true;
-            }
-
-            guard.Coordinate = nextCoordinate;
+            guard.Step();
         }
     }
 }

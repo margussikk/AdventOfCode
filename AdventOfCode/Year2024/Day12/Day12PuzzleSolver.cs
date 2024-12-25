@@ -20,7 +20,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
         var visitedMap = new BitGrid(_map.Height, _map.Width);
 
         var answer = _map.Where(cell => !visitedMap[cell.Coordinate])
-                         .Select(cell => GetGardenRegion(visitedMap, cell.Coordinate))   
+                         .Select(cell => GetGardenRegion(visitedMap, cell.Coordinate))
                          .Sum(CalculatePriceUsingPerimeter);
 
         return new PuzzleAnswer(answer, 1494342);

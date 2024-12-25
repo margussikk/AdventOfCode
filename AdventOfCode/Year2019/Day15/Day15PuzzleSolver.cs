@@ -12,7 +12,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _program = inputLines[0].SelectToLongs(',');
+        _program = inputLines[0].SplitToNumbers<long>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -35,19 +35,19 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         while (stack.TryPop(out gridWalker))
         {
-            if (gridWalker.CurrentCoordinate == oxygenSystemCoordinate)
+            if (gridWalker.Coordinate == oxygenSystemCoordinate)
             {
                 answer = gridWalker.Steps;
                 break;
             }
 
-            if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
+            if (!visited.Add(gridWalker.Coordinate)) continue;
 
-            foreach (var neighbor in grid.SideNeighbors(gridWalker.CurrentCoordinate).Where(c => c.Object != Tile.Wall))
+            foreach (var neighbor in grid.SideNeighbors(gridWalker.Coordinate).Where(c => c.Object != Tile.Wall))
             {
                 var nextGridWalker = gridWalker.Clone();
 
-                var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
+                var direction = gridWalker.Coordinate.DirectionToward(neighbor.Coordinate);
                 nextGridWalker.Move(direction);
 
                 stack.Push(nextGridWalker);

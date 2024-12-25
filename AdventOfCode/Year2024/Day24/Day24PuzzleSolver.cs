@@ -134,7 +134,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
             visitedWireNames.Add(wire.Name);
             visitedGates.UnionWith(wire.OutputGates);
 
-            foreach(var gate in wire.OutputGates.Where(x => x.GateType != GateType.Or)) // Or gate leaves the current adder
+            foreach (var gate in wire.OutputGates.Where(x => x.GateType != GateType.Or)) // Or gate leaves the current adder
             {
                 queue.Enqueue(gate.OutputWire);
             }
@@ -142,7 +142,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
         var xorGate1 = _wires[bitNumberWireName].OutputGates.First(g => g.GateType == GateType.Xor);
         var xorGate2 = visitedGates.First(g => g.GateType == GateType.Xor && g != xorGate1);
-        
+
         var andGate1 = _wires[bitNumberWireName].OutputGates.First(g => g.GateType == GateType.And);
         var andGate2 = visitedGates.First(g => g.GateType == GateType.And && g != andGate1);
 

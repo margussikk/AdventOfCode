@@ -40,7 +40,7 @@ internal class Sample
             throw new InvalidOperationException("Failed to parse before registers");
         }
 
-        sample.BeforeRegisters = inputLines[0]["Before: [".Length ..^1]
+        sample.BeforeRegisters = inputLines[0]["Before: [".Length..^1]
             .Split(", ")
             .Select(int.Parse)
             .ToArray();

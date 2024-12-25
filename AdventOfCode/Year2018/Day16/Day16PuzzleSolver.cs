@@ -40,7 +40,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                                             .Select(x => opCodes.ToList())
                                             .ToList();
 
-        foreach(var sample in _samples)
+        foreach (var sample in _samples)
         {
             foreach (var opCode in opCodes)
             {

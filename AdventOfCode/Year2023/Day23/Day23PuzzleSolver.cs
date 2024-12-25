@@ -152,9 +152,9 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
             while (hikers.TryPop(out var hiker))
             {
-                if (vertexCoordinates.Contains(hiker.CurrentCoordinate) && hiker.CurrentCoordinate != hiker.StartCoordinate)
+                if (vertexCoordinates.Contains(hiker.Coordinate) && hiker.Coordinate != hiker.StartCoordinate)
                 {
-                    var entranceTileType = tiles[hiker.CurrentCoordinate.Move(hiker.Direction.Flip())];
+                    var entranceTileType = tiles[hiker.Coordinate.Move(hiker.Direction.Flip())];
 
                     if (entranceTileType is Tile.Path ||
                         (hiker.Direction == GridDirection.Down && entranceTileType is Tile.SlopeDown) ||
@@ -163,38 +163,38 @@ public class Day23PuzzleSolver : IPuzzleSolver
                         (hiker.Direction == GridDirection.Right && entranceTileType is Tile.SlopeRight))
                     {
                         // Source and destination are in correct order.
-                        hikeGraphBuilder.AddConnection(hiker.StartCoordinate.ToString(), GraphVertexPort.Any, hiker.CurrentCoordinate.ToString(), GraphVertexPort.Any, hiker.Steps);
+                        hikeGraphBuilder.AddConnection(hiker.StartCoordinate.ToString(), GraphVertexPort.Any, hiker.Coordinate.ToString(), GraphVertexPort.Any, hiker.Steps);
                     }
                     else
                     {
                         // Source and destination are reversed. Swap coordinates.
-                        hikeGraphBuilder.AddConnection(hiker.CurrentCoordinate.ToString(), GraphVertexPort.Any, hiker.StartCoordinate.ToString(), GraphVertexPort.Any, hiker.Steps);
+                        hikeGraphBuilder.AddConnection(hiker.Coordinate.ToString(), GraphVertexPort.Any, hiker.StartCoordinate.ToString(), GraphVertexPort.Any, hiker.Steps);
                     }
 
-                    foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
+                    foreach (var neighborCell in tiles.SideNeighbors(hiker.Coordinate).Where(c => c.Object != Tile.Forest))
                     {
-                        var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
+                        var direction = hiker.Coordinate.DirectionToward(neighborCell.Coordinate);
                         if (direction == hiker.Direction.Flip()) continue;
 
-                        var newHiker = new GridWalker(hiker.CurrentCoordinate, neighborCell.Coordinate, direction, 1);
+                        var newHiker = new GridWalker(hiker.Coordinate, neighborCell.Coordinate, direction, 1);
                         hikers.Push(newHiker);
                     }
 
-                    visitedGrid[hiker.CurrentCoordinate] = true;
+                    visitedGrid[hiker.Coordinate] = true;
                     continue;
                 }
 
-                if (visitedGrid[hiker.CurrentCoordinate])
+                if (visitedGrid[hiker.Coordinate])
                 {
                     continue;
                 }
 
-                visitedGrid[hiker.CurrentCoordinate] = true;
+                visitedGrid[hiker.Coordinate] = true;
 
                 // Find neighbors
-                foreach (var neighborCell in tiles.SideNeighbors(hiker.CurrentCoordinate).Where(c => c.Object != Tile.Forest))
+                foreach (var neighborCell in tiles.SideNeighbors(hiker.Coordinate).Where(c => c.Object != Tile.Forest))
                 {
-                    var direction = hiker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
+                    var direction = hiker.Coordinate.DirectionToward(neighborCell.Coordinate);
                     if (direction == hiker.Direction.Flip()) continue;
 
                     var newHiker = hiker.Clone();

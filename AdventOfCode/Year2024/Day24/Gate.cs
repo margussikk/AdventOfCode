@@ -6,7 +6,7 @@ internal class Gate
     public Wire OutputWire { get; }
 
     public GateType GateType { get; }
-   
+
     public Gate(GateType gateType, Wire outputWire)
     {
         GateType = gateType;

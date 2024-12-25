@@ -14,7 +14,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _program = inputLines[0].SelectToLongs(',');
+        _program = inputLines[0].SplitToNumbers<long>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -86,21 +86,21 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
         while (true)
         {
-            var currentColor = paintedPanels.GetValueOrDefault(gridWalker.CurrentCoordinate, 0);
+            var currentColor = paintedPanels.GetValueOrDefault(gridWalker.Coordinate, 0);
 
             var result = computer.Run(currentColor);
             if (result.ExitCode == IntCodeExitCode.WaitingForInput)
             {
-                paintedPanels[gridWalker.CurrentCoordinate] = result.Outputs[0];
+                paintedPanels[gridWalker.Coordinate] = result.Outputs[0];
 
                 var turn = result.Outputs[1];
                 switch (turn)
                 {
                     case 0:
-                        gridWalker.TurnLeft();
+                        gridWalker.MoveLeft();
                         break;
                     case 1:
-                        gridWalker.TurnRight();
+                        gridWalker.MoveRight();
                         break;
                     default:
                         throw new InvalidOperationException($"Invalid turn {turn}");

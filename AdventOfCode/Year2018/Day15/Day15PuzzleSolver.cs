@@ -179,19 +179,19 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         while (walkerQueue.TryDequeue(out walker, out _))
         {
-            if (walker.CurrentCoordinate == endCoordinate)
+            if (walker.Coordinate == endCoordinate)
             {
                 return new WalkerResult(endCoordinate, walker.Steps, []);
             }
 
-            if (shortestDistancesGrid[walker.CurrentCoordinate].HasValue)
+            if (shortestDistancesGrid[walker.Coordinate].HasValue)
             {
                 continue;
             }
 
-            shortestDistancesGrid[walker.CurrentCoordinate] = walker.Steps;
+            shortestDistancesGrid[walker.Coordinate] = walker.Steps;
 
-            foreach (var neighborCell in _wallGrid.SideNeighbors(walker.CurrentCoordinate))
+            foreach (var neighborCell in _wallGrid.SideNeighbors(walker.Coordinate))
             {
                 if (neighborCell.Object || occupiedCoordinates.Contains(neighborCell.Coordinate))
                 {
@@ -201,7 +201,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
                 if (walker.Steps + 1 >= currentDistance) continue;
 
-                var direction = walker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
+                var direction = walker.Coordinate.DirectionToward(neighborCell.Coordinate);
 
                 var newWalker = walker.Clone();
 
@@ -226,27 +226,27 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         while (walkerQueue.TryDequeue(out walker, out _))
         {
-            walker.Breadcrumbs.Add(walker.CurrentCoordinate);
+            walker.Breadcrumbs.Add(walker.Coordinate);
 
-            if (walker.CurrentCoordinate == endCoordinate)
+            if (walker.Coordinate == endCoordinate)
             {
                 shortestDistance = walker.Steps;
 
-                if (bestPaths[walker.CurrentCoordinate] == null || !IsCurrentPathBetter(walker))
+                if (bestPaths[walker.Coordinate] == null || !IsCurrentPathBetter(walker))
                 {
-                    bestPaths[walker.CurrentCoordinate] = walker.Breadcrumbs;
+                    bestPaths[walker.Coordinate] = walker.Breadcrumbs;
                 }
 
                 continue;
             }
 
-            if (shortestDistancesGrid[walker.CurrentCoordinate].HasValue)
+            if (shortestDistancesGrid[walker.Coordinate].HasValue)
             {
-                if (shortestDistancesGrid[walker.CurrentCoordinate] != walker.Steps)
+                if (shortestDistancesGrid[walker.Coordinate] != walker.Steps)
                 {
                     continue;
                 }
-                
+
                 if (IsCurrentPathBetter(walker))
                 {
                     continue;
@@ -258,10 +258,10 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
-            shortestDistancesGrid[walker.CurrentCoordinate] = walker.Steps;
-            bestPaths[walker.CurrentCoordinate] = walker.Breadcrumbs;
+            shortestDistancesGrid[walker.Coordinate] = walker.Steps;
+            bestPaths[walker.Coordinate] = walker.Breadcrumbs;
 
-            foreach (var neighborCell in _wallGrid.SideNeighbors(walker.CurrentCoordinate))
+            foreach (var neighborCell in _wallGrid.SideNeighbors(walker.Coordinate))
             {
                 if (neighborCell.Object || occupiedCoordinates.Contains(neighborCell.Coordinate))
                 {
@@ -271,7 +271,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
                 var currentDistance = shortestDistancesGrid[neighborCell.Coordinate] ?? int.MaxValue;
                 if (walker.Steps + 1 >= currentDistance) continue;
 
-                var direction = walker.CurrentCoordinate.DirectionToward(neighborCell.Coordinate);
+                var direction = walker.Coordinate.DirectionToward(neighborCell.Coordinate);
 
                 var newWalker = walker.Clone();
                 newWalker.Breadcrumbs.AddRange(walker.Breadcrumbs);
@@ -291,7 +291,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         bool IsCurrentPathBetter(GridWalker walker)
         {
-            var currentBestPath = bestPaths[walker.CurrentCoordinate];
+            var currentBestPath = bestPaths[walker.Coordinate];
 
             for (var i = 0; i < currentBestPath.Count; i++)
             {

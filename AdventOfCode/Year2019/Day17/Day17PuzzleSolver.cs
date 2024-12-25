@@ -13,7 +13,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _program = inputLines[0].SelectToLongs(',');
+        _program = inputLines[0].SplitToNumbers<long>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -54,12 +54,12 @@ public class Day17PuzzleSolver : IPuzzleSolver
             // Turn
             var nextDirection = GridDirection.None;
 
-            var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
+            var neighbors = grid.SideNeighbors(gridWalker.Coordinate)
                                 .Where(cell => cell.Object == Tile.Scaffold);
 
             foreach (var neighbor in neighbors)
             {
-                var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
+                var direction = gridWalker.Coordinate.DirectionToward(neighbor.Coordinate);
                 if (gridWalker.Direction.TurnLeft() == direction)
                 {
                     nextDirection = direction;
@@ -82,8 +82,8 @@ public class Day17PuzzleSolver : IPuzzleSolver
             }
 
             // Move
-            var startCoordinate = gridWalker.CurrentCoordinate;
-            var endCoordinate = gridWalker.CurrentCoordinate;
+            var startCoordinate = gridWalker.Coordinate;
+            var endCoordinate = gridWalker.Coordinate;
 
             while (true)
             {

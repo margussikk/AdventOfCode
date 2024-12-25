@@ -8,8 +8,8 @@ namespace AdventOfCode.Year2024.Day18;
 public class Day18PuzzleSolver : IPuzzleSolver
 {
     private List<GridCoordinate> _byteCoordinates = [];
-    private GridCoordinate _startCoordinate = new (0, 0);
-    private GridCoordinate _endCoordinate = new (70, 70);
+    private GridCoordinate _startCoordinate = new(0, 0);
+    private GridCoordinate _endCoordinate = new(70, 70);
 
     public void ParseInput(string[] inputLines)
     {

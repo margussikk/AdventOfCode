@@ -6,9 +6,9 @@ namespace AdventOfCode.Year2024.Day16;
 [Puzzle(2024, 16, "Reindeer Maze")]
 public class Day16PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _maze = new (0, 0);
+    private BitGrid _maze = new(0, 0);
 
-    private GridCoordinate _startCoordinate = new (0, 0);
+    private GridCoordinate _startCoordinate = new(0, 0);
     private GridCoordinate _endCoordinate = new(0, 0);
 
     public void ParseInput(string[] inputLines)
@@ -89,7 +89,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                 {
                     newPoints += 1000;
                 }
-                
+
                 if (newPoints >= currentPoints) continue;
 
                 var newWalker = new MazeWalker
@@ -134,7 +134,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                     positionLowestScore[walker.Position] = walker.Score;
                     positionPreviousPositions[walker.Position] = [];
                 }
-                
+
                 endPositions.Add(walker.Position);
                 positionPreviousPositions[walker.Position].Add(walker.PreviousPosition);
 
@@ -184,7 +184,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                 {
                     Position = nextPosition,
                     PreviousPosition = walker.Position,
-                    Score = newScore,                    
+                    Score = newScore,
                 };
 
                 walkerQueue.Enqueue(newWalker, newWalker.Score);

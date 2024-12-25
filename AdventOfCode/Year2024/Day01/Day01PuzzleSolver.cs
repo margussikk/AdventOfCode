@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2024.Day01;
 
@@ -12,10 +13,10 @@ public class Day01PuzzleSolver : IPuzzleSolver
     {
         foreach (var line in inputLines)
         {
-            var splits = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var numbers = line.SplitToNumbers<int>(' ');
 
-            _leftLocationIds.Add(int.Parse(splits[0]));
-            _rightLocationIds.Add(int.Parse(splits[1]));
+            _leftLocationIds.Add(numbers[0]);
+            _rightLocationIds.Add(numbers[1]);
         }
     }
 

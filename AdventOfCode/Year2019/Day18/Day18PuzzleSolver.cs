@@ -113,11 +113,11 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
             while (queue.TryDequeue(out gridWalker))
             {
-                if (!visited.Add(gridWalker.CurrentCoordinate)) continue;
+                if (!visited.Add(gridWalker.Coordinate)) continue;
 
-                var tile = grid[gridWalker.CurrentCoordinate];
+                var tile = grid[gridWalker.Coordinate];
 
-                if (gridWalker.StartCoordinate != gridWalker.CurrentCoordinate && tile is Tile.Key or Tile.Door)
+                if (gridWalker.StartCoordinate != gridWalker.Coordinate && tile is Tile.Key or Tile.Door)
                 {
                     var sourceTile = grid[gridWalker.StartCoordinate];
                     var sourceName = sourceTile switch
@@ -128,11 +128,11 @@ public class Day18PuzzleSolver : IPuzzleSolver
                         _ => throw new InvalidOperationException("Invalid source tile")
                     };
 
-                    var destinationTile = grid[gridWalker.CurrentCoordinate];
+                    var destinationTile = grid[gridWalker.Coordinate];
                     var destinationName = destinationTile switch
                     {
-                        Tile.Key => _keys[gridWalker.CurrentCoordinate].ToString(),
-                        Tile.Door => _doors[gridWalker.CurrentCoordinate].ToString(),
+                        Tile.Key => _keys[gridWalker.Coordinate].ToString(),
+                        Tile.Door => _doors[gridWalker.Coordinate].ToString(),
                         _ => throw new InvalidOperationException("Invalid destination tile")
                     };
 
@@ -146,14 +146,14 @@ public class Day18PuzzleSolver : IPuzzleSolver
                 }
                 else
                 {
-                    var neighbors = grid.SideNeighbors(gridWalker.CurrentCoordinate)
+                    var neighbors = grid.SideNeighbors(gridWalker.Coordinate)
                         .Where(cell => cell.Object != Tile.Wall);
 
                     foreach (var neighbor in neighbors)
                     {
                         var newGridWalker = gridWalker.Clone();
 
-                        var direction = gridWalker.CurrentCoordinate.DirectionToward(neighbor.Coordinate);
+                        var direction = gridWalker.Coordinate.DirectionToward(neighbor.Coordinate);
                         newGridWalker.Move(direction);
 
                         queue.Enqueue(newGridWalker);

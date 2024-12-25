@@ -11,16 +11,12 @@ public class Day04PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _grid = inputLines.SelectToGrid<char>(letter => letter);
+        _grid = inputLines.SelectToGrid(letter => letter);
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var directions = new GridDirection[] {
-            GridDirection.UpLeft, GridDirection.Up, GridDirection.UpRight,
-            GridDirection.Left, GridDirection.Right,
-            GridDirection.DownLeft, GridDirection.Down, GridDirection.DownRight
-        };
+        var directions = GridDirection.None.AroundDirections();
 
         var letters = new char[] { 'X', 'M', 'A', 'S' };
 

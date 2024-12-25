@@ -7,25 +7,23 @@ namespace AdventOfCode.Year2024.Day05;
 public class Day05PuzzleSolver : IPuzzleSolver
 {
     private ILookup<int, int> _pageOrderingRules = Array.Empty<int>().ToLookup(kvp => kvp);
-    private List<List<int>> _updates = [];
+    private List<int[]> _updates = [];
 
     public void ParseInput(string[] inputLines)
     {
         var chunks = inputLines.SelectToChunks();
 
-        _pageOrderingRules = chunks[0].Select(line => line.Split('|'))
-                                      .ToLookup(splits => int.Parse(splits[0]), splits => int.Parse(splits[1]));
+        _pageOrderingRules = chunks[0].Select(line => line.SplitToNumbers<int>('|'))
+                                      .ToLookup(numbers => numbers[0], numbers => numbers[1]);
 
-        _updates = chunks[1].Select(line => line.Split(',')
-                                                .Select(int.Parse)
-                                                .ToList())
+        _updates = chunks[1].Select(line => line.SplitToNumbers<int>(','))
                             .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
         var answer = _updates.Where(IsCorrectlyOrdered)
-                             .Sum(x => x[x.Count / 2]);
+                             .Sum(GetMiddlePageNumber);
 
         return new PuzzleAnswer(answer, 5329);
     }
@@ -34,16 +32,21 @@ public class Day05PuzzleSolver : IPuzzleSolver
     {
         var comparer = new PageNumberComparer(_pageOrderingRules);
 
-        var answer = _updates.Where(x => !IsCorrectlyOrdered(x))
-                             .Select(x => x.OrderBy(x => x, comparer).ToList())
-                             .Sum(x => x[x.Count / 2]);
+        var answer = _updates.Where(update => !IsCorrectlyOrdered(update))
+                             .Select(update => update.Order(comparer).ToArray())
+                             .Sum(GetMiddlePageNumber);
 
         return new PuzzleAnswer(answer, 5833);
     }
 
-    public bool IsCorrectlyOrdered(List<int> update)
+    public bool IsCorrectlyOrdered(int[] update)
     {
-        return update.Select((pageNumber1, index) => update.Skip(index + 1).All(pageNumber2 => _pageOrderingRules[pageNumber1].Contains(pageNumber2)))
-                     .All(x => x);
+        return Enumerable.Range(0, update.Length)
+                         .All(index => !update[(index + 1)..].Except(_pageOrderingRules[update[index]]).Any());
+    }
+
+    private static int GetMiddlePageNumber(int[] update)
+    {
+        return update[update.Length / 2];
     }
 }

@@ -23,7 +23,7 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
 
             var fixedValue = long.Parse(match.Groups[2].Value);
             var startValue = long.Parse(match.Groups[4].Value);
-            var endValue= long.Parse(match.Groups[5].Value);
+            var endValue = long.Parse(match.Groups[5].Value);
 
             if (match.Groups[1].Value == "x" && match.Groups[3].Value == "y")
             {

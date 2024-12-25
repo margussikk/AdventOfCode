@@ -13,7 +13,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
     {
         _clawMachines = inputLines.SelectToChunks()
                                   .Select(ClawMachine.Parse)
-                                  .ToList();        
+                                  .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()

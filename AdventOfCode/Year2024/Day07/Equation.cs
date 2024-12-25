@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Utilities.Mathematics;
+﻿using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.Mathematics;
 using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2024.Day07;
@@ -35,9 +36,7 @@ internal class Equation
         return new Equation
         {
             TestValue = long.Parse(splits[0]),
-            Numbers = splits[1].Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                               .Select(int.Parse)
-                               .ToArray()
+            Numbers = splits[1].SplitToNumbers<int>(' ')
         };
     }
 }
