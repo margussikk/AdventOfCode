@@ -26,13 +26,13 @@ internal class GridPathFinder<T>
         return this;
     }
 
-    public int FindLowestCost(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
+    public int FindShortestPathLength(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
     {
         var startPosition = new GridPosition(startCoordinate, GridDirection.None);
-        return FindLowestCost(startPosition, endCoordinate);
+        return FindShortestPathLength(startPosition, endCoordinate);
     }
 
-    public int FindLowestCost(GridPosition startPosition, GridCoordinate endCoordinate)
+    public int FindShortestPathLength(GridPosition startPosition, GridCoordinate endCoordinate)
     {
         var lowestCostGrid = new Grid<int?>(_grid.Height, _grid.Width);
 
@@ -77,13 +77,13 @@ internal class GridPathFinder<T>
         return int.MaxValue;
     }
 
-    public List<List<GridCoordinate>> FindAllLowestCostPaths(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
+    public List<List<GridCoordinate>> FindAllShortestPaths(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
     {
         var startPosition = new GridPosition(startCoordinate, GridDirection.None);
-        return FindAllLowestCostPaths(startPosition, endCoordinate);
+        return FindAllShortestPaths(startPosition, endCoordinate);
     }
 
-    public List<List<GridCoordinate>> FindAllLowestCostPaths(GridPosition startPosition, GridCoordinate endCoordinate)
+    public List<List<GridCoordinate>> FindAllShortestPaths(GridPosition startPosition, GridCoordinate endCoordinate)
     {
         var lowestCost = int.MaxValue;
 
@@ -170,7 +170,7 @@ internal class GridPathFinder<T>
         return BuildPaths(previousPositions, startPosition, [.. endPositions]);
     }
 
-    public Dictionary<GridCoordinate, List<int>> FindAllPathCosts(GridCoordinate startCoordinate, Func<GridPathWalker, bool> endCondition)
+    public Dictionary<GridCoordinate, List<int>> FindAllPathLengths(GridCoordinate startCoordinate, Func<GridPathWalker, bool> endCondition)
     {
         var pathCosts = new Dictionary<GridCoordinate, List<int>>();
         //var paths = new Dictionary<GridCoordinate, List<List<GridCoordinate>>>();
@@ -190,7 +190,7 @@ internal class GridPathFinder<T>
             if (endCondition(walker))
             {
                 pathCosts.AddToValueList(walker.Position.Coordinate, walker.Cost);
-                    //paths.AddToValueList(walker.Coordinate, walker.Path);
+                //paths.AddToValueList(walker.Coordinate, walker.Path);
 
                 continue;
             }

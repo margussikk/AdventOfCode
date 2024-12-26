@@ -36,14 +36,14 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = _pathFinder.FindLowestCost(_startPosition, _endCoordinate);
+        var answer = _pathFinder.FindShortestPathLength(_startPosition, _endCoordinate);
 
         return new PuzzleAnswer(answer, 102488);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var answer = _pathFinder.FindAllLowestCostPaths(_startPosition, _endCoordinate)
+        var answer = _pathFinder.FindAllShortestPaths(_startPosition, _endCoordinate)
                                 .SelectMany(x => x)
                                 .Distinct()
                                 .Count();

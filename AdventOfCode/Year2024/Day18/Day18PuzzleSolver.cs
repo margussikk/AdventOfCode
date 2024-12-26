@@ -1,6 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.Numerics;
+using AdventOfCode.Utilities.PathFinding;
 
 namespace AdventOfCode.Year2024.Day18;
 
@@ -8,8 +9,8 @@ namespace AdventOfCode.Year2024.Day18;
 public class Day18PuzzleSolver : IPuzzleSolver
 {
     private List<GridCoordinate> _byteCoordinates = [];
-    private GridCoordinate _startCoordinate = new(0, 0);
-    private GridCoordinate _endCoordinate = new(70, 70);
+    private readonly GridCoordinate _startCoordinate = new(0, 0);
+    private readonly GridCoordinate _endCoordinate = new(70, 70);
 
     public void ParseInput(string[] inputLines)
     {
@@ -26,7 +27,10 @@ public class Day18PuzzleSolver : IPuzzleSolver
             grid[coordinate] = true;
         }
 
-        var answer = FindFewestSteps(grid);
+        var pathFinder = new GridPathFinder<bool>(grid)
+            .SetCellFilter(GridPathFinder<bool>.DefaultBitGridCellFilter);
+        
+        var answer = pathFinder.FindShortestPathLength(_startCoordinate, _endCoordinate);
 
         return new PuzzleAnswer(answer, 370);
     }
@@ -45,49 +49,22 @@ public class Day18PuzzleSolver : IPuzzleSolver
                 grid[coordinate] = true;
             }
 
-            var steps = FindFewestSteps(grid);
+            var pathFinder = new GridPathFinder<bool>(grid)
+                .SetCellFilter(GridPathFinder<bool>.DefaultBitGridCellFilter);
+
+            var steps = pathFinder.FindShortestPathLength(_startCoordinate, _endCoordinate);
             if (steps == int.MaxValue)
             {
-                numberRange = new NumberRange<int>(numberRange.Start, pivot);
+                numberRange = numberRange.SplitAfter(pivot)[0];
             }
             else
             {
-                numberRange = new NumberRange<int>(pivot + 1, numberRange.End);
+                numberRange = numberRange.SplitAfter(pivot)[1];
             }
         }
 
         var answer = _byteCoordinates[numberRange.End];
 
         return new PuzzleAnswer($"{answer.Column},{answer.Row}", "65,6");
-    }
-
-    private int FindFewestSteps(BitGrid grid)
-    {
-        var visited = new BitGrid(grid.Height, grid.Width);
-
-        var queue = new PriorityQueue<GridCoordinate, int>();
-        queue.Enqueue(_startCoordinate, 0);
-
-        while (queue.TryDequeue(out var coordinate, out var steps))
-        {
-            if (coordinate == _endCoordinate)
-            {
-                return steps;
-            }
-
-            if (visited[coordinate])
-            {
-                continue;
-            }
-
-            visited[coordinate] = true;
-
-            foreach (var cell in grid.SideNeighbors(coordinate).Where(c => !c.Object))
-            {
-                queue.Enqueue(cell.Coordinate, steps + 1);
-            }
-        }
-
-        return int.MaxValue;
     }
 }

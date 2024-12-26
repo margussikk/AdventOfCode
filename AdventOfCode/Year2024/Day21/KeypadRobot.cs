@@ -80,7 +80,7 @@ internal class KeypadRobot
         var gridPathFinder = new GridPathFinder<char>(_keypad)
             .SetCellFilter((_, c) => c.Object != ' ');
 
-        var pathList = gridPathFinder.FindAllLowestCostPaths(startCoordinate, endCoordinate);
+        var pathList = gridPathFinder.FindAllShortestPaths(startCoordinate, endCoordinate);
 
         var directionsList = new List<string>();
         foreach (var path in pathList)

@@ -22,7 +22,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartOneAnswer()
     {
         var answer = _grid.Where(cell => cell.Object == 0)
-                          .Select(cell => _gridPathFinder.FindAllPathCosts(cell.Coordinate, EndCondition).Count)
+                          .Select(cell => _gridPathFinder.FindAllPathLengths(cell.Coordinate, EndCondition).Count)
                           .Sum();
 
         return new PuzzleAnswer(answer, 489);
@@ -31,7 +31,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var answer = _grid.Where(cell => cell.Object == 0)
-                          .SelectMany(cell => _gridPathFinder.FindAllPathCosts(cell.Coordinate, EndCondition).Values.Select(x => x.Count))
+                          .SelectMany(cell => _gridPathFinder.FindAllPathLengths(cell.Coordinate, EndCondition).Values.Select(x => x.Count))
                           .Sum();
 
         return new PuzzleAnswer(answer, 1086);
