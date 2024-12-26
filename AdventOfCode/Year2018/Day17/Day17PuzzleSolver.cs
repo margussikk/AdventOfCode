@@ -93,7 +93,7 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
-            var downCoordinate = waterCoordinate.Move(GridDirection.Down);
+            var downCoordinate = waterCoordinate.Down();
 
             if (grid[waterCoordinate] == Tile.Water)
             {
@@ -115,12 +115,12 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 // Left
                 var leftBarrierCoordinate = waterCoordinate;
                 var foundLeftBarrier = true;
-                while (IsSand(leftBarrierCoordinate) && IsFloor(leftBarrierCoordinate.Move(GridDirection.Down)))
+                while (IsSand(leftBarrierCoordinate) && IsFloor(leftBarrierCoordinate.Down()))
                 {
-                    leftBarrierCoordinate = leftBarrierCoordinate.Move(GridDirection.Left);
+                    leftBarrierCoordinate = leftBarrierCoordinate.Left();
                 }
 
-                if (grid[leftBarrierCoordinate] != Tile.Clay || !IsFloor(leftBarrierCoordinate.Move(GridDirection.Down)))
+                if (grid[leftBarrierCoordinate] != Tile.Clay || !IsFloor(leftBarrierCoordinate.Down()))
                 {
                     foundLeftBarrier = false;
                 }
@@ -128,12 +128,12 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 // Right
                 var rightBarrierCoordinate = waterCoordinate;
                 var foundRightBarrier = true;
-                while (IsSand(rightBarrierCoordinate) && IsFloor(rightBarrierCoordinate.Move(GridDirection.Down)))
+                while (IsSand(rightBarrierCoordinate) && IsFloor(rightBarrierCoordinate.Down()))
                 {
-                    rightBarrierCoordinate = rightBarrierCoordinate.Move(GridDirection.Right);
+                    rightBarrierCoordinate = rightBarrierCoordinate.Right();
                 }
 
-                if (grid[rightBarrierCoordinate] != Tile.Clay || !IsFloor(rightBarrierCoordinate.Move(GridDirection.Down)))
+                if (grid[rightBarrierCoordinate] != Tile.Clay || !IsFloor(rightBarrierCoordinate.Down()))
                 {
                     foundRightBarrier = false;
                 }

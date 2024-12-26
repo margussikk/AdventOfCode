@@ -42,8 +42,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
             {
                 foreach (var newStone in TransformStone(stoneCountKvp.Key))
                 {
-                    var count = newStoneCounts.GetValueOrDefault(newStone, 0);
-                    newStoneCounts[newStone] = count + stoneCountKvp.Value;
+                    newStoneCounts.IncrementValue(newStone, stoneCountKvp.Value);
                 }
             }
 

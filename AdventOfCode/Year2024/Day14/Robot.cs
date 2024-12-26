@@ -36,18 +36,13 @@ internal partial class Robot
             throw new InvalidOperationException("Failed to parse input line");
         }
 
-        var match = matches[0];
-
-        var position = new Coordinate2D(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-        var velocity = new Vector2D(int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
-
         return new Robot
         {
-            Position = position,
-            Velocity = velocity
+            Position = Coordinate2D.Parse(matches[0].Groups[1].Value),
+            Velocity = Vector2D.Parse(matches[0].Groups[2].Value)
         };
     }
 
-    [GeneratedRegex(@"p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)")]
+    [GeneratedRegex(@"p=(-?\d+,-?\d+) v=(-?\d+,-?\d+)")]
     private static partial Regex InputLineRegex();
 }

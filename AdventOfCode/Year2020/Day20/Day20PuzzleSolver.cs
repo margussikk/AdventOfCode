@@ -92,10 +92,10 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
                         var coordinate = border switch
                         {
-                            TileBorder.Top => currentTileArrangement.Coordinate.Move(GridDirection.Up),
-                            TileBorder.Right => currentTileArrangement.Coordinate.Move(GridDirection.Right),
-                            TileBorder.Bottom => currentTileArrangement.Coordinate.Move(GridDirection.Down),
-                            TileBorder.Left => currentTileArrangement.Coordinate.Move(GridDirection.Left),
+                            TileBorder.Top => currentTileArrangement.Coordinate.Up(),
+                            TileBorder.Right => currentTileArrangement.Coordinate.Right(),
+                            TileBorder.Bottom => currentTileArrangement.Coordinate.Down(),
+                            TileBorder.Left => currentTileArrangement.Coordinate.Left(),
                             _ => throw new InvalidOperationException("Invalid tile border")
                         };
 

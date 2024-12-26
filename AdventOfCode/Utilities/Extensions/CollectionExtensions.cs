@@ -51,6 +51,21 @@ internal static class CollectionExtensions
         return grid;
     }
 
+    public static Grid<T> SelectToGrid<T>(this string[] lines, Func<char, GridCoordinate, T> func)
+    {
+        var grid = new Grid<T>(lines.Length, lines[0].Length);
+
+        for (var row = 0; row < grid.Height; row++)
+        {
+            for (var column = 0; column < grid.Width; column++)
+            {
+                grid[row, column] = func(lines[row][column], new GridCoordinate(row, column));
+            }
+        }
+
+        return grid;
+    }
+
     public static BitGrid SelectToBitGrid(this string[] lines, Func<char, bool> func)
     {
         var grid = new BitGrid(lines.Length, lines[0].Length);

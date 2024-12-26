@@ -18,14 +18,21 @@ internal readonly record struct Vector2D
         DY = dY;
     }
 
+    public Vector2D Normalize()
+    {
+        var gcm = MathFunctions.GreatestCommonDivisor(Math.Abs(DX), Math.Abs(DY));
+        return new Vector2D(DX / gcm, DY / gcm);
+    }
+
     public static Vector2D operator *(Vector2D vector, double scalar)
     {
         return new Vector2D(Convert.ToInt64(vector.DX * scalar), Convert.ToInt64(vector.DY * scalar));
     }
 
-    public Vector2D Normalize()
+    public static Vector2D Parse(string input)
     {
-        var gcm = MathFunctions.GreatestCommonDivisor(Math.Abs(DX), Math.Abs(DY));
-        return new Vector2D(DX / gcm, DY / gcm);
+        var splits = input.Split(',');
+
+        return new Vector2D(long.Parse(splits[0]), long.Parse(splits[1]));
     }
 }

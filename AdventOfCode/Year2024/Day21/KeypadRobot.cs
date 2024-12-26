@@ -60,10 +60,10 @@ internal class KeypadRobot
             {
                 coordinate = direction switch
                 {
-                    '^' => coordinate.Move(GridDirection.Up),
-                    '<' => coordinate.Move(GridDirection.Left),
-                    'v' => coordinate.Move(GridDirection.Down),
-                    '>' => coordinate.Move(GridDirection.Right),
+                    '^' => coordinate.Up(),
+                    '<' => coordinate.Left(),
+                    'v' => coordinate.Down(),
+                    '>' => coordinate.Right(),
                     _ => throw new NotImplementedException()
                 };
             }
@@ -77,10 +77,10 @@ internal class KeypadRobot
         var startCoordinate = _keypad.First(cell => cell.Object == startButton).Coordinate;
         var endCoordinate = _keypad.First(cell => cell.Object == endButton).Coordinate;
 
-        var gridPathFinder = new GridPathFinder<char>()
-            .UseFilterFunction(x => x.Object != ' ');
+        var gridPathFinder = new GridPathFinder<char>(_keypad)
+            .UseFilterFunction((_, c) => c.Object != ' ');
 
-        var pathList = gridPathFinder.FindAllShortestPaths(_keypad, startCoordinate, endCoordinate);
+        var pathList = gridPathFinder.FindAllShortestPaths(startCoordinate, endCoordinate);
 
         var directionsList = new List<string>();
         foreach (var path in pathList)

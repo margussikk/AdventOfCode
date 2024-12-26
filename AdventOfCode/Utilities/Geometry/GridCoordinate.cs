@@ -81,6 +81,26 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
         return direction;
     }
 
+    public GridCoordinate Left()
+    {
+        return new GridCoordinate(Row, Column - 1);
+    }
+
+    public GridCoordinate Up()
+    {
+        return new GridCoordinate(Row - 1, Column);
+    }
+
+    public GridCoordinate Right()
+    {
+        return new GridCoordinate(Row, Column + 1);
+    }
+
+    public GridCoordinate Down()
+    {
+        return new GridCoordinate(Row + 1, Column);
+    }
+
     public GridCoordinate Move(GridDirection direction, int steps = 1)
     {
         return direction switch

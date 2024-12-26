@@ -1,6 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.PathFinding;
 using System.Numerics;
 
 namespace AdventOfCode.Year2024.Day12;
@@ -37,41 +38,17 @@ public class Day12PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 893676);
     }
 
-    // BFS, Flood fill
     private Dictionary<GridCoordinate, GridDirection> GetGardenRegion(BitGrid visitedMap, GridCoordinate coordinate)
     {
-        var regionCoordinates = new Dictionary<GridCoordinate, GridDirection>();
+        var gridPathFinder = new GridPathFinder<char>(_map);
+        var region = gridPathFinder.FloodFill(coordinate, cell => cell.Object == _map[coordinate]);
 
-        var plant = _map[coordinate];
-
-        var queue = new Queue<GridCoordinate>();
-        queue.Enqueue(coordinate);
-
-        while (queue.TryDequeue(out coordinate))
+        foreach (var key in region.Keys)
         {
-            if (visitedMap[coordinate])
-            {
-                continue;
-            }
-
-            visitedMap[coordinate] = true;
-
-            var neighborCells = _map.SideNeighbors(coordinate)
-                                    .Where(c => c.Object == plant)
-                                    .ToList();
-
-            var fences = GridDirection.AllSides;
-
-            foreach (var neighborCell in neighborCells)
-            {
-                fences = fences.Clear(coordinate.DirectionToward(neighborCell.Coordinate));
-                queue.Enqueue(neighborCell.Coordinate);
-            }
-
-            regionCoordinates[coordinate] = fences;
+            visitedMap[key] = true;
         }
 
-        return regionCoordinates;
+        return region;
     }
 
     private static int CalculatePriceUsingPerimeter(Dictionary<GridCoordinate, GridDirection> gardenRegion)
@@ -85,7 +62,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
     private static int CalculatePriceUsingSides(Dictionary<GridCoordinate, GridDirection> gardenRegion)
     {
-        var allFenceDirections = new GridDirection[] { GridDirection.Up, GridDirection.Right, GridDirection.Down, GridDirection.Left };
+        var allFenceDirections = GridDirection.None.SideDirections();
 
         var sideCount = 0;
 

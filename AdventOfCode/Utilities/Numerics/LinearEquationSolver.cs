@@ -83,7 +83,7 @@ internal static class LinearEquationSolver
         // An array to store solution
         var values = new T[matrix.Height];
 
-        /* Start calculating from last equation up to the first */
+        // Start calculating from last equation up to the first
         for (var currentRow = matrix.LastRowIndex; currentRow >= 0; currentRow--)
         {
             var currentColumn = currentRow; // Use separate variables for clarity

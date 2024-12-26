@@ -109,10 +109,10 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
                         var proposedLocation = personalProposalIndex switch
                         {
-                            0 => elf.Location.Move(GridDirection.Up), // N
-                            1 => elf.Location.Move(GridDirection.Down), // S
-                            2 => elf.Location.Move(GridDirection.Left), // W
-                            3 => elf.Location.Move(GridDirection.Right), // E
+                            0 => elf.Location.Up(), // N
+                            1 => elf.Location.Down(), // S
+                            2 => elf.Location.Left(), // W
+                            3 => elf.Location.Right(), // E
                             _ => throw new InvalidOperationException()
                         };
 

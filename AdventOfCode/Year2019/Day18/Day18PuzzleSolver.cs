@@ -67,15 +67,15 @@ public class Day18PuzzleSolver : IPuzzleSolver
             ?? throw new InvalidOperationException("Entrance tile not found");
 
         part2Grid[entranceCoordinate.Move(GridDirection.UpLeft)] = Tile.Entrance;
-        part2Grid[entranceCoordinate.Move(GridDirection.Up)] = Tile.Wall;
+        part2Grid[entranceCoordinate.Up()] = Tile.Wall;
         part2Grid[entranceCoordinate.Move(GridDirection.UpRight)] = Tile.Entrance;
 
-        part2Grid[entranceCoordinate.Move(GridDirection.Left)] = Tile.Wall;
+        part2Grid[entranceCoordinate.Left()] = Tile.Wall;
         part2Grid[entranceCoordinate] = Tile.Wall;
-        part2Grid[entranceCoordinate.Move(GridDirection.Right)] = Tile.Wall;
+        part2Grid[entranceCoordinate.Right()] = Tile.Wall;
 
         part2Grid[entranceCoordinate.Move(GridDirection.DownLeft)] = Tile.Entrance;
-        part2Grid[entranceCoordinate.Move(GridDirection.Down)] = Tile.Wall;
+        part2Grid[entranceCoordinate.Down()] = Tile.Wall;
         part2Grid[entranceCoordinate.Move(GridDirection.DownRight)] = Tile.Entrance;
 
         var part2Entrances = new Dictionary<GridCoordinate, char>

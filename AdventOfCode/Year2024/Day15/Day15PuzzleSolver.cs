@@ -16,40 +16,24 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var chunks = inputLines.SelectToChunks();
 
         // Warehouse map
-        _warehouseMap = new Grid<Tile>(chunks[0].Length, chunks[0][0].Length);
-
-        for (var row = 0; row < _warehouseMap.Height; row++)
+        _warehouseMap = chunks[0].SelectToGrid((character, coordinate) =>
         {
-            for (var column = 0; column < _warehouseMap.Width; column++)
+            if (character == '@')
             {
-                var symbol = chunks[0][row][column];
-
-                if (symbol == '@')
-                {
-                    _robotStartCoordinate = new GridCoordinate(row, column);
-                }
-
-                _warehouseMap[row, column] = symbol switch
-                {
-                    'O' => Tile.Box,
-                    '#' => Tile.Wall,
-                    _ => Tile.Empty,
-                };
+                _robotStartCoordinate = coordinate;
             }
-        }
+
+            return character switch
+            {
+                'O' => Tile.Box,
+                '#' => Tile.Wall,
+                _ => Tile.Empty,
+            };
+        });
 
         // Moves
         _moveDirections = chunks[1]
-            .SelectMany(line => line
-                .Select(character => character switch
-                {
-                    '<' => GridDirection.Left,
-                    '^' => GridDirection.Up,
-                    '>' => GridDirection.Right,
-                    'v' => GridDirection.Down,
-                    _ => throw new InvalidOperationException($"Unexpected move direction: {character}")
-                })
-            )
+            .SelectMany(line => line.Select(character => character.ParseToGridDirection()))
             .ToList();
     }
 
@@ -58,9 +42,9 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var robotCoordinate = _robotStartCoordinate;
         var warehouseMap = _warehouseMap.Clone();
 
-        foreach (var move in _moveDirections)
+        foreach (var moveDirection in _moveDirections)
         {
-            var nextRobotCoordinate = robotCoordinate.Move(move);
+            var nextRobotCoordinate = robotCoordinate.Move(moveDirection);
 
             if (warehouseMap[nextRobotCoordinate] == Tile.Empty)
             {
@@ -72,7 +56,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
                 while (warehouseMap[boxCoordinate] == Tile.Box)
                 {
-                    boxCoordinate = boxCoordinate.Move(move);
+                    boxCoordinate = boxCoordinate.Move(moveDirection);
                 }
 
                 if (warehouseMap[boxCoordinate] == Tile.Empty)
@@ -102,12 +86,12 @@ public class Day15PuzzleSolver : IPuzzleSolver
             if (cell.Object == Tile.Box)
             {
                 warehouseMap[coordinate] = Tile.BoxLeft;
-                warehouseMap[coordinate.Move(GridDirection.Right)] = Tile.BoxRight;
+                warehouseMap[coordinate.Right()] = Tile.BoxRight;
             }
             else
             {
                 warehouseMap[coordinate] = cell.Object;
-                warehouseMap[coordinate.Move(GridDirection.Right)] = cell.Object;
+                warehouseMap[coordinate.Right()] = cell.Object;
             }
         }
 
@@ -162,30 +146,29 @@ public class Day15PuzzleSolver : IPuzzleSolver
                             continue;
                         }
 
-                        // Box left
-                        var newBoxLeftCoordinate = boxCoordinates[0].Move(moveDirection);
-                        if (warehouseMap[newBoxLeftCoordinate] == Tile.Wall)
+                        var nextBoxCoordinates = new GridCoordinate[]
                         {
-                            couldMove = false;
+                            boxCoordinates[0].Move(moveDirection), // Box left
+                            boxCoordinates[1].Move(moveDirection), // Box right
+                        };
+
+                        foreach (var nextBoxCoordinate in nextBoxCoordinates)
+                        {
+                            if (warehouseMap[nextBoxCoordinate] == Tile.Wall)
+                            {
+                                couldMove = false;
+                                break;
+                            }
+
+                            if (warehouseMap[nextBoxCoordinate] is Tile.BoxLeft or Tile.BoxRight)
+                            {
+                                stack.Push(GetBoxCoordinates(nextBoxCoordinate));
+                            }
+                        }
+
+                        if (!couldMove)
+                        {
                             break;
-                        }
-
-                        if (warehouseMap[newBoxLeftCoordinate] is Tile.BoxLeft or Tile.BoxRight)
-                        {
-                            stack.Push(GetBoxCoordinates(newBoxLeftCoordinate));
-                        }
-
-                        // Box right
-                        var newBoxRightCoordinate = boxCoordinates[1].Move(moveDirection);
-                        if (warehouseMap[newBoxRightCoordinate] == Tile.Wall)
-                        {
-                            couldMove = false;
-                            break;
-                        }
-
-                        if (warehouseMap[newBoxRightCoordinate] is Tile.BoxLeft or Tile.BoxRight)
-                        {
-                            stack.Push(GetBoxCoordinates(newBoxRightCoordinate));
                         }
                     }
 
@@ -198,11 +181,11 @@ public class Day15PuzzleSolver : IPuzzleSolver
                         foreach (var coordinate in orderedBoxLeftCoordinates)
                         {
                             warehouseMap[coordinate] = Tile.Empty;
-                            warehouseMap[coordinate.Move(GridDirection.Right)] = Tile.Empty;
+                            warehouseMap[coordinate.Right()] = Tile.Empty;
 
                             var newCoordinate = coordinate.Move(moveDirection);
                             warehouseMap[newCoordinate] = Tile.BoxLeft;
-                            warehouseMap[newCoordinate.Move(GridDirection.Right)] = Tile.BoxRight;
+                            warehouseMap[newCoordinate.Right()] = Tile.BoxRight;
                         }
 
                         robotCoordinate = nextRobotCoordinate;
@@ -219,8 +202,8 @@ public class Day15PuzzleSolver : IPuzzleSolver
         GridCoordinate[] GetBoxCoordinates(GridCoordinate coordinate)
         {
             return warehouseMap[coordinate] == Tile.BoxLeft
-                ? [coordinate, coordinate.Move(GridDirection.Right)]
-                : [coordinate.Move(GridDirection.Left), coordinate];
+                ? [coordinate, coordinate.Right()]
+                : [coordinate.Left(), coordinate];
         }
     }
 }
