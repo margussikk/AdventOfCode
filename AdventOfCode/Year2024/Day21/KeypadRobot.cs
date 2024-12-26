@@ -78,9 +78,9 @@ internal class KeypadRobot
         var endCoordinate = _keypad.First(cell => cell.Object == endButton).Coordinate;
 
         var gridPathFinder = new GridPathFinder<char>(_keypad)
-            .UseFilterFunction((_, c) => c.Object != ' ');
+            .SetCellFilter((_, c) => c.Object != ' ');
 
-        var pathList = gridPathFinder.FindAllShortestPaths(startCoordinate, endCoordinate);
+        var pathList = gridPathFinder.FindAllLowestCostPaths(startCoordinate, endCoordinate);
 
         var directionsList = new List<string>();
         foreach (var path in pathList)

@@ -9,14 +9,14 @@ namespace AdventOfCode.Year2024.Day10;
 public class Day10PuzzleSolver : IPuzzleSolver
 {
     private Grid<int> _grid = new(0, 0);
-    private GridPathFinder<int> _gridPathFinder = new(new(0, 0));
+    private GridPathFinder<int> _gridPathFinder = new(new Grid<int>(0, 0));
 
     public void ParseInput(string[] inputLines)
     {
         _grid = inputLines.SelectToGrid(x => x.ParseToDigit());
         
         _gridPathFinder = new GridPathFinder<int>(_grid)
-            .UseFilterFunction((worker, cell) => cell.Object == worker.Cost + 1);
+            .SetCellFilter((worker, cell) => cell.Object == worker.Cost + 1);
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -37,5 +37,5 @@ public class Day10PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 1086);
     }
 
-    private static bool EndCondition(GridCoordinatePathWalker walker) => walker.Cost == 9;
+    private static bool EndCondition(GridPathWalker walker) => walker.Cost == 9;
 }

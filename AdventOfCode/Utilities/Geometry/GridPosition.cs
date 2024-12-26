@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿using BenchmarkDotNet.Columns;
+
+namespace AdventOfCode.Utilities.Geometry;
 internal readonly struct GridPosition : IEquatable<GridPosition>
 {
     public GridCoordinate Coordinate { get; }
@@ -10,6 +12,11 @@ internal readonly struct GridPosition : IEquatable<GridPosition>
         Coordinate = coordinate;
         Direction = direction;
     }
+
+    public GridPosition Left() => new(Coordinate.Move(GridDirection.Left, 1), GridDirection.Left);
+    public GridPosition Up() => new(Coordinate.Move(GridDirection.Up, 1), GridDirection.Up);
+    public GridPosition Right() => new(Coordinate.Move(GridDirection.Right, 1), GridDirection.Right);
+    public GridPosition Down() => new(Coordinate.Move(GridDirection.Down, 1), GridDirection.Down);
 
     public GridPosition Move(int steps) => new(Coordinate.Move(Direction, steps), Direction);
 

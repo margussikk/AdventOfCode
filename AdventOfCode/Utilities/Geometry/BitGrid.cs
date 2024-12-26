@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using BenchmarkDotNet.Columns;
+using System.Collections;
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class BitGrid : IEnumerable<GridCell<bool>>
+internal class BitGrid : IGrid<bool>
 {
     private readonly BitArray _bitArray;
 
@@ -13,6 +14,8 @@ internal class BitGrid : IEnumerable<GridCell<bool>>
     public int LastRowIndex => Height - 1;
 
     public int LastColumnIndex => Width - 1;
+
+    public int Area => Width * Height;
 
     public BitGrid(int height, int width)
     {
@@ -61,7 +64,12 @@ internal class BitGrid : IEnumerable<GridCell<bool>>
         }
     }
 
-    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate)
+    public GridCell<bool> Cell(GridCoordinate coordinate)
+    {
+        return new GridCell<bool>(coordinate, _bitArray.Get(coordinate.Row * Width + coordinate.Column));
+    }
+
+    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
     {
         var neighborCoordinates = new GridCoordinate[]
         {

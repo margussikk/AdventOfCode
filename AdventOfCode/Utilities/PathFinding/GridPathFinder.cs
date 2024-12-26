@@ -4,52 +4,214 @@ using AdventOfCode.Utilities.Geometry;
 namespace AdventOfCode.Utilities.PathFinding;
 internal class GridPathFinder<T>
 {
-    private readonly Grid<T> _grid;
-    private Func<GridCoordinatePathWalker, GridCell<T>, bool> _filterFunc = (_, _) => true;
-    private Func<GridCoordinate, GridCoordinate, int, int> _costFunc = (_, _, x) => x + 1;
+    private readonly IGrid<T> _grid;
 
-    public GridPathFinder(Grid<T> grid)
+    private Func<GridPathWalker, GridCell<T>, bool> _cellFilter = DefaultCellFilter;
+    private Func<GridPathWalker, GridPosition, int> _costCalculator = DefaultCostCalculator;
+
+    public GridPathFinder(IGrid<T> grid)
     {
         _grid = grid;
     }
 
-    public GridPathFinder<T> UseFilterFunction(Func<GridCoordinatePathWalker, GridCell<T>, bool> filterFunc)
+    public GridPathFinder<T> SetCellFilter(Func<GridPathWalker, GridCell<T>, bool> cellFilter)
     {
-        _filterFunc = filterFunc;
+        _cellFilter = cellFilter;
         return this;
     }
 
-    public GridPathFinder<T> UseCostFunction(Func<GridCoordinate, GridCoordinate, int, int> costFunc)
+    public GridPathFinder<T> SetCostCalculator(Func<GridPathWalker, GridPosition, int> costCalculator)
     {
-        _costFunc = costFunc;
+        _costCalculator = costCalculator;
         return this;
     }
 
     public int FindLowestCost(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
     {
-        WalkShortestPath(FindMode.FindLowestCost, startCoordinate, endCoordinate, out var lowestCost, out _);
-        return lowestCost;
+        var startPosition = new GridPosition(startCoordinate, GridDirection.None);
+        return FindLowestCost(startPosition, endCoordinate);
     }
 
-    public List<List<GridCoordinate>> FindAllShortestPaths(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
+    public int FindLowestCost(GridPosition startPosition, GridCoordinate endCoordinate)
     {
-        WalkShortestPath(FindMode.FindShortestPaths, startCoordinate, endCoordinate, out _, out var shortestPaths);
-        return shortestPaths;
+        var lowestCostGrid = new Grid<int?>(_grid.Height, _grid.Width);
+
+        var walkerQueue = new PriorityQueue<GridPathWalker, int>();
+        var walker = new GridPathWalker
+        {
+            Position = startPosition
+        };
+
+        walkerQueue.Enqueue(walker, walker.Cost);
+        while (walkerQueue.TryDequeue(out walker, out _))
+        {
+            if (walker.Position.Coordinate == endCoordinate)
+            {
+                return walker.Cost;
+            }
+
+            if (lowestCostGrid[walker.Position.Coordinate].HasValue)
+            {
+                continue;
+            }
+
+            lowestCostGrid[walker.Position.Coordinate] = walker.Cost;
+            
+            foreach (var nextPosition in walker.MovementPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
+            {
+                var nextCost = _costCalculator(walker, nextPosition);
+
+                var currentLowestCost = lowestCostGrid[nextPosition.Coordinate] ?? int.MaxValue;
+                if (nextCost >= currentLowestCost) continue;
+
+                var newWalker = new GridPathWalker
+                {
+                    Position = nextPosition,
+                    Cost = nextCost
+                };
+
+                walkerQueue.Enqueue(newWalker, newWalker.Cost);
+            }
+        }
+
+        return int.MaxValue;
     }
 
-    public Dictionary<GridCoordinate, List<int>> FindAllPathCosts(GridCoordinate startCoordinate, Func<GridCoordinatePathWalker, bool> endCondition)
+    public List<List<GridCoordinate>> FindAllLowestCostPaths(GridCoordinate startCoordinate, GridCoordinate endCoordinate)
     {
-        WalkAllPaths(FindMode.FindAllPathCosts, startCoordinate, endCondition, out var pathCosts, out _);
+        var startPosition = new GridPosition(startCoordinate, GridDirection.None);
+        return FindAllLowestCostPaths(startPosition, endCoordinate);
+    }
+
+    public List<List<GridCoordinate>> FindAllLowestCostPaths(GridPosition startPosition, GridCoordinate endCoordinate)
+    {
+        var lowestCost = int.MaxValue;
+
+        var lowestCosts = new Dictionary<GridPosition, int>();
+        var previousPositions = new Dictionary<GridPosition, HashSet<GridPosition>>();
+        var endPositions = new HashSet<GridPosition>();
+
+        var walkerQueue = new PriorityQueue<GridPathWalker, int>();
+        var walker = new GridPathWalker
+        {
+            Position = startPosition,
+            Cost = 0
+        };
+        walkerQueue.Enqueue(walker, walker.Cost);
+
+        while (walkerQueue.TryDequeue(out walker, out _))
+        {
+            if (walker.Position.Coordinate == endCoordinate)
+            {
+                if (walker.Cost < lowestCost)
+                {
+                    lowestCost = walker.Cost;
+                    endPositions = [];
+
+                    lowestCosts[walker.Position] = walker.Cost;
+                    previousPositions[walker.Position] = [];
+                }
+
+                endPositions.Add(walker.Position);
+
+                if (walker.PreviousPosition.HasValue)
+                {
+                    previousPositions[walker.Position].Add(walker.PreviousPosition.Value);
+                }
+
+                continue;
+            }
+
+            if (walker.Cost > lowestCost)
+            {
+                continue;
+            }
+
+            var currentLowestCost = lowestCosts.GetValueOrDefault(walker.Position, int.MaxValue);
+            if (walker.Cost > currentLowestCost)
+            {
+                continue;
+            }
+
+            if (walker.Cost < currentLowestCost)
+            {
+                lowestCosts[walker.Position] = walker.Cost;
+                previousPositions[walker.Position] = [];
+            }
+
+            if (walker.PreviousPosition.HasValue)
+            {
+                previousPositions[walker.Position].Add(walker.PreviousPosition.Value);
+            }
+
+            foreach (var nextPosition in walker.TurningPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
+            {
+                var nextCost = _costCalculator(walker, nextPosition);
+
+                currentLowestCost = lowestCosts.GetValueOrDefault(nextPosition, int.MaxValue);
+                if (nextCost > currentLowestCost) continue;
+
+                var newWalker = new GridPathWalker
+                {
+                    Position = nextPosition,
+                    PreviousPosition = walker.Position,
+                    Cost = nextCost,
+                };
+
+                walkerQueue.Enqueue(newWalker, newWalker.Cost);
+            }
+        }
+
+        if (lowestCost == int.MaxValue)
+        {
+            return [];
+        }
+        
+        return BuildPaths(previousPositions, startPosition, [.. endPositions]);
+    }
+
+    public Dictionary<GridCoordinate, List<int>> FindAllPathCosts(GridCoordinate startCoordinate, Func<GridPathWalker, bool> endCondition)
+    {
+        var pathCosts = new Dictionary<GridCoordinate, List<int>>();
+        //var paths = new Dictionary<GridCoordinate, List<List<GridCoordinate>>>();
+
+        var walker = new GridPathWalker()
+        {
+            Position = new GridPosition(startCoordinate, GridDirection.None),
+        };
+
+        var walkerQueue = new Queue<GridPathWalker>();
+        walkerQueue.Enqueue(walker);
+
+        while (walkerQueue.TryDequeue(out walker))
+        {
+            //walker.Path.Add(walker.Coordinate);
+
+            if (endCondition(walker))
+            {
+                pathCosts.AddToValueList(walker.Position.Coordinate, walker.Cost);
+                    //paths.AddToValueList(walker.Coordinate, walker.Path);
+
+                continue;
+            }
+
+            foreach (var nextPosition in walker.MovementPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
+            {
+                var newWalker = new GridPathWalker
+                {
+                    Position = nextPosition,
+                    Cost = _costCalculator(walker, nextPosition)
+                };
+
+                //newWalker.Path.AddRange(walker.Path);
+
+                walkerQueue.Enqueue(newWalker);
+            }
+        }
+
         return pathCosts;
     }
 
-    public Dictionary<GridCoordinate, List<List<GridCoordinate>>> FindAllPaths(GridCoordinate startCoordinate, Func<GridCoordinatePathWalker, bool> endCondition)
-    {
-        WalkAllPaths(FindMode.FindAllPaths, startCoordinate, endCondition, out _, out var paths);
-        return paths;
-    }
-
-    // BFS
     public Dictionary<GridCoordinate, GridDirection> FloodFill(GridCoordinate coordinate, Func<GridCell<T>, bool> predicate)
     {
         var visitedMap = new BitGrid(_grid.Height, _grid.Width);
@@ -86,200 +248,27 @@ internal class GridPathFinder<T>
         return regionCoordinates;
     }
 
-    // Dijkstra
-    private void WalkShortestPath(FindMode mode, GridCoordinate startCoordinate, GridCoordinate endCoordinate, out int lowestCost, out List<List<GridCoordinate>> shortestPaths)
+    private static List<List<GridCoordinate>> BuildPaths(Dictionary<GridPosition, HashSet<GridPosition>> previousPositions, GridPosition startPosition, List<GridPosition> endPositions)
     {
-        lowestCost = int.MaxValue;
-        shortestPaths = [];
-
-        var coordinateLowestCosts = new Dictionary<GridCoordinate, int>();
-        var coordinatePreviousCoordinates = new Dictionary<GridCoordinate, HashSet<GridCoordinate>>();
-
-        var walkerQueue = new PriorityQueue<GridCoordinatePathWalker, int>();
-        var walker = new GridCoordinatePathWalker
-        {
-            Coordinate = startCoordinate,
-            Cost = 0
-        };
-        walkerQueue.Enqueue(walker, 0);
-
-        while (walkerQueue.TryDequeue(out walker, out _))
-        {
-            if (walker.Coordinate == endCoordinate)
-            {
-                if (mode == FindMode.FindLowestCost)
-                {
-                    return;
-                }
-                else if (mode == FindMode.FindShortestPaths)
-                {
-
-                    if (walker.Cost < lowestCost)
-                    {
-                        lowestCost = walker.Cost;
-
-                        coordinateLowestCosts[walker.Coordinate] = walker.Cost;
-                        coordinatePreviousCoordinates[walker.Coordinate] = [];
-                    }
-
-                    if (walker.PreviousCoordinate.HasValue)
-                    {
-                        coordinatePreviousCoordinates[walker.Coordinate].Add(walker.PreviousCoordinate.Value);
-                    }
-
-                    continue;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            if (walker.Cost > lowestCost)
-            {
-                continue;
-            }
-
-            var currentLowestCost = coordinateLowestCosts.GetValueOrDefault(walker.Coordinate, int.MaxValue);
-
-            if (walker.Cost > currentLowestCost)
-            {
-                continue;
-            }
-
-            if (walker.Cost < currentLowestCost)
-            {
-                coordinateLowestCosts[walker.Coordinate] = walker.Cost;
-
-                if (mode == FindMode.FindShortestPaths)
-                {
-                    coordinatePreviousCoordinates[walker.Coordinate] = [];
-                }
-            }
-
-            if (mode == FindMode.FindShortestPaths && walker.PreviousCoordinate.HasValue)
-            {
-                coordinatePreviousCoordinates[walker.Coordinate].Add(walker.PreviousCoordinate.Value);
-            }
-
-            foreach (var neighborCell in _grid.SideNeighbors(walker.Coordinate).Where(cell => _filterFunc(walker, cell)))
-            {
-                currentLowestCost = coordinateLowestCosts.GetValueOrDefault(neighborCell.Coordinate, int.MaxValue);
-
-                var newCost = _costFunc(walker.Coordinate, neighborCell.Coordinate, walker.Cost);
-                if (newCost > currentLowestCost) continue;
-
-                var newWalker = new GridCoordinatePathWalker
-                {
-                    Coordinate = neighborCell.Coordinate,
-                    PreviousCoordinate = walker.Coordinate,
-                    Cost = newCost,
-                };
-
-                var distance = MeasurementFunctions.ManhattanDistance(walker.Coordinate, newWalker.Coordinate);
-                walkerQueue.Enqueue(newWalker, distance);
-            }
-        }
-
-        if (mode == FindMode.FindShortestPaths && lowestCost != int.MaxValue)
-        {
-            shortestPaths = BuildPaths(coordinatePreviousCoordinates, startCoordinate, endCoordinate);
-        }
-    }
-
-    // BFS
-    private void WalkAllPaths(FindMode mode, GridCoordinate startCoordinate, Func<GridCoordinatePathWalker, bool> endCondition, out Dictionary<GridCoordinate, List<int>> pathCosts, out Dictionary<GridCoordinate, List<List<GridCoordinate>>> paths)
-    {
-        pathCosts = [];
-        paths = [];
-
-        var walker = new GridCoordinatePathWalker()
-        {
-            Coordinate = startCoordinate,
-        };
-
-        var walkerQueue = new Queue<GridCoordinatePathWalker>();
-        walkerQueue.Enqueue(walker);
-
-        while (walkerQueue.TryDequeue(out walker))
-        {
-            if (mode == FindMode.FindAllPaths)
-            {
-                walker.Path.Add(walker.Coordinate);
-            }
-
-            if (endCondition(walker))
-            {
-                if (mode == FindMode.FindAllPathCosts)
-                {
-                    pathCosts.AddToValueList(walker.Coordinate, walker.Cost);
-                }
-                else if (mode == FindMode.FindAllPaths)
-                {
-                    paths.AddToValueList(walker.Coordinate, walker.Path);
-                }
-
-                continue;
-            }
-
-            foreach (var neighborCell in _grid.SideNeighbors(walker.Coordinate)
-                                              .Where(c => _filterFunc(walker, c)))
-            {
-                var newWalker = new GridCoordinatePathWalker
-                {
-                    Coordinate = neighborCell.Coordinate,
-                    Cost = _costFunc(walker.Coordinate, neighborCell.Coordinate, walker.Cost)
-                };
-
-                if (mode == FindMode.FindAllPaths)
-                {
-                    newWalker.Path.AddRange(walker.Path);
-                }
-
-                walkerQueue.Enqueue(newWalker);
-            }
-        }
-    }
-
-
-    private enum FindMode
-    {
-        FindLowestCost,
-        FindShortestPaths,
-        FindAllPathCosts,
-        FindAllPaths
-    }
-
-    private static List<List<GridCoordinate>> BuildPaths(Dictionary<GridCoordinate, HashSet<GridCoordinate>> coordinatePreviousCoordinates, GridCoordinate startCoordinate, GridCoordinate endCoordinate)
-    {
-        if (startCoordinate == endCoordinate)
-        {
-            return
-            [
-                [startCoordinate],
-            ];
-        }
-
         var mainList = new List<List<GridCoordinate>>();
 
-        var queue = new Queue<List<GridCoordinate>>();
-        queue.Enqueue([endCoordinate]);
+        var queue = new Queue<List<GridPosition>>();
+        queue.Enqueue(endPositions);
 
         while (queue.Count > 0)
         {
-            var newQueue = new Queue<List<GridCoordinate>>();
-
+            var newQueue = new Queue<List<GridPosition>>();
             while (queue.TryDequeue(out var path))
             {
-                if (path[0] == startCoordinate)
+                if (path[0] == startPosition)
                 {
-                    mainList.Add(path);
+                    mainList.Add([.. path.Select(x => x.Coordinate)]);
                     continue;
                 }
 
-                foreach (var previousCoordinate in coordinatePreviousCoordinates[path[0]])
+                foreach (var previousPosition in previousPositions[path[0]])
                 {
-                    newQueue.Enqueue([previousCoordinate, .. path]);
+                    newQueue.Enqueue([previousPosition, .. path]);
                 }
             }
 
@@ -288,4 +277,11 @@ internal class GridPathFinder<T>
 
         return mainList;
     }
+
+
+    public static bool DefaultBitGridCellFilter(GridPathWalker _, GridCell<bool> cell) => !cell.Object;
+
+    private static bool DefaultCellFilter(GridPathWalker walker, GridCell<T> cell) => true;
+
+    private static int DefaultCostCalculator(GridPathWalker walker, GridPosition nextPosition) => walker.Cost + 1;
 }

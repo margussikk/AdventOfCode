@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class Grid<T>(int height, int width) : IEnumerable<GridCell<T>>
+internal class Grid<T>(int height, int width) : IGrid<T>
 {
     private readonly T[,] _array = new T[height, width];
 
