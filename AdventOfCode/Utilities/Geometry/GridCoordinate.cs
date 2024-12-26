@@ -81,6 +81,11 @@ internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCo
         return direction;
     }
 
+    public int ManhattanDistanceBetween(GridCoordinate other)
+    {
+        return Math.Abs(Row - other.Row) + Math.Abs(Column - other.Column);
+    }
+
     public GridCoordinate Left()
     {
         return new GridCoordinate(Row, Column - 1);

@@ -28,25 +28,6 @@ internal static class MeasurementFunctions
         return area - boundaryPoints / 2 + 1;
     }
 
-    public static int ManhattanDistance(GridCoordinate coordinate1, GridCoordinate coordinate2)
-    {
-        return Math.Abs(coordinate2.Row - coordinate1.Row) +
-               Math.Abs(coordinate2.Column - coordinate1.Column);
-    }
-
-    public static long ManhattanDistance(Coordinate2D coordinate1, Coordinate2D coordinate2)
-    {
-        return Math.Abs(coordinate2.X - coordinate1.X) +
-               Math.Abs(coordinate2.Y - coordinate1.Y);
-    }
-
-    public static long ManhattanDistance(Coordinate3D coordinate1, Coordinate3D coordinate2)
-    {
-        return Math.Abs(coordinate2.X - coordinate1.X) +
-               Math.Abs(coordinate2.Y - coordinate1.Y) +
-               Math.Abs(coordinate2.Z - coordinate1.Z);
-    }
-
     public static int ManhattanDistanceLoop(IReadOnlyList<GridCoordinate> coordinates)
     {
         var distance = 0;
@@ -55,7 +36,7 @@ internal static class MeasurementFunctions
         {
             var index2 = (index + 1) % coordinates.Count;
 
-            distance += ManhattanDistance(coordinates[index], coordinates[index2]);
+            distance += coordinates[index].ManhattanDistanceBetween(coordinates[index2]);
         }
 
         return distance;

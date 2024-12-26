@@ -1,5 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Extensions;
+using System.Collections.Concurrent;
 
 namespace AdventOfCode.Year2024.Day22;
 
@@ -11,49 +11,58 @@ public class Day22PuzzleSolver : IPuzzleSolver
     public void ParseInput(string[] inputLines)
     {
         _secretNumbers = inputLines.Select(long.Parse)
-                                  .ToList();
+                                   .ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = _secretNumbers.Sum(x => Enumerable.Range(0, 2000)
-                                                      .Aggregate(x, (secret, _) => GenerateSecretNumber(secret)));
+        var answer = 0L;
+
+        Parallel.ForEach(_secretNumbers, secretNumber =>
+        {
+            for (var i = 0; i < 2000; i++)
+            {
+                secretNumber = GenerateSecretNumber(secretNumber);
+            }
+
+            Interlocked.Add(ref answer, secretNumber);
+        });
 
         return new PuzzleAnswer(answer, 14082561342L);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var totalPatternBananas = new Dictionary<(long, long, long, long), long>();
+        var totalPatternBananas = new ConcurrentDictionary<long, long>();
 
-        foreach (var secretNumber in _secretNumbers)
+        Parallel.ForEach(_secretNumbers, secretNumber =>
         {
-            var seenPatterns = new HashSet<(long, long, long, long)>();
+            var seenPatterns = new HashSet<long>();
 
-            var prices = Enumerable.Range(0, 2000)
-                                   .Aggregate(new List<long> { secretNumber }, (list, _) =>
-                                   {
-                                       list.Add(GenerateSecretNumber(list[^1]));
-                                       return list;
-                                   })
-                                   .Select(x => x % 10)
-                                   .ToList();
+            var prices = new List<long>(2000);
+            for (var i = 0; i < 2000; i++)
+            {
+                secretNumber = GenerateSecretNumber(secretNumber);
+                prices.Add(secretNumber % 10);
+            }
 
-            var priceChanges = prices.SlidingPairs()
-                                     .Select(x => x.NextItem - x.CurrentItem)
-                                     .ToList();
+            var priceChanges = new List<long>(1999);
+            for (var i = 1; i < 2000; i++)
+            {
+                priceChanges.Add(prices[i] - prices[i - 1]);
+            }
 
             for (var index = 0; index < priceChanges.Count - 4; index++)
             {
-                var pattern = (priceChanges[index], priceChanges[index + 1], priceChanges[index + 2], priceChanges[index + 3]);
+                var pattern = Hash(priceChanges[index], priceChanges[index + 1], priceChanges[index + 2], priceChanges[index + 3]);
 
                 if (seenPatterns.Add(pattern))
                 {
                     var price = prices[index + 4];
-                    totalPatternBananas[pattern] = totalPatternBananas.GetValueOrDefault(pattern, 0) + price;
+                    totalPatternBananas.AddOrUpdate(pattern, price, (key, value) => value + price);
                 }
             }
-        }
+        });
 
         var answer = totalPatternBananas.Max(x => x.Value);
 
@@ -75,5 +84,10 @@ public class Day22PuzzleSolver : IPuzzleSolver
         secret = secret % 16777216; // Prune
 
         return secret;
+    }
+
+    private static long Hash(long priceChange1, long priceChange2, long priceChange3, long priceChange4)
+    {
+        return ((((((priceChange1 + 9) * 18) + priceChange2 + 9) * 18) + priceChange3 + 9) * 18) + priceChange4 + 9;
     }
 }

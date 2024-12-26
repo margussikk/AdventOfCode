@@ -30,22 +30,23 @@ public class Day21PuzzleSolver : IPuzzleSolver
     {
         var answer = 0L;
 
-        var cache = new Dictionary<(char, char, int), long>();
+        var numericKeypadSequencesCache = new Dictionary<(char, char), List<string>>();
+        var directionalKeybadSequencesCache = new Dictionary<(char, char), List<string>>();
 
-        var numericKeypadRobot = new KeypadRobot(true);
+        var numericKeypadRobot = new KeypadRobot(numericKeypadSequencesCache, true);
 
         var currentRobot = numericKeypadRobot;
 
         for (var counter = 0; counter < robots; counter++)
         {
-            var newRobot = new KeypadRobot(false);
+            var newRobot = new KeypadRobot(directionalKeybadSequencesCache, false);
             currentRobot.ControlledBy = newRobot;
             currentRobot = newRobot;
         }
 
         foreach (var doorCode in _doorCodes)
         {
-            var length = numericKeypadRobot.CalculateLength(cache, doorCode, 0);
+            var length = numericKeypadRobot.CalculateLength(doorCode, 0);
 
             var complexity = length * int.Parse(doorCode[..^1]);
             answer += complexity;

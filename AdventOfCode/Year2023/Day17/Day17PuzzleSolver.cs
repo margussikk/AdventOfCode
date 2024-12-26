@@ -67,7 +67,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
                 var newCrucible = new Crucible(neighborCell.Coordinate, newDirection, newSteps, newHeatLoss);
 
-                var distance = MeasurementFunctions.ManhattanDistance(neighborCell.Coordinate, endCoordinate);
+                var distance = neighborCell.Coordinate.ManhattanDistanceBetween(endCoordinate);
                 crucibles.Enqueue(newCrucible, newHeatLoss + distance);
             }
         }

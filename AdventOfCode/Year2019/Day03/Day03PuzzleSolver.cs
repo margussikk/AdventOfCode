@@ -102,11 +102,11 @@ public class Day03PuzzleSolver : IPuzzleSolver
             {
                 if (lineSegment.Contains(coordinate) && !stepCounts.ContainsKey(coordinate))
                 {
-                    stepCounts[coordinate] = steps + MeasurementFunctions.ManhattanDistance(lineSegment.Start, coordinate);
+                    stepCounts[coordinate] = steps + lineSegment.Start.ManhattanDistanceBetween(coordinate);
                 }
             }
 
-            steps += MeasurementFunctions.ManhattanDistance(lineSegment.Start, lineSegment.End);
+            steps += lineSegment.Start.ManhattanDistanceBetween(lineSegment.End);
         }
 
         return stepCounts;

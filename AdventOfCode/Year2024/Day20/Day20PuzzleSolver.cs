@@ -61,7 +61,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
                 foreach (var endCell in endCells)
                 {
-                    var cheatDistance = MeasurementFunctions.ManhattanDistance(startCell.Coordinate, endCell.Coordinate);
+                    var cheatDistance = startCell.Coordinate.ManhattanDistanceBetween(endCell.Coordinate);
 
                     var savedTime = startCell.Object - endCell.Object - cheatDistance;
                     if (savedTime >= 100)

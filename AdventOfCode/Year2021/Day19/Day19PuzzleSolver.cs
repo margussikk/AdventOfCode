@@ -57,7 +57,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
         {
             for (var j = i + 1; j < alignedScanners.Count; j++)
             {
-                answer = Math.Max(answer, MeasurementFunctions.ManhattanDistance(alignedScanners[i].AbsoluteLocation, alignedScanners[j].AbsoluteLocation));
+                answer = Math.Max(answer, alignedScanners[i].AbsoluteLocation.ManhattanDistanceBetween(alignedScanners[j].AbsoluteLocation));
             }
         }
 

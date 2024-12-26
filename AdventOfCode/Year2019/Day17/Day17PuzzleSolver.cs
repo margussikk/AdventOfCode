@@ -99,7 +99,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
                 }
             }
 
-            var steps = MeasurementFunctions.ManhattanDistance(startCoordinate, endCoordinate);
+            var steps = startCoordinate.ManhattanDistanceBetween(endCoordinate);
             actions.Add(steps.ToString(CultureInfo.InvariantCulture));
 
             gridWalker.Move(nextDirection, steps);

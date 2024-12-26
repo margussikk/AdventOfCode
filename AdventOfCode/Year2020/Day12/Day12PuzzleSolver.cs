@@ -58,7 +58,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             }
         }
 
-        var answer = MeasurementFunctions.ManhattanDistance(startCoordinate, ship.Coordinate);
+        var answer = startCoordinate.ManhattanDistanceBetween(ship.Coordinate);
 
         return new PuzzleAnswer(answer, 2458);
     }
@@ -109,7 +109,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
             }
         }
 
-        var answer = MeasurementFunctions.ManhattanDistance(startCoordinate, ship.Coordinate);
+        var answer = startCoordinate.ManhattanDistanceBetween(ship.Coordinate);
 
         return new PuzzleAnswer(answer, 145117);
     }

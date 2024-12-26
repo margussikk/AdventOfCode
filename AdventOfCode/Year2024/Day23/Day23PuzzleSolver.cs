@@ -16,7 +16,6 @@ public class Day23PuzzleSolver : IPuzzleSolver
         foreach (var line in inputLines)
         {
             var splits = line.Split('-');
-
             graphBuilder.AddConnection(splits[0], GraphVertexPort.Any, splits[1], GraphVertexPort.Any, 0);
         }
 
@@ -35,7 +34,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
                     (vertexKvp.Key[0] == 't' || First.Name[0] == 't' || Second.Name[0] == 't'))
                 {
                     var set = new string[] { vertexKvp.Key, First.Name, Second.Name }
-                        .OrderBy(x => x, StringComparer.InvariantCulture)
+                        .Order(StringComparer.InvariantCulture)
                         .ToList();
 
                     sets.Add((set[0], set[1], set[2]));
@@ -52,7 +51,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
         var clique = cliques.OrderByDescending(x => x.Count).First();
 
-        var answer = string.Join(',', clique.Select(x => x.Name).OrderBy(x => x, StringComparer.InvariantCulture));
+        var answer = string.Join(',', clique.Select(x => x.Name).Order(StringComparer.InvariantCulture));
 
         return new PuzzleAnswer(answer, "af,aq,ck,ee,fb,it,kg,of,ol,rt,sc,vk,zh");
     }

@@ -1,28 +1,32 @@
-﻿using AdventOfCode.Utilities.Geometry;
+﻿using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.PathFinding;
 using System.Text;
 
 namespace AdventOfCode.Year2024.Day21;
 internal class KeypadRobot
 {
+    private readonly Dictionary<(char, char), List<string>> _sequencesCache;
+    private readonly Dictionary<(char, char), long> _subLengthsCache = [];
     private readonly Grid<char> _keypad;
 
     public KeypadRobot? ControlledBy { get; set; }
 
-    public KeypadRobot(bool isNumericKeypadRobot)
+    public KeypadRobot(Dictionary<(char, char), List<string>> sequencesCache, bool isNumericKeypadRobot)
     {
+        _sequencesCache = sequencesCache;
         _keypad = isNumericKeypadRobot ? BuildNumericKeypad() : BuildDirectionalKeypad();
     }
 
-    public long CalculateLength(Dictionary<(char, char, int), long> cache, string code, int level)
+    public long CalculateLength(string code, int level)
     {
         var length = 0L;
 
         var current = 'A';
         foreach (var next in code)
         {
-            var cacheKey = (current, next, level);
-            if (!cache.TryGetValue(cacheKey, out var subLength))
+            var cacheKey = (current, next);
+            if (!_subLengthsCache.TryGetValue(cacheKey, out var subLength))
             {
                 if (ControlledBy == null)
                 {
@@ -30,10 +34,10 @@ internal class KeypadRobot
                 }
                 else
                 {
-                    subLength = GetSequences(current, next).Min(sequence => ControlledBy.CalculateLength(cache, sequence, level + 1));
+                    subLength = GetSequences(current, next).Min(sequence => ControlledBy.CalculateLength(sequence, level + 1));
                 }
 
-                cache[cacheKey] = subLength;
+                _subLengthsCache[cacheKey] = subLength;
             }
 
             length += subLength;
@@ -58,14 +62,7 @@ internal class KeypadRobot
             }
             else
             {
-                coordinate = direction switch
-                {
-                    '^' => coordinate.Up(),
-                    '<' => coordinate.Left(),
-                    'v' => coordinate.Down(),
-                    '>' => coordinate.Right(),
-                    _ => throw new NotImplementedException()
-                };
+                coordinate = coordinate.Move(direction.ParseToGridDirection());
             }
         }
 
@@ -74,41 +71,48 @@ internal class KeypadRobot
 
     public List<string> GetSequences(char startButton, char endButton)
     {
-        var startCoordinate = _keypad.First(cell => cell.Object == startButton).Coordinate;
-        var endCoordinate = _keypad.First(cell => cell.Object == endButton).Coordinate;
+        var key = (startButton, endButton);
 
-        var gridPathFinder = new GridPathFinder<char>(_keypad)
-            .SetCellFilter((_, c) => c.Object != ' ');
-
-        var pathList = gridPathFinder.FindAllShortestPaths(startCoordinate, endCoordinate);
-
-        var directionsList = new List<string>();
-        foreach (var path in pathList)
+        if (!_sequencesCache.TryGetValue(key, out var sequences))
         {
-            var directions = new StringBuilder();
+            var startCoordinate = _keypad.First(cell => cell.Object == startButton).Coordinate;
+            var endCoordinate = _keypad.First(cell => cell.Object == endButton).Coordinate;
 
-            for (var i = 0; i < path.Count - 1; i++)
+            var gridPathFinder = new GridPathFinder<char>(_keypad)
+                .SetCellFilter((_, c) => c.Object != ' ');
+
+            var pathList = gridPathFinder.FindAllShortestPaths(startCoordinate, endCoordinate);
+
+            sequences = [];
+            foreach (var path in pathList)
             {
-                var direction = path[i].DirectionToward(path[i + 1]);
+                var directions = new StringBuilder();
 
-                var character = direction switch
+                for (var i = 0; i < path.Count - 1; i++)
                 {
-                    GridDirection.Up => '^',
-                    GridDirection.Down => 'v',
-                    GridDirection.Left => '<',
-                    GridDirection.Right => '>',
-                    _ => throw new NotImplementedException()
-                };
+                    var direction = path[i].DirectionToward(path[i + 1]);
 
-                directions.Append(character);
+                    var character = direction switch
+                    {
+                        GridDirection.Up => '^',
+                        GridDirection.Down => 'v',
+                        GridDirection.Left => '<',
+                        GridDirection.Right => '>',
+                        _ => throw new NotImplementedException()
+                    };
+
+                    directions.Append(character);
+                }
+
+                directions.Append('A');
+
+                sequences.Add(directions.ToString());
             }
 
-            directions.Append('A');
-
-            directionsList.Add(directions.ToString());
+            _sequencesCache[key] = sequences;
         }
 
-        return directionsList;
+        return sequences;
     }
 
     private static Grid<char> BuildDirectionalKeypad()
