@@ -1,5 +1,5 @@
-﻿using BenchmarkDotNet.Columns;
-using System.Collections;
+﻿using System.Collections;
+using System.Text;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -171,6 +171,23 @@ internal class BitGrid : IGrid<bool>
             }
             Console.WriteLine();
         }
+    }
+
+    public void PrintToFile(string path)
+    {
+        var stringBuilder = new StringBuilder();
+
+        for (var row = 0; row <= LastRowIndex; row++)
+        {
+            for (var column = 0; column <= LastColumnIndex; column++)
+            {
+                var character = _bitArray.Get(row * Width + column) ? '#': ' ';
+                stringBuilder.Append(character);
+            }
+            stringBuilder.AppendLine();
+        }
+
+        File.WriteAllText(path, stringBuilder.ToString());
     }
 
     public IEnumerator<GridCell<bool>> GetEnumerator()

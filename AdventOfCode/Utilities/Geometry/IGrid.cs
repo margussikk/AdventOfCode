@@ -9,8 +9,6 @@ internal interface IGrid<T> : IEnumerable<GridCell<T>>
 
     int LastColumnIndex { get; }
 
-    int Area { get; }
-
     T this[GridCoordinate coordinate] { get; set; }
 
     GridCell<T> Cell(GridCoordinate coordinate);

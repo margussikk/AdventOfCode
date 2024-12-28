@@ -1,6 +1,8 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿using System.Collections;
 
-public class InfiniteBitGrid
+namespace AdventOfCode.Utilities.Geometry;
+
+internal class InfiniteBitGrid : IGrid<bool>
 {
     private BitGrid[,] _grid;
 
@@ -25,6 +27,14 @@ public class InfiniteBitGrid
         MinColumn = 0;
         MaxColumn = MinColumn + _grid.GetLength(1) * _subGridColumnCount - 1;
     }
+
+    public int Width => int.MaxValue;
+
+    public int Height => int.MaxValue;
+
+    public int LastRowIndex => MaxRow;
+
+    public int LastColumnIndex => MaxColumn;
 
     public int MinRow { get; private set; }
 
@@ -63,92 +73,142 @@ public class InfiniteBitGrid
         }
     }
 
+    public bool InBounds(GridCoordinate coordinate) => true; // It's infinite
+
+    public bool this[GridCoordinate coordinate]
+    {
+        get => this[coordinate.Row, coordinate.Column];
+        set => this[coordinate.Row, coordinate.Column] = value;
+    }
+
+    public GridCell<bool> Cell(GridCoordinate coordinate)
+    {
+        return new GridCell<bool>(coordinate, this[coordinate.Row, coordinate.Column]);
+    }
+
+    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
+    {
+        var neighborCoordinates = new GridCoordinate[] { coordinate.Left(), coordinate.Up(), coordinate.Right(), coordinate.Down() };
+
+        foreach (var neighborCoordinate in neighborCoordinates)
+        {
+            
+            yield return new GridCell<bool>(neighborCoordinate, this[neighborCoordinate]);
+        }
+    }
+
+    public IEnumerator<GridCell<bool>> GetEnumerator()
+    {
+        throw new NotImplementedException("Cannot enumerate over infinite space");
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
     private void AdjustGridSize(int row, int column)
     {
         // Row
         if (row < MinRow || row > MaxRow)
         {
-            int newGridMinRow;
-            int newGridMaxRow;
+            var emptyRowsBefore = 0;
+            var emptyRowsAfter = 0;
 
             if (row < MinRow)
             {
-                newGridMinRow = row / _subGridRowCount - 1;
-                newGridMaxRow = _grid.GetLength(0) - 1;
+                emptyRowsBefore = (MinRow - row) / _subGridRowCount + 1;
             }
-            else
+            else if (row > MaxRow)
             {
-                newGridMinRow = 0;
-                newGridMaxRow = row / _subGridRowCount;
+                emptyRowsAfter = (row - MaxRow) / _subGridRowCount + 1;
             }
 
-            var newGrid = new BitGrid[newGridMaxRow - newGridMinRow + 1, _grid.GetLength(1)];
-            for (var gridRow = newGridMinRow; gridRow <= newGridMaxRow; gridRow++)
+            var newGrid = new BitGrid[emptyRowsBefore + _grid.GetLength(0) + emptyRowsAfter, _grid.GetLength(1)];
+
+            // Add empty subgrids before
+            for (var subGridRow = 0; subGridRow < emptyRowsBefore; subGridRow++)
             {
-                if (gridRow >= 0 && gridRow < _grid.GetLength(0))
+                for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    // Copy existing subgrids
-                    for (var gridColumn = 0; gridColumn < _grid.GetLength(1); gridColumn++)
-                    {
-                        newGrid[gridRow - newGridMinRow, gridColumn] = _grid[gridRow, gridColumn];
-                    }
+                    newGrid[subGridRow, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
                 }
-                else
+            }
+            var subGridRowOffset = emptyRowsBefore;
+
+            // Copy existing subgrids
+            for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
+            {
+                for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    // Add empty subgrids
-                    for (var gridColumn = 0; gridColumn < _grid.GetLength(1); gridColumn++)
-                    {
-                        newGrid[gridRow - newGridMinRow, gridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
-                    }
+                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = _grid[subGridRow, subGridColumn];
+                }
+            }
+            subGridRowOffset += _grid.GetLength(0);
+
+            // Add empty subgrids after
+            for (var subGridRow = 0; subGridRow < emptyRowsAfter; subGridRow++)
+            {
+                for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
+                {
+                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
                 }
             }
 
             _grid = newGrid;
-            MinRow = newGridMinRow * _subGridRowCount;
-            MaxRow = MinRow + _grid.GetLength(0) * _subGridRowCount - 1;
+            MinRow -= emptyRowsBefore * _subGridRowCount;
+            MaxRow += emptyRowsAfter * _subGridRowCount;
         }
 
         // Column
         if (column < MinColumn || column > MaxColumn)
         {
-            int newGridMinColumn;
-            int newGridMaxColumn;
+            var emptyColumnsBefore = 0;
+            var emptyColumnsAfter = 0;
 
             if (column < MinColumn)
             {
-                newGridMinColumn = column / _subGridColumnCount - 1;
-                newGridMaxColumn = _grid.GetLength(1) - 1;
+                emptyColumnsBefore = (MinColumn - column) / _subGridColumnCount + 1;
             }
-            else
+            else if (column > MaxColumn)
             {
-                newGridMinColumn = 0;
-                newGridMaxColumn = column / _subGridColumnCount;
+                emptyColumnsAfter = (column - MaxColumn) / _subGridColumnCount + 1;
             }
 
-            var newGrid = new BitGrid[_grid.GetLength(0), newGridMaxColumn - newGridMinColumn + 1];
-            for (var gridColumn = newGridMinColumn; gridColumn <= newGridMaxColumn; gridColumn++)
+            var newGrid = new BitGrid[_grid.GetLength(0), emptyColumnsBefore + _grid.GetLength(1) + emptyColumnsAfter];
+
+            // Add empty subgrids before
+            for (var subGridColumn = 0; subGridColumn < emptyColumnsBefore; subGridColumn++)
             {
-                if (gridColumn >= 0 && gridColumn < _grid.GetLength(1))
+                for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    // Copy existing subgrids
-                    for (var gridRow = 0; gridRow < _grid.GetLength(0); gridRow++)
-                    {
-                        newGrid[gridRow, gridColumn - newGridMinColumn] = _grid[gridRow, gridColumn];
-                    }
+                    newGrid[subGridRow, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
                 }
-                else
+            }
+            var subGridColumnOffset = emptyColumnsBefore;
+
+            // Copy existing subgrids
+            for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
+            {
+                for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    // Add empty subgrids
-                    for (var gridRow = 0; gridRow < _grid.GetLength(0); gridRow++)
-                    {
-                        newGrid[gridRow, gridColumn - newGridMinColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
-                    }
+                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = _grid[subGridRow, subGridColumn];
+                }
+            }
+            subGridColumnOffset += _grid.GetLength(1);
+
+            // Add empty subgrids after
+            for (var subGridColumn = 0; subGridColumn < emptyColumnsAfter; subGridColumn++)
+            {
+                for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
+                {
+                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
                 }
             }
 
             _grid = newGrid;
-            MinColumn = newGridMinColumn * _subGridColumnCount;
-            MaxColumn = MinColumn + _grid.GetLength(1) * _subGridColumnCount - 1;
+            MinColumn -= emptyColumnsBefore * _subGridColumnCount;
+            MaxColumn += emptyColumnsAfter * _subGridColumnCount;
         }
     }
 

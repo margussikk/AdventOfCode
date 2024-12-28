@@ -212,6 +212,45 @@ internal class GridPathFinder<T>
         return pathCosts;
     }
 
+    public void WalkAllPaths(GridCoordinate startCoordinate, Func<GridPathWalker, bool> continueFunc)
+    {
+        var visited = new InfiniteBitGrid();
+
+        var walker = new GridPathWalker
+        {
+            Position = new GridPosition(startCoordinate, GridDirection.None)
+        };
+
+        var queue = new Queue<GridPathWalker>();
+        queue.Enqueue(walker);
+
+        while (queue.TryDequeue(out walker))
+        {
+            if (visited[walker.Position.Coordinate])
+            {
+                continue;
+            }
+
+            visited[walker.Position.Coordinate] = true;
+
+            if (!continueFunc(walker))
+            {
+                continue;
+            }
+
+            foreach (var nextPosition in walker.MovementPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
+            {
+                var newWalker = new GridPathWalker
+                {
+                    Position = nextPosition,
+                    Cost = _costCalculator(walker, nextPosition),
+                };
+
+                queue.Enqueue(newWalker);
+            }
+        }
+    }
+
     public Dictionary<GridCoordinate, GridDirection> FloodFill(GridCoordinate coordinate, Func<GridCell<T>, bool> predicate)
     {
         var visitedMap = new BitGrid(_grid.Height, _grid.Width);
