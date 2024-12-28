@@ -21,21 +21,37 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = _grid.Where(cell => cell.Object == 0)
-                          .Select(cell => _gridPathFinder.FindAllPathLengths(cell.Coordinate, EndCondition).Count)
-                          .Sum();
+        var answer = GetAnswer(true);
 
         return new PuzzleAnswer(answer, 489);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var answer = _grid.Where(cell => cell.Object == 0)
-                          .SelectMany(cell => _gridPathFinder.FindAllPathLengths(cell.Coordinate, EndCondition).Values.Select(x => x.Count))
-                          .Sum();
+        var answer = GetAnswer(false);
 
         return new PuzzleAnswer(answer, 1086);
     }
 
-    private static bool EndCondition(GridPathWalker walker) => walker.Cost == 9;
+    public int GetAnswer(bool unique)
+    {
+        var answer = 0;
+
+        foreach (var cell in _grid.Where(cell => cell.Object == 0))
+        {
+            _gridPathFinder.WalkAllPaths(unique, cell.Coordinate, CountTrails);
+        }
+
+        return answer;
+
+        bool CountTrails(GridPathWalker walker)
+        {
+            if (walker.Cost == 9)
+            {
+                answer++;
+            }
+
+            return true;
+        }
+    }
 }

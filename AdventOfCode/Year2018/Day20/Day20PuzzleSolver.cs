@@ -27,7 +27,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var pathFinder = new GridPathFinder<bool>(grid)
             .SetCellFilter((_, cell) => cell.Object);
 
-        pathFinder.WalkAllPaths(startCoordinate, CountDoors);
+        pathFinder.WalkAllPaths(true, startCoordinate, CountDoors);
 
         return new PuzzleAnswer(answer, 3806);
 
@@ -54,7 +54,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         var pathFinder = new GridPathFinder<bool>(grid)
             .SetCellFilter((_, cell) => cell.Object);
 
-        pathFinder.WalkAllPaths(startCoordinate, CountRooms);
+        pathFinder.WalkAllPaths(true, startCoordinate, CountRooms);
 
         var answer = roomCoordinates.Count;
 

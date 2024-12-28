@@ -170,49 +170,7 @@ internal class GridPathFinder<T>
         return BuildPaths(previousPositions, startPosition, [.. endPositions]);
     }
 
-    public Dictionary<GridCoordinate, List<int>> FindAllPathLengths(GridCoordinate startCoordinate, Func<GridPathWalker, bool> endCondition)
-    {
-        var pathCosts = new Dictionary<GridCoordinate, List<int>>();
-        //var paths = new Dictionary<GridCoordinate, List<List<GridCoordinate>>>();
-
-        var walker = new GridPathWalker()
-        {
-            Position = new GridPosition(startCoordinate, GridDirection.None),
-        };
-
-        var walkerQueue = new Queue<GridPathWalker>();
-        walkerQueue.Enqueue(walker);
-
-        while (walkerQueue.TryDequeue(out walker))
-        {
-            //walker.Path.Add(walker.Coordinate);
-
-            if (endCondition(walker))
-            {
-                pathCosts.AddToValueList(walker.Position.Coordinate, walker.Cost);
-                //paths.AddToValueList(walker.Coordinate, walker.Path);
-
-                continue;
-            }
-
-            foreach (var nextPosition in walker.MovementPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
-            {
-                var newWalker = new GridPathWalker
-                {
-                    Position = nextPosition,
-                    Cost = _costCalculator(walker, nextPosition)
-                };
-
-                //newWalker.Path.AddRange(walker.Path);
-
-                walkerQueue.Enqueue(newWalker);
-            }
-        }
-
-        return pathCosts;
-    }
-
-    public void WalkAllPaths(GridCoordinate startCoordinate, Func<GridPathWalker, bool> continueFunc)
+    public void WalkAllPaths(bool unique, GridCoordinate startCoordinate, Func<GridPathWalker, bool> continueFunc)
     {
         var visited = new InfiniteBitGrid();
 
@@ -226,12 +184,15 @@ internal class GridPathFinder<T>
 
         while (queue.TryDequeue(out walker))
         {
-            if (visited[walker.Position.Coordinate])
+            if (unique)
             {
-                continue;
-            }
+                if (visited[walker.Position.Coordinate])
+                {
+                    continue;
+                }
 
-            visited[walker.Position.Coordinate] = true;
+                visited[walker.Position.Coordinate] = true;
+            }
 
             if (!continueFunc(walker))
             {
