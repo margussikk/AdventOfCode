@@ -4,9 +4,9 @@ namespace AdventOfCode.Year2018.Day16;
 
 internal class Sample
 {
-    public int[] BeforeRegisters { get; private set; } = new int[4];
-    public int[] InstructionValues { get; private set; } = new int[4];
-    public int[] AfterRegisters { get; private set; } = new int[4];
+    public long[] BeforeRegisters { get; private set; } = new long[4];
+    public long[] InstructionValues { get; private set; } = new long[4];
+    public long[] AfterRegisters { get; private set; } = new long[4];
 
     public bool BehavesLikeOpcode(OpCode opCode)
     {
@@ -42,13 +42,13 @@ internal class Sample
 
         sample.BeforeRegisters = inputLines[0]["Before: [".Length..^1]
             .Split(", ")
-            .Select(int.Parse)
+            .Select(long.Parse)
             .ToArray();
 
         // Instruction
         sample.InstructionValues = inputLines[1]
             .Split(' ')
-            .Select(int.Parse)
+            .Select(long.Parse)
             .ToArray();
 
         // After registers
@@ -59,7 +59,7 @@ internal class Sample
 
         sample.AfterRegisters = inputLines[2]["After:  [".Length..^1]
             .Split(", ")
-            .Select(int.Parse)
+            .Select(long.Parse)
             .ToArray();
 
         return sample;

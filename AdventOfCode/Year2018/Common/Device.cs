@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode.Year2018.Common;
 internal class Device
 {
-    public int[] Registers { get; private set; }
+    public long[] Registers { get; private set; }
 
-    public Device(IEnumerable<int> registers)
+    public Device(IEnumerable<long> registers)
     {
         Registers = registers.ToArray();
     }
@@ -24,7 +24,7 @@ internal class Device
             OpCode.BanR => Registers[instruction.A] & Registers[instruction.B],
             OpCode.BanI => Registers[instruction.A] & instruction.B,
             OpCode.BorR => Registers[instruction.A] | Registers[instruction.B],
-            OpCode.BorI => Registers[instruction.A] | instruction.B,
+            OpCode.BorI => Registers[(int)instruction.A] | instruction.B,
             OpCode.SetR => Registers[instruction.A],
             OpCode.SetI => instruction.A,
             OpCode.GtIR => instruction.A > Registers[instruction.B] ? 1 : 0,
@@ -43,16 +43,17 @@ internal class Device
 
         while (instructionPointer < instructions.Count)
         {
-            // Updates bound register to the current instruction pointer value
-            Registers[instructionPointerBinding] = instructionPointer;
-
             // Runs instruction
             var instruction = instructions[instructionPointer];
+
             RunInstruction(instruction);
 
             // Sets the instruction pointer to the value of bound register, and then adds one to the instruction pointer.
-            instructionPointer = Registers[instructionPointerBinding];
+            instructionPointer = (int)Registers[instructionPointerBinding];
             instructionPointer++;
+
+            // Updates bound register to the current instruction pointer value
+            Registers[instructionPointerBinding] = instructionPointer;
         }
     }
 }

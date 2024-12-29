@@ -8,7 +8,7 @@ namespace AdventOfCode.Year2018.Day19;
 public class Day19PuzzleSolver : IPuzzleSolver
 {
     private int _instructionPointerBinding = 0;
-    private readonly List<Instruction> _instructions = [];
+    private List<Instruction> _instructions = [];
 
     public void ParseInput(string[] inputLines)
     {
@@ -18,38 +18,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
         }
 
         _instructionPointerBinding = int.Parse(inputLines[0]["#ip ".Length..]);
-
-        foreach (var instructionLine in inputLines.Skip(1))
-        {
-            var splits = instructionLine.Split(' ');
-
-            var opCode = splits[0] switch
-            {
-                "addr" => OpCode.AddR,
-                "addi" => OpCode.AddI,
-                "mulr" => OpCode.MulR,
-                "muli" => OpCode.MulI,
-                "banr" => OpCode.BanR,
-                "bani" => OpCode.BanI,
-                "borr" => OpCode.BorR,
-                "bori" => OpCode.BorI,
-                "setr" => OpCode.SetR,
-                "seti" => OpCode.SetI,
-                "gtir" => OpCode.GtIR,
-                "gtri" => OpCode.GtRI,
-                "gtrr" => OpCode.GtRR,
-                "eqir" => OpCode.EqIR,
-                "eqri" => OpCode.EqRI,
-                "eqrr" => OpCode.EqRR,
-                _ => throw new InvalidOperationException($"Invalid OpCode: {splits[0]}")
-            };
-
-            var a = int.Parse(splits[1]);
-            var b = int.Parse(splits[2]);
-            var c = int.Parse(splits[3]);
-
-            _instructions.Add(Instruction.Parse([(int)opCode, a, b, c]));
-        }
+        _instructions = inputLines.Skip(1).Select(Instruction.Parse).ToList();
     }
 
     public PuzzleAnswer GetPartOneAnswer()

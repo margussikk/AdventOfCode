@@ -8,7 +8,7 @@ namespace AdventOfCode.Year2018.Day16;
 public class Day16PuzzleSolver : IPuzzleSolver
 {
     private List<Sample> _samples = [];
-    private List<int[]> _instructionValues = [];
+    private List<long[]> _instructionValues = [];
 
     public void ParseInput(string[] inputLines)
     {
@@ -20,7 +20,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
         _instructionValues = chunks.TakeLast(1)
                                    .SelectMany(x => x.Select(y => y.Split(' ')
-                                                                   .Select(int.Parse)
+                                                                   .Select(long.Parse)
                                                                    .ToArray()))
                                    .ToList();
     }
@@ -46,7 +46,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             {
                 if (!sample.BehavesLikeOpcode(opCode))
                 {
-                    opCodePossibilities[sample.InstructionValues[0]].Remove(opCode);
+                    opCodePossibilities[(int)sample.InstructionValues[0]].Remove(opCode);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
         foreach (var instructionValue in _instructionValues)
         {
-            var opCode = opCodePossibilities[instructionValue[0]][0];
+            var opCode = opCodePossibilities[(int)instructionValue[0]][0];
 
             var instruction = Instruction.Parse(instructionValue);
             instruction.ChangeOpCode(opCode);
