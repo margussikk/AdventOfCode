@@ -95,7 +95,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         valleys.Add(valley);
 
         var valleyWalker = new ValleyWalker(expeditionLocation, 0);
-        var distance = valleyWalker.Coordinate.ManhattanDistanceBetween(endLocation);
+        var distance = valleyWalker.Coordinate.ManhattanDistanceTo(endLocation);
         queue.Enqueue(valleyWalker, distance);
 
         while (queue.TryDequeue(out valleyWalker, out _))
@@ -114,7 +114,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
                 queue.Clear();
 
-                distance = valleyWalker.Coordinate.ManhattanDistanceBetween(endLocation);
+                distance = valleyWalker.Coordinate.ManhattanDistanceTo(endLocation);
                 queue.Enqueue(valleyWalker, valleyWalker.Minute + distance);
 
                 continue;
@@ -144,7 +144,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
 
                 var newValleyWalker = new ValleyWalker(movementLocation, valleyWalker.Minute + 1);
 
-                distance = newValleyWalker.Coordinate.ManhattanDistanceBetween(endLocation);
+                distance = newValleyWalker.Coordinate.ManhattanDistanceTo(endLocation);
                 queue.Enqueue(newValleyWalker, newValleyWalker.Minute + distance);
             }
         }

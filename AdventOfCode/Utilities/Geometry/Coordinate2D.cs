@@ -1,5 +1,4 @@
-﻿using BenchmarkDotNet.Columns;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -88,7 +87,7 @@ internal readonly struct Coordinate2D : IEquatable<Coordinate2D>
         }
     }
 
-    public long ManhattanDistanceBetween(Coordinate2D other)
+    public long ManhattanDistanceTo(Coordinate2D other)
     {
         return Math.Abs(X - other.X) + Math.Abs(Y - other.Y);
     }

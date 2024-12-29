@@ -54,7 +54,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
                 .Sum(galaxy2 =>
                 {
                     // Direct
-                    var directDistance = galaxy1.ManhattanDistanceBetween(galaxy2);
+                    var directDistance = galaxy1.ManhattanDistanceTo(galaxy2);
 
                     // Expanded
                     var minRow = Math.Min(galaxy1.Row, galaxy2.Row);

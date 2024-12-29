@@ -36,7 +36,7 @@ internal static class MeasurementFunctions
         {
             var index2 = (index + 1) % coordinates.Count;
 
-            distance += coordinates[index].ManhattanDistanceBetween(coordinates[index2]);
+            distance += coordinates[index].ManhattanDistanceTo(coordinates[index2]);
         }
 
         return distance;

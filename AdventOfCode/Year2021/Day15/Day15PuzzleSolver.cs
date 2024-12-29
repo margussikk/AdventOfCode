@@ -77,7 +77,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
                 var newCaveWalker = new CaveWalker(neighbor.Coordinate, newTotalRisk);
 
-                var manhattan = newCaveWalker.Coordinate.ManhattanDistanceBetween(endCoordinate);
+                var manhattan = newCaveWalker.Coordinate.ManhattanDistanceTo(endCoordinate);
                 queue.Enqueue(newCaveWalker, newTotalRisk + manhattan);
             }
         }

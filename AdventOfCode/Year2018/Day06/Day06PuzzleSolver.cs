@@ -35,7 +35,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
             foreach (var measureCoordinate in measureCoordinates)
             {
                 var distances = _coordinates
-                    .Select(c => c.ManhattanDistanceBetween(measureCoordinate))
+                    .Select(c => c.ManhattanDistanceTo(measureCoordinate))
                     .ToList();
 
                 var minDistance = distances.Min();
@@ -84,7 +84,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
 
             foreach (var measureCoordinate in measureCoordinates)
             {
-                var totalManhattanDistance = _coordinates.Sum(c => c.ManhattanDistanceBetween(measureCoordinate));
+                var totalManhattanDistance = _coordinates.Sum(c => c.ManhattanDistanceTo(measureCoordinate));
                 if (totalManhattanDistance < 10_000)
                 {
                     regionSize++;

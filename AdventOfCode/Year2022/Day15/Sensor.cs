@@ -23,7 +23,7 @@ internal class Sensor
         Coordinate = coordinate;
         BeaconCoordinate = beaconCoordinate;
 
-        _manhattanDistance = Coordinate.ManhattanDistanceBetween(BeaconCoordinate);
+        _manhattanDistance = Coordinate.ManhattanDistanceTo(BeaconCoordinate);
 
         TopCoordinate = new Coordinate2D(Coordinate.X, Coordinate.Y - _manhattanDistance);
         BottomCoordinate = new Coordinate2D(Coordinate.X, Coordinate.Y + _manhattanDistance);
@@ -49,6 +49,6 @@ internal class Sensor
 
     public bool Detectable(Coordinate2D location)
     {
-        return Coordinate.ManhattanDistanceBetween(location) <= _manhattanDistance;
+        return Coordinate.ManhattanDistanceTo(location) <= _manhattanDistance;
     }
 }

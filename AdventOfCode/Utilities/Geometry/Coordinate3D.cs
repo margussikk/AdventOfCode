@@ -66,7 +66,7 @@ internal readonly struct Coordinate3D(long x, long y, long z) : IEquatable<Coord
         }
     }
 
-    public long ManhattanDistanceBetween(Coordinate3D other)
+    public long ManhattanDistanceTo(Coordinate3D other)
     {
         return Math.Abs(X - other.X) + Math.Abs(Y - other.Y) + Math.Abs(Z - other.Z);
     }
