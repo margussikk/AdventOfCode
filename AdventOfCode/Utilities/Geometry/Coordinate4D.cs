@@ -4,6 +4,8 @@ namespace AdventOfCode.Utilities.Geometry;
 
 internal readonly struct Coordinate4D(long x, long y, long z, long w) : IEquatable<Coordinate4D>
 {
+    public static readonly Coordinate4D Zero = new(0, 0, 0, 0);
+
     public long X { get; } = x;
 
     public long Y { get; } = y;

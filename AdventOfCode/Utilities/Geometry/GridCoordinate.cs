@@ -2,6 +2,8 @@
 
 internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCoordinate>
 {
+    public static readonly GridCoordinate Zero = new(0, 0);
+
     public int Row { get; } = row;
 
     public int Column { get; } = column;
