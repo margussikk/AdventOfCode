@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2018.Day08;
 
@@ -9,9 +10,9 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        var queue = new Queue<int>(inputLines[0].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse));
+        var span = inputLines[0].SplitToNumbers<int>(' ').AsSpan();
 
-        _rootNode = new Node(queue);
+        _rootNode = new Node(ref span);
     }
 
     public PuzzleAnswer GetPartOneAnswer()

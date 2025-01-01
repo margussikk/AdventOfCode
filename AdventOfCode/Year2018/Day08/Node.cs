@@ -5,19 +5,22 @@ internal class Node
     public List<Node> Children { get; } = [];
     public List<int> MetadataEntries { get; } = [];
 
-    public Node(Queue<int> queue)
+    public Node(ref Span<int> span)
     {
-        var childrenCount = queue.Dequeue();
-        var metadataEntriesCount = queue.Dequeue();
+        var childrenCount = span[0];
+        var metadataEntriesCount = span[1];
+
+        span = span[2..];
 
         for (int i = 0; i < childrenCount; i++)
         {
-            Children.Add(new Node(queue));
+            Children.Add(new Node(ref span));
         }
 
         for (int i = 0; i < metadataEntriesCount; i++)
         {
-            MetadataEntries.Add(queue.Dequeue());
+            MetadataEntries.Add(span[0]);
+            span = span[1..];
         }
     }
 
