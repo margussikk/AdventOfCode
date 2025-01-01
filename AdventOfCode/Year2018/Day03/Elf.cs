@@ -8,11 +8,11 @@ internal partial class Elf
 {
     public int Id { get; init; }
 
-    public required Area2D ClaimArea { get; init; }
+    public required Region2D ClaimRegion { get; init; }
 
-    public bool TryFindOverlappingClaimArea(Elf other, [MaybeNullWhen(false)] out Area2D overlapArea)
+    public bool TryFindOverlappingClaimArea(Elf other, [MaybeNullWhen(false)] out Region2D overlapRegion)
     {
-        return ClaimArea.TryFindOverlap(other.ClaimArea, out overlapArea);
+        return ClaimRegion.TryFindOverlap(other.ClaimRegion, out overlapRegion);
     }
 
     public static Elf Parse(string input)
@@ -31,7 +31,7 @@ internal partial class Elf
         return new Elf
         {
             Id = int.Parse(match.Groups[1].Value),
-            ClaimArea = new Area2D(minCoordinate, maxCoordinate)
+            ClaimRegion = new Region2D(minCoordinate, maxCoordinate)
         };
     }
 

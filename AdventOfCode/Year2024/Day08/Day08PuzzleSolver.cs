@@ -9,13 +9,13 @@ public class Day08PuzzleSolver : IPuzzleSolver
 {
     private readonly Dictionary<char, List<Coordinate2D>> _antennas = [];
 
-    private Area2D _area = new(Coordinate2D.Zero, Coordinate2D.Zero);
+    private Region2D _region = new(Coordinate2D.Zero, Coordinate2D.Zero);
 
     public void ParseInput(string[] inputLines)
     {
-        _area = new Area2D(Coordinate2D.Zero, new Coordinate2D(inputLines[0].Length - 1, inputLines.Length - 1)); // - 1 because the end coordinate is inclusive
+        _region = new Region2D(Coordinate2D.Zero, new Coordinate2D(inputLines[0].Length - 1, inputLines.Length - 1)); // - 1 because the end coordinate is inclusive
 
-        foreach (var coordinate in _area)
+        foreach (var coordinate in _region)
         {
             var character = inputLines[coordinate.Y][(int)coordinate.X];
             if (character == '.')
@@ -73,7 +73,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
         var vector = coordinate2 - coordinate1;
 
         var coordinate = coordinate2 + vector;
-        while (_area.InBounds(coordinate))
+        while (_region.InBounds(coordinate))
         {
             antinodeCoordinates.Add(coordinate);
 

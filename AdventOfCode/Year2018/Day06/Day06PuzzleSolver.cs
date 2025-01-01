@@ -22,7 +22,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
         var minCoordinate = new Coordinate2D(_coordinates.Select(c => c.X).Min(), _coordinates.Select(c => c.Y).Min());
         var maxCoordinate = new Coordinate2D(_coordinates.Select(c => c.X).Max(), _coordinates.Select(c => c.Y).Max());
 
-        var area = new Area2D(minCoordinate, maxCoordinate);
+        var region = new Region2D(minCoordinate, maxCoordinate);
 
         var found = true;
         for (var manhattanDistance = 1; found && manhattanDistance < int.MaxValue; manhattanDistance++)
@@ -30,7 +30,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
             found = false;
             var measureCoordinates = _coordinates
                 .SelectMany(c => c.ManhattanCoordinates(manhattanDistance))
-                .Where(c => area.InBounds(c) && !processedCoordinates.Contains(c));
+                .Where(c => region.InBounds(c) && !processedCoordinates.Contains(c));
 
             foreach (var measureCoordinate in measureCoordinates)
             {

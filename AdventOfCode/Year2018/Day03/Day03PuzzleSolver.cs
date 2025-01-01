@@ -27,7 +27,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var overlappedClaimIds = _elves.GetPairs()
-                                       .Where(x => x.First.ClaimArea.Overlaps(x.Second.ClaimArea))
+                                       .Where(x => x.First.ClaimRegion.Overlaps(x.Second.ClaimRegion))
                                        .SelectMany(x => new int[] { x.First.Id, x.Second.Id })
                                        .Distinct();
 

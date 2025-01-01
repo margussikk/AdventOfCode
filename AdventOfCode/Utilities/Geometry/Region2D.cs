@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class Area2D : IEnumerable<Coordinate2D>
+internal class Region2D : IEnumerable<Coordinate2D>
 {
     public Coordinate2D MinCoordinate { get; }
 
@@ -13,7 +13,7 @@ internal class Area2D : IEnumerable<Coordinate2D>
 
     public long YLength { get; }
 
-    public Area2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate)
+    public Region2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate)
     {
         MinCoordinate = minCoordinate;
         MaxCoordinate = maxCoordinate;
@@ -30,23 +30,23 @@ internal class Area2D : IEnumerable<Coordinate2D>
                coordinate.Y <= MaxCoordinate.Y;
     }
 
-    public bool TryFindOverlap(Area2D other, [MaybeNullWhen(false)] out Area2D overlapArea)
+    public bool TryFindOverlap(Region2D other, [MaybeNullWhen(false)] out Region2D overlapRegion)
     {
         if (Overlaps(other))
         {
             var minCoordinate = new Coordinate2D(Math.Max(MinCoordinate.X, other.MinCoordinate.X), Math.Max(MinCoordinate.Y, other.MinCoordinate.Y));
             var maxCoordinate = new Coordinate2D(Math.Min(MaxCoordinate.X, other.MaxCoordinate.X), Math.Min(MaxCoordinate.Y, other.MaxCoordinate.Y));
 
-            overlapArea = new Area2D(minCoordinate, maxCoordinate);
+            overlapRegion = new Region2D(minCoordinate, maxCoordinate);
 
             return true;
         }
 
-        overlapArea = null;
+        overlapRegion = null;
         return false;
     }
 
-    public bool Overlaps(Area2D other)
+    public bool Overlaps(Region2D other)
     {
         return MinCoordinate.X <= other.MaxCoordinate.X &&
                MaxCoordinate.X >= other.MinCoordinate.X &&
