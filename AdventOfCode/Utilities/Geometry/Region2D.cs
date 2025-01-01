@@ -13,6 +13,30 @@ internal class Region2D : IEnumerable<Coordinate2D>
 
     public long YLength { get; }
 
+    public Region2D(IEnumerable<Coordinate2D> coordinates)
+    {
+        var minX = long.MaxValue;
+        var maxX = long.MinValue;
+
+        var minY = long.MaxValue;
+        var maxY = long.MinValue;
+
+        foreach (var coordinate in coordinates)
+        {
+            minX = long.Min(minX, coordinate.X);
+            maxX = long.Max(maxX, coordinate.X);
+
+            minY = long.Min(minY, coordinate.Y);
+            maxY = long.Max(maxY, coordinate.Y);
+        }
+
+        MinCoordinate = new Coordinate2D(minX, minY);
+        MaxCoordinate = new Coordinate2D(maxX, maxY);
+
+        XLength = MaxCoordinate.X - MinCoordinate.X + 1;
+        YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
+    }
+
     public Region2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate)
     {
         MinCoordinate = minCoordinate;
