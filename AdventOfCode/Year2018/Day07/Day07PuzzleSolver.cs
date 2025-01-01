@@ -38,7 +38,7 @@ public partial class Day07PuzzleSolver : IPuzzleSolver
             _stepDependencies[step].Add(finishedBeforeStep);
         }
 
-        _namedSteps.AddRange(namedSteps.OrderBy(x => x));
+        _namedSteps.AddRange(namedSteps.Order());
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -48,7 +48,7 @@ public partial class Day07PuzzleSolver : IPuzzleSolver
 
         while (workSteps.Count != 0)
         {
-            var step = workSteps.Find(s => _stepDependencies[s].TrueForAll(x => !workSteps.Contains(x)));
+            var step = workSteps.Find(s => !_stepDependencies[s].Intersect(workSteps).Any());
             workSteps.Remove(step);
 
             answer.Append(Convert.ToChar(step + 'A'));
@@ -100,7 +100,7 @@ public partial class Day07PuzzleSolver : IPuzzleSolver
                 var step = workSteps.Cast<int?>()
                                     .FirstOrDefault(s => s != null &&
                                                          !workers.Exists(w => w.IsWorking && w.ProcessingStep == s) &&
-                                                         _stepDependencies[s.Value].TrueForAll(x => !workSteps.Contains(x)));
+                                                         !_stepDependencies[s.Value].Intersect(workSteps).Any());
                 if (step == null)
                 {
                     break;
