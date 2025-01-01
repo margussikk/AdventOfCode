@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using AdventOfCode.Utilities.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -14,13 +15,9 @@ internal readonly struct Coordinate4D(long x, long y, long z, long w) : IEquatab
 
     public long W { get; } = w;
 
-    public static Coordinate4D Parse(string input)
+    public long ManhattanDistanceTo(Coordinate4D other)
     {
-        var values = input.Split(',')
-                          .Select(long.Parse)
-                          .ToList();
-
-        return new Coordinate4D(values[0], values[1], values[2], values[3]);
+        return Math.Abs(X - other.X) + Math.Abs(Y - other.Y) + Math.Abs(Z - other.Z) + Math.Abs(W - other.W);
     }
 
     public override int GetHashCode()
@@ -75,5 +72,12 @@ internal readonly struct Coordinate4D(long x, long y, long z, long w) : IEquatab
             Y == otherCoordinate.Y &&
             Z == otherCoordinate.Z &&
             W == otherCoordinate.W;
+    }
+
+    public static Coordinate4D Parse(string input)
+    {
+        var values = input.SplitToNumbers<long>(',');
+
+        return new Coordinate4D(values[0], values[1], values[2], values[3]);
     }
 }
