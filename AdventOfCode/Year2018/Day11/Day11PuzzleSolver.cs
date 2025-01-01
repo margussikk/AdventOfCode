@@ -1,5 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.Mathematics;
+using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2018.Day11;
 
@@ -8,24 +10,28 @@ public class Day11PuzzleSolver : IPuzzleSolver
 {
     private int _serialNumber;
 
-    private readonly Grid<int> _grid = new Grid<int>(300, 300);
+    private SummedAreaTable _summedAreaTable = new(new(0, 0));
 
     public void ParseInput(string[] inputLines)
     {
         _serialNumber = int.Parse(inputLines[0]);
 
-        for (var row = 0; row <= _grid.LastRowIndex; row++)
+        var matrix = new Matrix<int>(300, 300);
+
+        for (var row = 0; row <= matrix.LastRowIndex; row++)
         {
-            for (var column = 0; column <= _grid.LastColumnIndex; column++)
+            for (var column = 0; column <= matrix.LastColumnIndex; column++)
             {
-                _grid[row, column] = CalculatePowerLevel(row, column);
+                matrix[row, column] = CalculatePowerLevel(row, column);
             }
         }
+
+        _summedAreaTable = new SummedAreaTable(matrix);
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var result = GetLargestTotalPowerResultFixed(3);
+        var result = FindTotalPower(3);
 
         var answer = $"{result.Coordinate.Column + 1},{result.Coordinate.Row + 1}";
 
@@ -34,85 +40,43 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var result = GetLargestTotalPowerResultDynamic();
+        var bestResult = new TotalPowerResult(GridCoordinate.Zero, 0, int.MinValue);
 
-        var answer = $"{result.Coordinate.Column + 1},{result.Coordinate.Row + 1},{result.Size}";
+        for (var squareSize = 1; squareSize <= 300; squareSize++)
+        {
+            var result = FindTotalPower(squareSize);
+            if (result.TotalPower > bestResult.TotalPower)
+            {
+                bestResult = result;
+            }
+        }
+
+        var answer = $"{bestResult.Coordinate.Column + 1},{bestResult.Coordinate.Row + 1},{bestResult.SquareSize}";
 
         return new PuzzleAnswer(answer, "229,61,16");
     }
 
-    private TotalPowerResult GetLargestTotalPowerResultFixed(int size)
+    private TotalPowerResult FindTotalPower(int squareSize)
     {
-        var result = new TotalPowerResult(new GridCoordinate(0, 0), size, int.MinValue);
+        var largestTotalPower = int.MinValue;
+        var largestTotalPowerCoordinate = GridCoordinate.Zero;
 
-        for (var outerRow = 0; outerRow <= _grid.LastRowIndex - size; outerRow++)
+        for (var row = 0; row <= _summedAreaTable.Height - squareSize; row++)
         {
-            for (var outerColumn = 0; outerColumn <= _grid.LastColumnIndex - size; outerColumn++)
+            for (var column = 0; column <= _summedAreaTable.Width - squareSize; column++)
             {
-                var totalPower = 0;
-
-                for (var innerRow = outerRow; innerRow < outerRow + size; innerRow++)
+                var sum = _summedAreaTable.GetRectangleSum(row, column, row + squareSize - 1, column + squareSize - 1);
+                if (sum > largestTotalPower)
                 {
-                    for (var innerColumn = outerColumn; innerColumn < outerColumn + size; innerColumn++)
-                    {
-                        totalPower += _grid[innerRow, innerColumn];
-                    }
-                }
-
-                if (totalPower > result.TotalPower)
-                {
-                    var coordinate = new GridCoordinate(outerRow, outerColumn);
-                    result = new TotalPowerResult(coordinate, size, totalPower);
+                    largestTotalPower = sum;
+                    largestTotalPowerCoordinate = new GridCoordinate(row, column);
                 }
             }
         }
 
-        return result;
+        return new TotalPowerResult(largestTotalPowerCoordinate, squareSize, largestTotalPower);
     }
 
-    private TotalPowerResult GetLargestTotalPowerResultDynamic()
-    {
-        var previousSizeGrid = _grid;
-
-        var cell = previousSizeGrid.MaxBy(x => x.Object);
-        var result = new TotalPowerResult(cell.Coordinate, 1, cell.Object);
-
-        for (var size = 2; size <= 300; size++)
-        {
-            var currentSizeGrid = new Grid<int>(300, 300);
-
-            for (var outerRow = 0; outerRow <= _grid.LastRowIndex - size; outerRow++)
-            {
-                for (var outerColumn = 0; outerColumn <= _grid.LastColumnIndex - size; outerColumn++)
-                {
-                    var previousSize = size - 1;
-
-                    var coordinate = new GridCoordinate(outerRow, outerColumn);
-
-                    var previousSizeSquarePower = previousSizeGrid[coordinate];
-
-                    var expansionRowPower = Enumerable.Range(outerColumn, previousSize)
-                                                      .Sum(c => _grid[outerRow + previousSize, c]);
-
-                    var expansionColumnPower = Enumerable.Range(outerRow, previousSize)
-                                                         .Sum(r => _grid[r, outerColumn + previousSize]);
-
-                    var totalPower = previousSizeSquarePower + expansionRowPower + expansionColumnPower + _grid[outerRow + previousSize, outerColumn + previousSize];
-
-                    currentSizeGrid[coordinate] = totalPower;
-
-                    if (totalPower > result.TotalPower)
-                    {
-                        result = new TotalPowerResult(coordinate, size, totalPower);
-                    }
-                }
-            }
-
-            previousSizeGrid = currentSizeGrid;
-        }
-
-        return result;
-    }
 
     private int CalculatePowerLevel(int row, int column)
     {
@@ -128,5 +92,5 @@ public class Day11PuzzleSolver : IPuzzleSolver
         return hundredsDigit - 5;
     }
 
-    private sealed record TotalPowerResult(GridCoordinate Coordinate, int Size, int TotalPower);
+    private sealed record TotalPowerResult(GridCoordinate Coordinate, int SquareSize, int TotalPower);
 }

@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.Mathematics;
 using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2023.Day24;

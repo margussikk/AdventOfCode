@@ -1,4 +1,5 @@
 ﻿using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.Mathematics;
 using AdventOfCode.Utilities.Numerics;
 using System.Text.RegularExpressions;
 

@@ -1,6 +1,7 @@
-﻿using System.Numerics;
+﻿using AdventOfCode.Utilities.Numerics;
+using System.Numerics;
 
-namespace AdventOfCode.Utilities.Numerics;
+namespace AdventOfCode.Utilities.Mathematics;
 
 internal static class LinearEquationSolver
 {

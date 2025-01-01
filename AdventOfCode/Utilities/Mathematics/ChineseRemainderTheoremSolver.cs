@@ -1,6 +1,4 @@
-﻿using AdventOfCode.Utilities.Mathematics;
-
-namespace AdventOfCode.Utilities.Numerics;
+﻿namespace AdventOfCode.Utilities.Mathematics;
 
 // Adapted from https://rosettacode.org/wiki/Chinese_remainder_theorem#C.23
 internal static class ChineseRemainderTheoremSolver

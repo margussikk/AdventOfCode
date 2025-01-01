@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Numerics;
+﻿namespace AdventOfCode.Utilities.Mathematics;
 
 internal class Congruence(long modulus, long reminder)
 {
