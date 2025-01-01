@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.Geometry;
 
 namespace AdventOfCode.Year2018.Day03;
 
@@ -16,6 +17,13 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
+        GetAnswerUsingGrid(out var answer, out _);
+
+        return new PuzzleAnswer(answer, 118223);
+    }
+
+    public PuzzleAnswer GetPartOneAnswerUsingRegions()
+    {
         var answer = _elves.GetPairs()
                            .SelectMany(x => x.First.TryFindOverlappingClaimArea(x.Second, out var overlapArea) ? overlapArea.AsEnumerable() : [])
                            .Distinct()
@@ -26,8 +34,15 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
+        GetAnswerUsingGrid(out _, out var answer);
+
+        return new PuzzleAnswer(answer, 412);
+    }
+
+    public PuzzleAnswer GetPartTwoAnswerUsingRegionOverlaps()
+    {
         var overlappedClaimIds = _elves.GetPairs()
-                                       .Where(x => x.First.ClaimRegion.Overlaps(x.Second.ClaimRegion))
+                                       .Where(x => x.First.ClaimArea.Overlaps(x.Second.ClaimArea))
                                        .SelectMany(x => new int[] { x.First.Id, x.Second.Id })
                                        .Distinct();
 
@@ -36,5 +51,45 @@ public class Day03PuzzleSolver : IPuzzleSolver
                            .FirstOrDefault();
 
         return new PuzzleAnswer(answer, 412);
+    }
+
+    public void GetAnswerUsingGrid(out int _overlappedClaims, out int claimWithoutOverlap)
+    {
+        var grid = new Grid<int?>(1000, 1000);
+        _overlappedClaims = 0;
+
+        var elfIds = new HashSet<int>();
+
+        foreach (var elf in _elves)
+        {
+            elfIds.Add(elf.Id);
+
+            foreach (var coordinate2D in elf.ClaimArea)
+            {
+                var gridCoordinate = new GridCoordinate((int)coordinate2D.Y, (int)coordinate2D.X);
+
+                if (!grid[gridCoordinate].HasValue)
+                {
+                    // First claim
+                    grid[gridCoordinate] = elf.Id;
+                }
+                else if (grid[gridCoordinate]!.Value > 0)
+                {
+                    // First claim overlap
+                    elfIds.Remove(grid[gridCoordinate]!.Value);
+                    elfIds.Remove(elf.Id);
+
+                    grid[gridCoordinate] = 0;
+                    _overlappedClaims++;
+                }
+                else
+                {
+                    // 2nd, 3rd etc claim overlap
+                    elfIds.Remove(elf.Id);
+                }
+            }
+        }
+
+        claimWithoutOverlap = elfIds.Single();
     }
 }

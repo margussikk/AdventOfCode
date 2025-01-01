@@ -8,11 +8,11 @@ internal partial class Elf
 {
     public int Id { get; init; }
 
-    public required Region2D ClaimRegion { get; init; }
+    public required Region2D ClaimArea { get; init; }
 
-    public bool TryFindOverlappingClaimArea(Elf other, [MaybeNullWhen(false)] out Region2D overlapRegion)
+    public bool TryFindOverlappingClaimArea(Elf other, [MaybeNullWhen(false)] out Region2D overlapArea)
     {
-        return ClaimRegion.TryFindOverlap(other.ClaimRegion, out overlapRegion);
+        return ClaimArea.TryFindOverlap(other.ClaimArea, out overlapArea);
     }
 
     public static Elf Parse(string input)
@@ -25,16 +25,17 @@ internal partial class Elf
 
         var match = matches[0];
 
-        var minCoordinate = new Coordinate2D(int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value));
-        var maxCoordinate = new Coordinate2D(minCoordinate.X + int.Parse(match.Groups[4].Value) - 1, minCoordinate.Y + int.Parse(match.Groups[5].Value) - 1);
+        var minCoordinate = Coordinate2D.Parse(match.Groups[2].Value);
+        var sizeVector = Vector2D.Parse(match.Groups[3].Value.Replace('x', ','));
+        var maxCoordinate = minCoordinate + sizeVector - Vector2D.UnitX - Vector2D.UnitY;
 
         return new Elf
         {
             Id = int.Parse(match.Groups[1].Value),
-            ClaimRegion = new Region2D(minCoordinate, maxCoordinate)
+            ClaimArea = new Region2D(minCoordinate, maxCoordinate)
         };
     }
 
-    [GeneratedRegex(@"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)")]
+    [GeneratedRegex(@"#(\d+) @ (\d+,\d+): (\d+x\d+)")]
     private static partial Regex InputLineRegex();
 }

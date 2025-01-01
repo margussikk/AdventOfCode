@@ -1,5 +1,4 @@
 ﻿using AdventOfCode.Utilities.Geometry;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AdventOfCode.Utilities.Extensions;
 internal static class CharExtensions

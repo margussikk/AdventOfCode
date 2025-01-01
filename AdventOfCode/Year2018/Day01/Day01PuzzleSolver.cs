@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using System.Globalization;
 
 namespace AdventOfCode.Year2018.Day01;
 
@@ -10,7 +11,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
     public void ParseInput(string[] inputLines)
     {
         _frequencyChanges = inputLines
-            .Select(x => int.Parse(x.Replace("+", "")))
+            .Select(x => int.Parse(x, NumberStyles.AllowLeadingSign))
             .ToList();
     }
 
