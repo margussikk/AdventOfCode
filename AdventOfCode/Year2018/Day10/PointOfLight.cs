@@ -5,13 +5,22 @@ namespace AdventOfCode.Year2018.Day10;
 
 internal partial class PointOfLight
 {
-    public Coordinate2D Position { get; set; }
+    public Coordinate2D Position { get; private set; }
 
-    public Vector2D Velocity { get; set; }
+    public Vector2D Velocity { get; private set; }
+
+    public PointOfLight Clone()
+    {
+        return new PointOfLight
+        {
+            Position = Position,
+            Velocity = Velocity,
+        };
+    }
 
     public void Move()
     {
-        Position = Position + Velocity;
+        Position += Velocity;
     }
 
     public static PointOfLight Parse(string input)
@@ -24,8 +33,8 @@ internal partial class PointOfLight
 
         var match = matches[0];
 
-        var position = new Coordinate2D(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-        var velocity = new Vector2D(int.Parse(match.Groups[3].Value), int.Parse(match.Groups[4].Value));
+        var position = Coordinate2D.Parse(match.Groups[1].Value.Replace(" ", string.Empty));
+        var velocity = Vector2D.Parse(match.Groups[2].Value.Replace(" ", string.Empty));
 
         return new PointOfLight
         {
@@ -34,6 +43,6 @@ internal partial class PointOfLight
         };
     }
 
-    [GeneratedRegex(@"position=<\s*(-?\d+),\s*(-?\d+)> velocity=<\s*(-?\d+),\s*(-?\d+)>")]
+    [GeneratedRegex(@"position=<(\s*-?\d+,\s*-?\d+)> velocity=<(\s*-?\d+,\s*-?\d+)>")]
     private static partial Regex InputLineRegex();
 }

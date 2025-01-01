@@ -32,29 +32,20 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public (string message, int minutes) DetectMessage()
     {
-        var pointsOfLight = _pointsOfLight
-            .Select(x => new PointOfLight
-            {
-                Position = x.Position,
-                Velocity = x.Velocity,
-            })
-            .ToList();
+        var pointsOfLight = _pointsOfLight.Select(x => x.Clone())
+                                          .ToList();
 
         for (var minute = 0; minute < int.MaxValue; minute++)
         {
-            var minY = pointsOfLight.Min(p => p.Position.Y);
-            var maxY = pointsOfLight.Max(p => p.Position.Y);
-
-            if (maxY - minY + 1 == Ocr.LargeLetterHeight)
+            var region = new Region2D(pointsOfLight.Select(p => p.Position));
+            if (region.YLength == Ocr.LargeLetterHeight)
             {
-                var minX = pointsOfLight.Min(p => p.Position.X);
-                var maxX = pointsOfLight.Max(p => p.Position.X);
-
-                var grid = new BitGrid((int)(maxY - minY) + 1, (int)(maxX - minX) + 1);
+                var grid = new BitGrid((int)region.YLength, (int)region.XLength);
 
                 foreach (var pointOfLight in pointsOfLight)
                 {
-                    grid[(int)(pointOfLight.Position.Y - minY), (int)(pointOfLight.Position.X - minX)] = true;
+                    var coordinate = Coordinate2D.Zero + (pointOfLight.Position - region.MinCoordinate);
+                    grid[(int)coordinate.Y, (int)coordinate.X] = true;
                 }
 
                 var stringBuilder = new StringBuilder();
@@ -78,7 +69,6 @@ public class Day10PuzzleSolver : IPuzzleSolver
                 }
 
                 var message = Ocr.Parse(stringBuilder.ToString());
-
                 return (message, minute);
             }
 
