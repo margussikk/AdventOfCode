@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2018.Day09;
@@ -42,31 +43,25 @@ public partial class Day09PuzzleSolver : IPuzzleSolver
         var player = 0;
         var playerScores = new long[playerCount];
 
-        var currentMarble = new Marble(0);
+        var marblesList = new LinkedList<long>();
+        var currentMarble = marblesList.AddFirst(0);
 
         for (var marbleWorth = 1L; marbleWorth <= lastMarbleWorth; marbleWorth++)
         {
             if (marbleWorth % 23 == 0)
             {
-                var removedMarble = currentMarble;
-                for (var i = 0; i < 7; i++)
-                {
-                    removedMarble = removedMarble.CounterClockwiseMarble;
-                }
+                var toBeRemovedMarble = currentMarble.PreviousCircular(7);
 
-                removedMarble.Remove();
+                playerScores[player] += marbleWorth + toBeRemovedMarble.Value;
 
-                playerScores[player] += marbleWorth + removedMarble.Worth;
+                currentMarble = toBeRemovedMarble.NextCircular();
 
-                currentMarble = removedMarble.ClockwiseMarble;
+                marblesList.Remove(toBeRemovedMarble);
             }
             else
             {
-                var addedMarble = new Marble(marbleWorth);
-
-                currentMarble.ClockwiseMarble.AddClockwise(addedMarble);
-
-                currentMarble = addedMarble;
+                currentMarble = currentMarble.NextCircular();
+                currentMarble = marblesList.AddAfter(currentMarble, marbleWorth);
             }
 
             player = (player + 1) % playerCount;
