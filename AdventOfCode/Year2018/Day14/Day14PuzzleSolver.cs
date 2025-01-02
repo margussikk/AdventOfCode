@@ -56,44 +56,41 @@ public class Day14PuzzleSolver : IPuzzleSolver
         var elf1Position = 0;
         var elf2Position = 1;
 
-        while (true)
+        var answer = 0;
+
+        var found = false;
+        do
         {
             var newRecipe = scoreboard[elf1Position] + scoreboard[elf2Position];
             if (newRecipe >= 10)
             {
                 scoreboard.Add(1);
-
-                if (Found(scoreboard, recipeDigits))
-                {
-                    break;
-                }
             }
-
             scoreboard.Add(newRecipe % 10);
-            if (Found(scoreboard, recipeDigits))
-            {
-                break;
-            }
 
             elf1Position = MathFunctions.Modulo(elf1Position + scoreboard[elf1Position] + 1, scoreboard.Count);
             elf2Position = MathFunctions.Modulo(elf2Position + scoreboard[elf2Position] + 1, scoreboard.Count);
-        }
 
-        var answer = scoreboard.Count - recipeDigits.Count;
+            while (answer < scoreboard.Count - recipeDigits.Count)
+            {
+                found = Found(scoreboard, answer, recipeDigits);
+                if (found)
+                {
+                    break;
+                }
+
+                answer++;
+            }
+        } while(!found);
 
         return new PuzzleAnswer(answer, 20333868);
     }
 
-    private static bool Found(List<int> scoreboard, List<int> recipeDigits)
+    private static bool Found(List<int> scoreboard, int offset, List<int> recipeDigits)
     {
-        if (scoreboard.Count < recipeDigits.Count || scoreboard[^1] != recipeDigits[^1])
-        {
-            return false;
-        }
-
         for (var i = 0; i < recipeDigits.Count; i++)
         {
-            if (scoreboard[^(recipeDigits.Count - i)] != recipeDigits[i])
+            if (scoreboard[offset + i] != recipeDigits[i])
             {
                 return false;
             }
