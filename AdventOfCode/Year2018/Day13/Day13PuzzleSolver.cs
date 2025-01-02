@@ -1,53 +1,37 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
+using Microsoft.CodeAnalysis;
 
 namespace AdventOfCode.Year2018.Day13;
 
 [Puzzle(2018, 13, "Mine Cart Madness")]
 public class Day13PuzzleSolver : IPuzzleSolver
 {
-    private Grid<GridDirection> _grid = new Grid<GridDirection>(0, 0);
+    private Grid<GridDirection> _grid = new(0, 0);
 
-    private readonly List<Cart> _carts = new List<Cart>();
+    private readonly List<Cart> _carts = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _grid = new Grid<GridDirection>(inputLines.Length, inputLines[0].Length);
-
-        for (var row = 0; row <= _grid.LastRowIndex; row++)
+        _grid = inputLines.SelectToGrid((character, coordinate) =>
         {
-            for (var column = 0; column <= _grid.LastColumnIndex; column++)
+            if (character is '<' or '>' or 'v' or '^')
             {
-                var symbol = inputLines[row][column];
-
-                if (symbol is '<' or '>' or 'v' or '^')
-                {
-                    var direction = symbol switch
-                    {
-                        '<' => GridDirection.Left,
-                        '>' => GridDirection.Right,
-                        '^' => GridDirection.Up,
-                        'v' => GridDirection.Down,
-                        _ => throw new NotImplementedException()
-                    };
-
-                    var cart = new Cart(new GridCoordinate(row, column), direction);
-
-                    _carts.Add(cart);
-                }
-
-                _grid[row, column] = symbol switch
-                {
-                    ' ' => GridDirection.None,
-                    '|' or 'v' or '^' => GridDirection.UpAndDown,
-                    '-' or '<' or '>' => GridDirection.LeftAndRight,
-                    '/' => GridDirection.UpAndLeft,
-                    '\\' => GridDirection.DownAndLeft,
-                    '+' => GridDirection.AllSides,
-                    _ => throw new NotImplementedException()
-                };
+                _carts.Add(new Cart(coordinate, character.ParseToGridDirection()));
             }
-        }
+
+            return character switch
+            {
+                ' ' => GridDirection.None,
+                '|' or 'v' or '^' => GridDirection.UpAndDown,
+                '-' or '<' or '>' => GridDirection.LeftAndRight,
+                '/' => GridDirection.UpAndLeft,
+                '\\' => GridDirection.DownAndLeft,
+                '+' => GridDirection.AllSides,
+                _ => throw new NotImplementedException()
+            };
+        });
     }
 
     public PuzzleAnswer GetPartOneAnswer()
