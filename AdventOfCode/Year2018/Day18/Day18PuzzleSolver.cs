@@ -1,6 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.Simulation;
 
 namespace AdventOfCode.Year2018.Day18;
 
@@ -22,18 +23,22 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var grid = _grid.Clone();
+        var gameOfLife = new GameOfLife<Tile>(_grid.Height, _grid.Width);
+        foreach (var cell in _grid)
+        {
+            gameOfLife.SetState(cell.Coordinate, cell.Object);
+        }
 
         for (var minute = 0; minute < 10; minute++)
         {
-            ApplyStrangeMagic(grid);
+            gameOfLife = ApplyStrangeMagic(gameOfLife);
         }
 
-        var answer = GetResourceValue(grid);
+        var answer = CalculateResourceValue(gameOfLife);
 
         return new PuzzleAnswer(answer, 535522);
     }
-
+    
     public PuzzleAnswer GetPartTwoAnswer()
     {
         const int totalCycles = 1_000_000_000;
@@ -41,11 +46,15 @@ public class Day18PuzzleSolver : IPuzzleSolver
         var strangeMagicCycles = new Dictionary<int, int>();
         var totalResourceValues = new List<int>();
 
-        var grid = _grid.Clone();
+        var gameOfLife = new GameOfLife<Tile>(_grid.Height, _grid.Width);
+        foreach (var cell in _grid)
+        {
+            gameOfLife.SetState(cell.Coordinate, cell.Object);
+        }
 
         for (var cycle = 0; cycle < int.MaxValue; cycle++)
         {
-            var hashCode = grid.GetHashCode();
+            var hashCode = gameOfLife.GetHashCode();
             if (strangeMagicCycles.TryGetValue(hashCode, out var cycleStart))
             {
                 var cycleLength = cycle - cycleStart;
@@ -57,78 +66,67 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
             strangeMagicCycles[hashCode] = cycle;
 
-            totalResourceValues.Add(GetResourceValue(grid));
+            totalResourceValues.Add(CalculateResourceValue(gameOfLife));
 
-            ApplyStrangeMagic(grid);
+            gameOfLife = ApplyStrangeMagic(gameOfLife);
         }
 
         return new PuzzleAnswer(answer, 210160);
     }
 
-    private static int GetResourceValue(Grid<Tile> grid)
+    private static GameOfLife<Tile> ApplyStrangeMagic(GameOfLife<Tile> gameOfLife)
     {
-        var wooded = grid.Count(c => c.Object == Tile.Trees);
-        var lumberyard = grid.Count(c => c.Object == Tile.Lumberyard);
+        var nextGameOfLife = gameOfLife.Clone();
 
-        return wooded * lumberyard;
+        foreach (var cell in gameOfLife)
+        {
+            if (cell.Object == Tile.Open)
+            {
+                if (cell.AroundCount(Tile.Trees) >= 3)
+                {
+                    nextGameOfLife.SetState(cell.Coordinate, Tile.Trees);
+                }
+            }
+            else if (cell.Object == Tile.Trees)
+            {
+                if (cell.AroundCount(Tile.Lumberyard) >= 3)
+                {
+                    nextGameOfLife.SetState(cell.Coordinate, Tile.Lumberyard);
+                }
+            }
+            else if (cell.Object == Tile.Lumberyard)
+            {
+                if (cell.AroundCount(Tile.Lumberyard) == 0 || cell.AroundCount(Tile.Trees) == 0)
+                {
+                    nextGameOfLife.SetState(cell.Coordinate, Tile.Open);
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        return nextGameOfLife;
     }
 
-    private static void ApplyStrangeMagic(Grid<Tile> grid)
+    private static int CalculateResourceValue(GameOfLife<Tile> gameOfLife)
     {
-        var tileChanges = new List<TileChange>();
+        var treesCount = 0;
+        var lumberyardCount = 0;
 
-        // Find tile changes
-        foreach (var cell in grid)
+        foreach (var cell in gameOfLife)
         {
-            var nextTile = GetNextTile(grid, cell);
-            if (nextTile != cell.Object)
+            if (cell.Object == Tile.Trees)
             {
-                tileChanges.Add(new TileChange(cell.Coordinate, nextTile));
+                treesCount++;
+            }
+            else if (cell.Object == Tile.Lumberyard)
+            {
+                lumberyardCount++;
             }
         }
 
-        // Apply tile changes
-        foreach (var tileChange in tileChanges)
-        {
-            grid[tileChange.Coordinate] = tileChange.Tile;
-        }
+        return treesCount * lumberyardCount;
     }
-
-    private static Tile GetNextTile(Grid<Tile> grid, GridCell<Tile> gridCell)
-    {
-        if (gridCell.Object == Tile.Open)
-        {
-            var treeCount = grid.AroundNeighbors(gridCell.Coordinate).Count(c => c.Object == Tile.Trees);
-            if (treeCount >= 3)
-            {
-                return Tile.Trees;
-            }
-        }
-        else if (gridCell.Object == Tile.Trees)
-        {
-            var lumberyardCount = grid.AroundNeighbors(gridCell.Coordinate).Count(c => c.Object == Tile.Lumberyard);
-            if (lumberyardCount >= 3)
-            {
-                return Tile.Lumberyard;
-            }
-        }
-        else if (gridCell.Object == Tile.Lumberyard)
-        {
-            var adjacentToLumberyard = grid.AroundNeighbors(gridCell.Coordinate).Any(c => c.Object == Tile.Lumberyard);
-            var adjacentToTrees = grid.AroundNeighbors(gridCell.Coordinate).Any(c => c.Object == Tile.Trees);
-
-            if (!adjacentToLumberyard || !adjacentToTrees)
-            {
-                return Tile.Open;
-            }
-        }
-        else
-        {
-            throw new InvalidOperationException();
-        }
-
-        return gridCell.Object;
-    }
-
-    private sealed record TileChange(GridCoordinate Coordinate, Tile Tile);
 }

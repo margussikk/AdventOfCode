@@ -3,9 +3,9 @@ using System.Text;
 
 namespace AdventOfCode.Utilities.Geometry;
 
-internal class Grid<T>(int height, int width) : IGrid<T>
+internal class Grid<T> : IGrid<T>
 {
-    private readonly T[,] _array = new T[height, width];
+    private readonly T[,] _array;
 
     public int Width => _array.GetLength(1);
 
@@ -16,6 +16,11 @@ internal class Grid<T>(int height, int width) : IGrid<T>
     public int LastColumnIndex => Width - 1;
 
     public int Area => Width * Height;
+
+    public Grid(int height, int width)
+    {
+        _array = new T[height, width];
+    }
 
     public T this[int row, int column]
     {
