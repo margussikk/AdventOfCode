@@ -37,6 +37,30 @@ internal class Region2D : IEnumerable<Coordinate2D>
         YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
     }
 
+    public Region2D(IEnumerable<LineSegment2D> lineSegments)
+    {
+        var minX = long.MaxValue;
+        var maxX = long.MinValue;
+
+        var minY = long.MaxValue;
+        var maxY = long.MinValue;
+
+        foreach (var lineSegment in lineSegments)
+        {
+            minX = long.Min(minX, long.Min(lineSegment.Start.X, lineSegment.End.X));
+            maxX = long.Max(maxX, long.Max(lineSegment.Start.X, lineSegment.End.X));
+
+            minY = long.Min(minY, long.Min(lineSegment.Start.Y, lineSegment.End.Y));
+            maxY = long.Max(maxY, long.Max(lineSegment.Start.Y, lineSegment.End.Y));
+        }
+
+        MinCoordinate = new Coordinate2D(minX, minY);
+        MaxCoordinate = new Coordinate2D(maxX, maxY);
+
+        XLength = MaxCoordinate.X - MinCoordinate.X + 1;
+        YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
+    }
+
     public Region2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate)
     {
         MinCoordinate = minCoordinate;

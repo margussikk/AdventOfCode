@@ -67,11 +67,13 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
 
     private Grid<Tile> ProduceWaterGrid()
     {
-        var minX = _clayVeins.Min(x => long.Min(x.Start.X, x.End.X)) - 1;
-        var maxX = _clayVeins.Max(x => long.Max(x.Start.X, x.End.X)) + 1;
+        var region = new Region2D(_clayVeins);
 
-        var minY = _clayVeins.Min(x => long.Min(x.Start.Y, x.End.Y));
-        var maxY = _clayVeins.Max(x => long.Max(x.Start.Y, x.End.Y));
+        var minX = region.MinCoordinate.X - 1;
+        var maxX = region.MaxCoordinate.X + 1;
+
+        var minY = region.MinCoordinate.Y;
+        var maxY = region.MaxCoordinate.Y;
 
         var grid = new Grid<Tile>(Convert.ToInt32(maxY - minY + 1), Convert.ToInt32(maxX - minX + 1));
 
@@ -92,14 +94,13 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 grid[waterCoordinate] = Tile.WetSand;
                 continue;
             }
-
-            var downCoordinate = waterCoordinate.Down();
-
-            if (grid[waterCoordinate] == Tile.Water)
+            else if (grid[waterCoordinate] == Tile.Water)
             {
                 continue;
             }
-            else if (grid[downCoordinate] == Tile.WetSand)
+
+            var downCoordinate = waterCoordinate.Down();           
+            if (grid[downCoordinate] == Tile.WetSand)
             {
                 grid[waterCoordinate] = Tile.WetSand;
             }
@@ -113,8 +114,8 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
             else if (IsFloor(downCoordinate))
             {
                 // Left
-                var leftBarrierCoordinate = waterCoordinate;
                 var foundLeftBarrier = true;
+                var leftBarrierCoordinate = waterCoordinate;
                 while (IsSand(leftBarrierCoordinate) && IsFloor(leftBarrierCoordinate.Down()))
                 {
                     leftBarrierCoordinate = leftBarrierCoordinate.Left();
@@ -126,8 +127,8 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 }
 
                 // Right
-                var rightBarrierCoordinate = waterCoordinate;
                 var foundRightBarrier = true;
+                var rightBarrierCoordinate = waterCoordinate;
                 while (IsSand(rightBarrierCoordinate) && IsFloor(rightBarrierCoordinate.Down()))
                 {
                     rightBarrierCoordinate = rightBarrierCoordinate.Right();
