@@ -19,9 +19,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                          .ToList();
 
         _instructionValues = chunks.TakeLast(1)
-                                   .SelectMany(x => x.Select(y => y.Split(' ')
-                                                                   .Select(long.Parse)
-                                                                   .ToArray()))
+                                   .SelectMany(x => x.Select(y => y.SplitToNumbers<long>(' ')))
                                    .ToList();
     }
 

@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Year2018.Common;
+﻿using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Year2018.Common;
 
 namespace AdventOfCode.Year2018.Day16;
 
@@ -40,16 +41,10 @@ internal class Sample
             throw new InvalidOperationException("Failed to parse before registers");
         }
 
-        sample.BeforeRegisters = inputLines[0]["Before: [".Length..^1]
-            .Split(", ")
-            .Select(long.Parse)
-            .ToArray();
+        sample.BeforeRegisters = inputLines[0]["Before: [".Length..^1].SplitToNumbers<long>(',', ' ');
 
         // Instruction
-        sample.InstructionValues = inputLines[1]
-            .Split(' ')
-            .Select(long.Parse)
-            .ToArray();
+        sample.InstructionValues = inputLines[1].SplitToNumbers<long>(',', ' ');
 
         // After registers
         if (!inputLines[2].StartsWith("After:  ["))
@@ -57,10 +52,7 @@ internal class Sample
             throw new InvalidOperationException("Failed to parse after registers");
         }
 
-        sample.AfterRegisters = inputLines[2]["After:  [".Length..^1]
-            .Split(", ")
-            .Select(long.Parse)
-            .ToArray();
+        sample.AfterRegisters = inputLines[2]["After:  [".Length..^1].SplitToNumbers<long>(',', ' ');
 
         return sample;
     }
