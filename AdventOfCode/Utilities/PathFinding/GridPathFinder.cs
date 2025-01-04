@@ -170,6 +170,85 @@ internal class GridPathFinder<T>
         return BuildPaths(previousPositions, startPosition, [.. endPositions]);
     }
 
+    public Dictionary<GridCoordinate, List<GridCoordinate>> FindShortestBestPaths(GridCoordinate startCoordinate, HashSet<GridCoordinate> endCoordinates)
+    {
+        var bestPathWalkerComparer = new GridPathWalkerComparer();
+        var results = new Dictionary<GridCoordinate, List<GridCoordinate>>();
+
+        var lowestCosts = new Dictionary<GridPosition, int>();
+        var previousPositions = new Dictionary<GridPosition, HashSet<GridPosition>>();
+        var endPositions = new HashSet<GridPosition>();
+
+        var startPosition = new GridPosition(startCoordinate, GridDirection.None);
+        var walkers = new List<GridPathWalker>
+        {
+            new() {
+                Position = startPosition,
+                Cost = 0
+            }
+        };
+
+        lowestCosts[startPosition] = 0;
+
+        while (walkers.Count > 0 && endPositions.Count == 0)
+        {
+            var nextWalkers = new Dictionary<GridPosition, List<GridPathWalker>>();
+
+            foreach (var walker in walkers)
+            {
+                foreach (var nextPosition in walker.TurningPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
+                {
+                    var nextCost = _costCalculator(walker, nextPosition);
+
+                    var currentLowestCost = lowestCosts.GetValueOrDefault(nextPosition, int.MaxValue);
+                    if (nextCost > currentLowestCost)
+                    {
+                        continue;
+                    }
+                    else if (nextCost < currentLowestCost)
+                    {
+                        lowestCosts[nextPosition] = nextCost;
+                        nextWalkers.Remove(nextPosition);
+                    }
+
+                    var nextWalker = new GridPathWalker
+                    {
+                        Position = nextPosition,
+                        PreviousPosition = walker.Position,
+                        Cost = nextCost
+                    };
+
+                    nextWalkers.AddToValueList(nextWalker.Position, nextWalker);
+
+                    if (endCoordinates.Contains(nextWalker.Position.Coordinate))
+                    {
+                        endPositions.Add(nextWalker.Position);
+                    }
+                }
+            }
+
+            walkers.Clear();
+
+            foreach (var walkerKvp in nextWalkers)
+            {
+                var bestWalker = walkerKvp.Value.Order(bestPathWalkerComparer).First();
+                previousPositions[bestWalker.Position] =
+                [
+                    bestWalker.PreviousPosition!.Value
+                ];
+
+                walkers.Add(bestWalker);
+            }
+        }
+
+        foreach (var endCoordinate in endPositions.Select(p => p.Coordinate).Distinct())
+        {
+            results[endCoordinate] = BuildPaths(previousPositions, startPosition, endPositions.Where(p => p.Coordinate == endCoordinate).ToList())[0];
+        }
+
+        return results;
+    }
+
     public void WalkAllPaths(bool unique, GridCoordinate startCoordinate, Func<GridPathWalker, bool> continueFunc)
     {
         var visited = new InfiniteBitGrid();

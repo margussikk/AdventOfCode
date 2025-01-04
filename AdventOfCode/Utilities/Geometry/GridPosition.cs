@@ -49,4 +49,8 @@ internal readonly struct GridPosition : IEquatable<GridPosition>
         return obj is GridPosition gridPosition && Equals(gridPosition);
     }
 
+    public override string ToString()
+    {
+        return $"{Coordinate}, {Direction}";
+    }
 }
