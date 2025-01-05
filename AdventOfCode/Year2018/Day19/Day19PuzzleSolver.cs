@@ -23,30 +23,31 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var device = new Device([0, 0, 0, 0, 0, 0]);
+        var breakAt = _instructions.FindIndex(i => i.OpCode == OpCode.SetI && i.A == 0 && i.C == _instructionPointerBinding);
 
-        device.RunProgram(_instructions, _instructionPointerBinding);
-
-        var answer = device.Registers[0];
+        var answer = GetAnswer(0, breakAt);
 
         return new PuzzleAnswer(answer, 1092);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var device = new Device([1, 0, 0, 0, 0, 0]);
+        var breakAt = _instructions.Count - 1;
 
-        var instructions = _instructions.SkipLast(1) // Let it run only until large number is generated
-                                        .ToList();
-
-        device.RunProgram(instructions, _instructionPointerBinding);
-
-        // Assume the program always has GtRR instruction and the B operand refers to the large number register
-        var gtrrInstruction = instructions.First(x => x.OpCode == OpCode.GtRR);
-        var largeNumber = device.Registers[gtrrInstruction.B];
-
-        var answer = MathFunctions.GetDivisors(largeNumber).Sum();
+        var answer = GetAnswer(1, breakAt);
 
         return new PuzzleAnswer(answer, 13406472);
+    }
+
+    private long GetAnswer(long register0, int breakAt)
+    {
+        var device = new Device([register0, 0, 0, 0, 0, 0]);
+        device.RunProgram(_instructions, _instructionPointerBinding, breakAt);
+
+        // Assume the program always has GtRR instruction and the B operand refers to the number register
+        var gtrrInstruction = _instructions.First(x => x.OpCode == OpCode.GtRR);
+        var number = device.Registers[(int)gtrrInstruction.B];
+
+        return MathFunctions.GetDivisors(number).Sum();
     }
 }

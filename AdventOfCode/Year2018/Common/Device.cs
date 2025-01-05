@@ -37,12 +37,17 @@ internal class Device
         };
     }
 
-    public void RunProgram(List<Instruction> instructions, int instructionPointerBinding)
+    public void RunProgram(List<Instruction> instructions, int instructionPointerBinding, int breakAtInstructionPointer = -1)
     {
         var instructionPointer = 0;
 
         while (instructionPointer < instructions.Count)
         {
+            if (instructionPointer == breakAtInstructionPointer)
+            {
+                return;
+            }
+
             // Runs instruction
             var instruction = instructions[instructionPointer];
 
