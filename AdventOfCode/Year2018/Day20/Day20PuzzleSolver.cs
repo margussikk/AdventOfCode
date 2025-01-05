@@ -19,7 +19,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
     {
         var answer = int.MinValue;
 
-        var startCoordinate = new GridCoordinate(0, 0);
+        var startCoordinate = GridCoordinate.Zero;
         var grid = new InfiniteBitGrid();
 
         _rootElement.Walk(startCoordinate, grid);
@@ -46,7 +46,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
     {
         var roomCoordinates = new HashSet<GridCoordinate>();
 
-        var startCoordinate = new GridCoordinate(0, 0);
+        var startCoordinate = GridCoordinate.Zero;
         var grid = new InfiniteBitGrid();
 
         _rootElement.Walk(startCoordinate, grid);
