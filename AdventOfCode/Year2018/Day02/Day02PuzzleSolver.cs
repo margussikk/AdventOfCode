@@ -45,7 +45,7 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        foreach (var (First, Second) in _boxIds.GetPairs())
+        foreach (var (First, Second) in _boxIds.Pairs())
         {
             var commonLetters = Enumerable.Range(0, First.Length)
                 .Where(letterIndex => First[letterIndex] == Second[letterIndex])

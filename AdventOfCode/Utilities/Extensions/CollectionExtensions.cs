@@ -139,7 +139,7 @@ internal static class CollectionExtensions
         return sequence;
     }
 
-    public static IEnumerable<(T First, T Second)> GetPairs<T>(this IEnumerable<T> enumerable)
+    public static IEnumerable<(T First, T Second)> Pairs<T>(this IEnumerable<T> enumerable)
     {
         var array = enumerable as T[] ?? enumerable.ToArray();
 

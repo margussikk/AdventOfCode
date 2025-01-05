@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 
 namespace AdventOfCode.Year2018.Day25;
@@ -16,40 +17,39 @@ public class Day25PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = 0;
+        var constellations = new List<List<Coordinate4D>>();
+        var coordinateConstellations = new Dictionary<Coordinate4D, List<Coordinate4D>>();
 
-        var coordinates = _coordinates.ToList();
-
-        while (coordinates.Count > 0)
+        foreach (var coordinate in _coordinates)
         {
-            var constellation = new List<Coordinate4D>();
-            bool addedMembers;
-
-            do
-            {
-                var newCoordinates = new List<Coordinate4D>();
-                addedMembers = false;
-
-                foreach (var coordinate in coordinates)
-                {
-                    if (constellation.Count == 0 || constellation.Any(c => c.ManhattanDistanceTo(coordinate) <= 3))
-                    {
-                        constellation.Add(coordinate);
-                        addedMembers = true;
-                    }
-                    else
-                    {
-                        newCoordinates.Add(coordinate);
-                    }
-                }
-
-                coordinates = newCoordinates;
-            } while (addedMembers);
-
-            answer++;
+            var list = new List<Coordinate4D> { coordinate };
+            constellations.Add(list);
+            coordinateConstellations.Add(coordinate, list);
         }
 
-        return new PuzzleAnswer(answer, 396);
+        foreach (var (First, Second) in _coordinates.Pairs().Where(p => p.First.ManhattanDistanceTo(p.Second) <= 3))
+        {
+            var firstConstellation = coordinateConstellations[First];
+            var secondConstellation = coordinateConstellations[Second];
+
+            if (firstConstellation != secondConstellation)
+            {
+                // Merge second constellation to first
+                foreach(var coordinate in secondConstellation)
+                {
+                    coordinateConstellations[coordinate] = firstConstellation;
+                }
+
+                firstConstellation.AddRange(secondConstellation);
+                constellations.Remove(secondConstellation);
+            }
+            else
+            {
+                // They are already in the same constellation
+            }
+        }
+
+        return new PuzzleAnswer(constellations.Count, 396);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()

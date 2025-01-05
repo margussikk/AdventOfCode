@@ -24,7 +24,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswerUsingRegions()
     {
-        var answer = _elves.GetPairs()
+        var answer = _elves.Pairs()
                            .SelectMany(x => x.First.TryFindOverlappingClaimArea(x.Second, out var overlapArea) ? overlapArea.AsEnumerable() : [])
                            .Distinct()
                            .Count();
@@ -41,7 +41,7 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswerUsingRegionOverlaps()
     {
-        var overlappedClaimIds = _elves.GetPairs()
+        var overlappedClaimIds = _elves.Pairs()
                                        .Where(x => x.First.ClaimArea.Overlaps(x.Second.ClaimArea))
                                        .SelectMany(x => new int[] { x.First.Id, x.Second.Id })
                                        .Distinct();

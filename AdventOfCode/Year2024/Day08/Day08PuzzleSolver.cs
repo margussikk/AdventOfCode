@@ -39,7 +39,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
         foreach (var antenna in _antennas)
         {
-            foreach (var (first, second) in antenna.Value.GetPairs())
+            foreach (var (first, second) in antenna.Value.Pairs())
             {
                 CollectAntinode(antinodeCoordinates, first, second, true);
                 CollectAntinode(antinodeCoordinates, second, first, true);
@@ -55,7 +55,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
         foreach (var antenna in _antennas)
         {
-            foreach (var (first, second) in antenna.Value.GetPairs())
+            foreach (var (first, second) in antenna.Value.Pairs())
             {
                 antinodeCoordinates.Add(first);
                 antinodeCoordinates.Add(second);

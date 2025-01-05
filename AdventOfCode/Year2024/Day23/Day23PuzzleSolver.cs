@@ -28,7 +28,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
         foreach (var vertexKvp in _vertices)
         {
-            foreach (var (First, Second) in vertexKvp.Value.AdjacentVertices().GetPairs())
+            foreach (var (First, Second) in vertexKvp.Value.AdjacentVertices().Pairs())
             {
                 if (First.AdjacentVertices().Any(x => x.Name == Second.Name) &&
                     (vertexKvp.Key[0] == 't' || First.Name[0] == 't' || Second.Name[0] == 't'))
