@@ -90,7 +90,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
                 var nextState = (nextClimber.Coordinate, nextClimber.Tool);
 
                 currentLowestMinutes = fewestMinutes.GetValueOrDefault(nextState, int.MaxValue);
-                if (nextClimber.Minutes > currentLowestMinutes) continue;
+                if (nextClimber.Minutes >= currentLowestMinutes) continue;
 
                 var distance = climber.Coordinate.ManhattanDistanceTo(_targetCoordinate);
                 climberQueue.Enqueue(nextClimber, nextClimber.Minutes + distance);
