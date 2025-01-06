@@ -8,6 +8,23 @@ internal partial class Nanobot
 
     public long SignalRadius { get; private set; }
 
+    public bool Overlaps(Nanobot other)
+    {
+        return Coordinate.ManhattanDistanceTo(other.Coordinate) <= SignalRadius + other.SignalRadius;
+    }
+
+    public IEnumerable<Coordinate3D> Corners()
+    {
+        yield return new Coordinate3D(Coordinate.X - SignalRadius, Coordinate.Y, Coordinate.Z);
+        yield return new Coordinate3D(Coordinate.X + SignalRadius, Coordinate.Y, Coordinate.Z);
+
+        yield return new Coordinate3D(Coordinate.X, Coordinate.Y - SignalRadius, Coordinate.Z);
+        yield return new Coordinate3D(Coordinate.X, Coordinate.Y + SignalRadius, Coordinate.Z);
+
+        yield return new Coordinate3D(Coordinate.X, Coordinate.Y, Coordinate.Z - SignalRadius);
+        yield return new Coordinate3D(Coordinate.X, Coordinate.Y, Coordinate.Z + SignalRadius);
+    }
+
     public static Nanobot Parse(string input)
     {
         var matches = InputLineRegex().Matches(input);

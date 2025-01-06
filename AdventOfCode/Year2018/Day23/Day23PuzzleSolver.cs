@@ -23,63 +23,36 @@ public class Day23PuzzleSolver : IPuzzleSolver
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
-    {        
-        var coordinates = new HashSet<Coordinate3D>();
+    {
+        var answer = 0L;
 
-        foreach (var nanobot in _nanobots)
+        var region = new Region3D(_nanobots.SelectMany(nb => nb.Corners()));
+        var searchBox = new SearchBox(region);
+
+        searchBox.Nanobots.AddRange(_nanobots);
+
+        var queue = new PriorityQueue<SearchBox, SearchBoxRank>();
+        queue.Enqueue(searchBox, searchBox.GetRank());
+
+        while(queue.TryDequeue(out searchBox, out var rank))
         {
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X + nanobot.SignalRadius, nanobot.Coordinate.Y, nanobot.Coordinate.Z));
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X - nanobot.SignalRadius, nanobot.Coordinate.Y, nanobot.Coordinate.Z));
-
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X, nanobot.Coordinate.Y + nanobot.SignalRadius, nanobot.Coordinate.Z));
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X, nanobot.Coordinate.Y - nanobot.SignalRadius, nanobot.Coordinate.Z));
-
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X, nanobot.Coordinate.Y, nanobot.Coordinate.Z + nanobot.SignalRadius));
-            coordinates.Add(new Coordinate3D(nanobot.Coordinate.X, nanobot.Coordinate.Y, nanobot.Coordinate.Z - nanobot.SignalRadius));
-        }
-
-        var candidateCoordinate = coordinates.MaxBy(coordinate => _nanobots.Count(nb => nb.Coordinate.ManhattanDistanceTo(coordinate) <= nb.SignalRadius));
-
-        // Use path finding to find the best distance
-        var answer = long.MaxValue;
-        var highestCount = int.MinValue;
-
-        var visited = new HashSet<Coordinate3D>();
-
-        var queue = new PriorityQueue<Coordinate3D, long>();
-        queue.Enqueue(candidateCoordinate, answer);
-
-        while (queue.TryDequeue(out var coordinate, out _))
-        {
-            if (!visited.Add(coordinate))
+            if (searchBox.Volume == 1)
             {
-                continue;
+                answer = rank.Distance;
+                break;
             }
 
-            var count = _nanobots.Count(nb => nb.Coordinate.ManhattanDistanceTo(coordinate) <= nb.SignalRadius);
-            if (count > highestCount)
+            foreach (var subSearchBox in searchBox.Divide())
             {
-                highestCount = count;
-            }
-            else if (count < highestCount)
-            {
-                continue;
-            }
+                foreach (var nanobot in searchBox.Nanobots)
+                {
+                    if (subSearchBox.InBounds(nanobot))
+                    {
+                        subSearchBox.Nanobots.Add(nanobot);
+                    }
+                }
 
-            var distance = coordinate.ManhattanDistanceTo(Coordinate3D.Zero);
-            if (distance < answer)
-            {
-                answer = distance;
-            }
-            else if (distance > answer)
-            {
-                continue;
-            }
-
-            foreach (var nextCoordinate in coordinate.SideNeighbors())
-            {
-                var nextDistance = nextCoordinate.ManhattanDistanceTo(Coordinate3D.Zero);
-                queue.Enqueue(nextCoordinate, nextDistance);
+                queue.Enqueue(subSearchBox, subSearchBox.GetRank());
             }
         }
 
