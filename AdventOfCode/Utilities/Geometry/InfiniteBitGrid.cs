@@ -86,11 +86,9 @@ internal class InfiniteBitGrid : IGrid<bool>
         return new GridCell<bool>(coordinate, this[coordinate.Row, coordinate.Column]);
     }
 
-    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
+    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate)
     {
-        var neighborCoordinates = new GridCoordinate[] { coordinate.Left(), coordinate.Up(), coordinate.Right(), coordinate.Down() };
-
-        foreach (var neighborCoordinate in neighborCoordinates)
+        foreach (var neighborCoordinate in coordinate.SideNeighbors())
         {
             
             yield return new GridCell<bool>(neighborCoordinate, this[neighborCoordinate]);

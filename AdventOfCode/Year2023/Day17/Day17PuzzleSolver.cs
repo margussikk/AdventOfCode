@@ -53,8 +53,8 @@ public class Day17PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
-            var directions = crucible.Direction.Flip() ^ GridDirection.AllSides;
-            foreach (var neighborCell in _cityBlockHeatLosses.SideNeighbors(crucible.Coordinate, directions))
+            var previousCoordinate = crucible.Coordinate.Move(crucible.Direction.Flip());
+            foreach (var neighborCell in _cityBlockHeatLosses.SideNeighbors(crucible.Coordinate).Where(c => c.Coordinate != previousCoordinate))
             {
                 var newDirection = crucible.Coordinate.DirectionToward(neighborCell.Coordinate);
 

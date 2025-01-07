@@ -86,11 +86,9 @@ internal class InfiniteGrid<T> : IGrid<T?>
         return new GridCell<T?>(coordinate, this[coordinate.Row, coordinate.Column]);
     }
 
-    public IEnumerable<GridCell<T?>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
+    public IEnumerable<GridCell<T?>> SideNeighbors(GridCoordinate coordinate)
     {
-        var neighborCoordinates = new GridCoordinate[] { coordinate.Left(), coordinate.Up(), coordinate.Right(), coordinate.Down() };
-
-        foreach (var neighborCoordinate in neighborCoordinates)
+        foreach (var neighborCoordinate in coordinate.SideNeighbors())
         {
             
             yield return new GridCell<T?>(neighborCoordinate, this[neighborCoordinate]);

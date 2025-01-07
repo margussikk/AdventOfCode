@@ -69,22 +69,11 @@ internal class BitGrid : IGrid<bool>
         return new GridCell<bool>(coordinate, _bitArray.Get(coordinate.Row * Width + coordinate.Column));
     }
 
-    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
+    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate)
     {
-        var neighborCoordinates = new GridCoordinate[]
+        foreach (var neighborCoordinate in coordinate.SideNeighbors().Where(InBounds))
         {
-            new(coordinate.Row - 1, coordinate.Column),
-            new(coordinate.Row + 1, coordinate.Column),
-            new(coordinate.Row, coordinate.Column - 1),
-            new(coordinate.Row, coordinate.Column + 1)
-        };
-
-        foreach (var neighborCoordinate in neighborCoordinates)
-        {
-            if (InBounds(neighborCoordinate))
-            {
-                yield return new GridCell<bool>(neighborCoordinate, _bitArray.Get(neighborCoordinate.Row * Width + neighborCoordinate.Column));
-            }
+            yield return new GridCell<bool>(neighborCoordinate, _bitArray.Get(neighborCoordinate.Row * Width + neighborCoordinate.Column));
         }
     }
 

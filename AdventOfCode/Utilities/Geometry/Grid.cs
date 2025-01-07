@@ -82,31 +82,9 @@ internal class Grid<T> : IGrid<T>
         return new GridCell<T>(coordinate, _array[coordinate.Row, coordinate.Column]);
     }
 
-    public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides)
+    public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate)
     {
-        var neighborCoordinates = new List<GridCoordinate>();
-
-        if ((direction & GridDirection.Up) != GridDirection.None)
-        {
-            neighborCoordinates.Add(new GridCoordinate(coordinate.Row - 1, coordinate.Column));
-        }
-
-        if ((direction & GridDirection.Down) != GridDirection.None)
-        {
-            neighborCoordinates.Add(new GridCoordinate(coordinate.Row + 1, coordinate.Column));
-        }
-
-        if ((direction & GridDirection.Left) != GridDirection.None)
-        {
-            neighborCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column - 1));
-        }
-
-        if ((direction & GridDirection.Right) != GridDirection.None)
-        {
-            neighborCoordinates.Add(new GridCoordinate(coordinate.Row, coordinate.Column + 1));
-        }
-
-        foreach (var neighborCoordinate in neighborCoordinates.Where(InBounds))
+        foreach (var neighborCoordinate in coordinate.SideNeighbors().Where(InBounds))
         {
             yield return new GridCell<T>(neighborCoordinate, this[neighborCoordinate]);
         }

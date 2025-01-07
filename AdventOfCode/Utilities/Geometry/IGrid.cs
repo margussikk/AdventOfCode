@@ -15,5 +15,5 @@ internal interface IGrid<T> : IEnumerable<GridCell<T>>
 
     bool InBounds(GridCoordinate coordinate);
 
-    IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate, GridDirection direction = GridDirection.AllSides);
+    IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate);
 }
