@@ -80,11 +80,6 @@ internal class Region3D
 
     public IEnumerable<Region3D> Divide()
     {
-        if (Volume == 1)
-        {
-            yield return this;
-        }
-
         var x1 = MinCoordinate.X + (XLength - 1) / 2;
         var x2 = x1 + 1;
         var y1 = MinCoordinate.Y + (YLength - 1) / 2;
