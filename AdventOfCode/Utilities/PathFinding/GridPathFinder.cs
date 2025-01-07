@@ -1,5 +1,6 @@
 ﻿using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Utilities.PathFinding;
 internal class GridPathFinder<T>

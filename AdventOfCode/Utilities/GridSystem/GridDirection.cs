@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 [Flags]
 internal enum GridDirection

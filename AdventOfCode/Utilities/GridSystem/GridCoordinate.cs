@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 internal readonly struct GridCoordinate(int row, int column) : IEquatable<GridCoordinate>
 {

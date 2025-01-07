@@ -1,6 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
-using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 using Microsoft.CodeAnalysis;
 
 namespace AdventOfCode.Year2018.Day13;

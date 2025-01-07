@@ -1,5 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2022.Day09;
 

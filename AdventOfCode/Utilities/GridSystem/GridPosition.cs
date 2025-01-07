@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Columns;
 
-namespace AdventOfCode.Utilities.Geometry;
+namespace AdventOfCode.Utilities.GridSystem;
 internal readonly struct GridPosition : IEquatable<GridPosition>
 {
     public GridCoordinate Coordinate { get; }

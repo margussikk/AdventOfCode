@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace AdventOfCode.Utilities.Geometry;
+namespace AdventOfCode.Utilities.GridSystem;
 
 internal class Grid<T> : IGrid<T>
 {

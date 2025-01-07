@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 
-namespace AdventOfCode.Utilities.Geometry;
+namespace AdventOfCode.Utilities.GridSystem;
 
-internal class InfiniteBitGrid : IGrid<bool>
+internal class InfiniteGrid<T> : IGrid<T?>
 {
-    private BitGrid[,] _grid;
+    private Grid<T?>[,] _grid;
 
     private readonly int _subGridRowCount;
     private readonly int _subGridColumnCount;
 
-    public InfiniteBitGrid()
+    public InfiniteGrid()
     {
         _subGridRowCount = 64;
         _subGridColumnCount = 64;
 
-        _grid = new BitGrid[,]
+        _grid = new Grid<T?>[,]
         {
             {
                 new(_subGridRowCount, _subGridColumnCount)
@@ -44,14 +44,14 @@ internal class InfiniteBitGrid : IGrid<bool>
 
     public int MaxColumn { get; private set; }
 
-    public bool this[int row, int column]
+    public T? this[int row, int column]
     {
         get
         {
             if (row < MinRow || row > MaxRow || column < MinColumn || column > MaxColumn)
             {
-                // Out of bounds is always 'false'
-                return false;
+                // Out of bounds is always null
+                return default;
             }
 
             var location = GetLocation(row, column);
@@ -59,9 +59,9 @@ internal class InfiniteBitGrid : IGrid<bool>
         }
         set
         {
-            if (!value && (row < MinRow || row > MaxRow || column < MinColumn || column > MaxColumn))
+            if (value is null && (row < MinRow || row > MaxRow || column < MinColumn || column > MaxColumn))
             {
-                // Out of bounds is already 'false'
+                // Out of bounds is already null
                 return;
             }
 
@@ -75,27 +75,27 @@ internal class InfiniteBitGrid : IGrid<bool>
 
     public bool InBounds(GridCoordinate coordinate) => true; // It's infinite
 
-    public bool this[GridCoordinate coordinate]
+    public T? this[GridCoordinate coordinate]
     {
         get => this[coordinate.Row, coordinate.Column];
         set => this[coordinate.Row, coordinate.Column] = value;
     }
 
-    public GridCell<bool> Cell(GridCoordinate coordinate)
+    public GridCell<T?> Cell(GridCoordinate coordinate)
     {
-        return new GridCell<bool>(coordinate, this[coordinate.Row, coordinate.Column]);
+        return new GridCell<T?>(coordinate, this[coordinate.Row, coordinate.Column]);
     }
 
-    public IEnumerable<GridCell<bool>> SideNeighbors(GridCoordinate coordinate)
+    public IEnumerable<GridCell<T?>> SideNeighbors(GridCoordinate coordinate)
     {
         foreach (var neighborCoordinate in coordinate.SideNeighbors())
         {
-            
-            yield return new GridCell<bool>(neighborCoordinate, this[neighborCoordinate]);
+
+            yield return new GridCell<T?>(neighborCoordinate, this[neighborCoordinate]);
         }
     }
 
-    public IEnumerator<GridCell<bool>> GetEnumerator()
+    public IEnumerator<GridCell<T?>> GetEnumerator()
     {
         throw new NotImplementedException("Cannot enumerate over infinite space");
     }
@@ -122,14 +122,14 @@ internal class InfiniteBitGrid : IGrid<bool>
                 emptyRowsAfter = (row - MaxRow) / _subGridRowCount + 1;
             }
 
-            var newGrid = new BitGrid[emptyRowsBefore + _grid.GetLength(0) + emptyRowsAfter, _grid.GetLength(1)];
+            var newGrid = new Grid<T?>[emptyRowsBefore + _grid.GetLength(0) + emptyRowsAfter, _grid.GetLength(1)];
 
             // Add empty subgrids before
             for (var subGridRow = 0; subGridRow < emptyRowsBefore; subGridRow++)
             {
                 for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    newGrid[subGridRow, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
                 }
             }
             var subGridRowOffset = emptyRowsBefore;
@@ -149,7 +149,7 @@ internal class InfiniteBitGrid : IGrid<bool>
             {
                 for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
                 }
             }
 
@@ -173,14 +173,14 @@ internal class InfiniteBitGrid : IGrid<bool>
                 emptyColumnsAfter = (column - MaxColumn) / _subGridColumnCount + 1;
             }
 
-            var newGrid = new BitGrid[_grid.GetLength(0), emptyColumnsBefore + _grid.GetLength(1) + emptyColumnsAfter];
+            var newGrid = new Grid<T?>[_grid.GetLength(0), emptyColumnsBefore + _grid.GetLength(1) + emptyColumnsAfter];
 
             // Add empty subgrids before
             for (var subGridColumn = 0; subGridColumn < emptyColumnsBefore; subGridColumn++)
             {
                 for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    newGrid[subGridRow, subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
                 }
             }
             var subGridColumnOffset = emptyColumnsBefore;
@@ -200,7 +200,7 @@ internal class InfiniteBitGrid : IGrid<bool>
             {
                 for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = new BitGrid(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
                 }
             }
 

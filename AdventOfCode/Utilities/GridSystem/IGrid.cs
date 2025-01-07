@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 internal interface IGrid<T> : IEnumerable<GridCell<T>>
 {
     int Width { get; }

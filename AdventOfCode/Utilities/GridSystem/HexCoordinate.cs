@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 // Q - West/East
 // R - Northwest/Southeast

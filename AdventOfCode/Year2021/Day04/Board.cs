@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Utilities.Geometry;
+﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2021.Day04;
 

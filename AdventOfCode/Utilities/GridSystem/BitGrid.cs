@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace AdventOfCode.Utilities.Geometry;
+namespace AdventOfCode.Utilities.GridSystem;
 
 internal class BitGrid : IGrid<bool>
 {
@@ -170,7 +170,7 @@ internal class BitGrid : IGrid<bool>
         {
             for (var column = 0; column <= LastColumnIndex; column++)
             {
-                var character = _bitArray.Get(row * Width + column) ? '#': ' ';
+                var character = _bitArray.Get(row * Width + column) ? '#' : ' ';
                 stringBuilder.Append(character);
             }
             stringBuilder.AppendLine();

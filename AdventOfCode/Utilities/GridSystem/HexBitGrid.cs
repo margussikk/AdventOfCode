@@ -1,7 +1,7 @@
 ﻿using AdventOfCode.Utilities.Numerics;
 using System.Collections;
 
-namespace AdventOfCode.Utilities.Geometry;
+namespace AdventOfCode.Utilities.GridSystem;
 
 internal class HexBitGrid : IEnumerable<HexGridCell<bool>>
 {

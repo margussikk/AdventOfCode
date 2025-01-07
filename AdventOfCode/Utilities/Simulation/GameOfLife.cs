@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Utilities.Geometry;
+﻿using AdventOfCode.Utilities.GridSystem;
 using System.Collections;
 using System.Runtime.CompilerServices;
 

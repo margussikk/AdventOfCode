@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 internal static class GridDirectionExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 internal readonly struct GridCell<T>(GridCoordinate coordinate, T obj)
 {

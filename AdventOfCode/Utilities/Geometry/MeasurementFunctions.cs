@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿using AdventOfCode.Utilities.GridSystem;
+
+namespace AdventOfCode.Utilities.Geometry;
 
 internal static class MeasurementFunctions
 {

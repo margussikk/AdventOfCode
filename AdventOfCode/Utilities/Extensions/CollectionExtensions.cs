@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Utilities.Geometry;
+﻿using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Mathematics;
 
 namespace AdventOfCode.Utilities.Extensions;

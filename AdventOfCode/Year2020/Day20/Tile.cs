@@ -1,5 +1,5 @@
 ﻿using AdventOfCode.Utilities.Extensions;
-using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2020.Day20;

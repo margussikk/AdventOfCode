@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utilities.Geometry;
+﻿namespace AdventOfCode.Utilities.GridSystem;
 
 internal class HexGridCell<T>(HexCoordinate coordinate, T obj)
 {

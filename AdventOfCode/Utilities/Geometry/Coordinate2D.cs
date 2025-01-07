@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using AdventOfCode.Utilities.GridSystem;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AdventOfCode.Utilities.Geometry;
 

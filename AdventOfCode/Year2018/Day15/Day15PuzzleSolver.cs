@@ -1,6 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
-using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Numerics;
 using AdventOfCode.Utilities.PathFinding;
 
