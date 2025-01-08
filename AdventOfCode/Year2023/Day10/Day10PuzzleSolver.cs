@@ -56,7 +56,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
     // Solution counting up and down directions
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var loopGrid = new BitGrid(_pipeDirections.Height, _pipeDirections.Width);
+        var loopGrid = new Grid<bool>(_pipeDirections.Height, _pipeDirections.Width);
 
         TraverseTheLoop(coordinate => loopGrid[coordinate] = true);
 

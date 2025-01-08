@@ -45,7 +45,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             energizedTiles.Add(CountEnergizedTiles(rightBeam));
 
             // Left
-            var leftCoordinate = new GridCoordinate(i, _tiles.LastColumnIndex);
+            var leftCoordinate = new GridCoordinate(i, _tiles.LastColumn);
             var leftBeam = new GridWalker(leftCoordinate, leftCoordinate, GridDirection.Left, 0);
             energizedTiles.Add(CountEnergizedTiles(leftBeam));
 
@@ -55,7 +55,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             energizedTiles.Add(CountEnergizedTiles(downBeam));
 
             // Up
-            var upCoordinate = new GridCoordinate(_tiles.LastRowIndex, i);
+            var upCoordinate = new GridCoordinate(_tiles.LastRow, i);
             var upBeam = new GridWalker(upCoordinate, upCoordinate, GridDirection.Up, 0);
             energizedTiles.Add(CountEnergizedTiles(upBeam));
         }

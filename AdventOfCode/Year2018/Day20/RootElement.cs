@@ -27,7 +27,7 @@ internal class RootElement : RouteElement
         return root;
     }
 
-    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteBitGrid grid)
+    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteGrid<bool> grid)
     {
         grid[coordinate] = true;
 

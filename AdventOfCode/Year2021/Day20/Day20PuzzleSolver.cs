@@ -8,7 +8,7 @@ namespace AdventOfCode.Year2021.Day20;
 public class Day20PuzzleSolver : IPuzzleSolver
 {
     private bool[] _imageEnhancementAlgorithm = [];
-    private BitGrid _image = new(0, 0);
+    private Grid<bool> _image = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
@@ -17,7 +17,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         _imageEnhancementAlgorithm = chunks[0][0].Select(x => x == '#')
                                                  .ToArray();
 
-        _image = chunks[1].SelectToBitGrid(character => character == '#');
+        _image = chunks[1].SelectToGrid(character => character == '#');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -48,7 +48,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         return CountLitPixels(grid);
     }
 
-    private static int CountLitPixels(BitGrid grid)
+    private static int CountLitPixels(Grid<bool> grid)
     {
         var litPixelsCount = 0;
         for (var row = 0; row < grid.Height; row++)
@@ -65,9 +65,9 @@ public class Day20PuzzleSolver : IPuzzleSolver
         return litPixelsCount;
     }
 
-    private static BitGrid Enhance(BitGrid grid, bool[] algorithm, bool defaultPixel)
+    private static Grid<bool> Enhance(Grid<bool> grid, bool[] algorithm, bool defaultPixel)
     {
-        var newGrid = new BitGrid(grid.Height + 2, grid.Width + 2);
+        var newGrid = new Grid<bool>(grid.Height + 2, grid.Width + 2);
 
         for (var row = -1; row < grid.Height + 1; row++)
         {
@@ -81,7 +81,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         return newGrid;
     }
 
-    private static int GetPixelNumber(BitGrid grid, int middleRow, int middleColumn, bool defaultPixel)
+    private static int GetPixelNumber(Grid<bool> grid, int middleRow, int middleColumn, bool defaultPixel)
     {
         var pixelNumber = 0;
         for (var row = middleRow - 1; row <= middleRow + 1; row++)
@@ -106,7 +106,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         return pixelNumber;
     }
 
-    private static void Print(BitGrid image)
+    private static void Print(Grid<bool> image)
     {
         for (var row = 0; row < image.Height; row++)
         {

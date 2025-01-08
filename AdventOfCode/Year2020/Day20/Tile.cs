@@ -8,11 +8,11 @@ internal class Tile
 {
     public int Id { get; private init; }
 
-    public BitGrid Image { get; private init; } = new(0, 0);
+    public Grid<bool> Image { get; private init; } = new(0, 0);
 
     public uint[,] BorderBitmasks { get; private set; } = new uint[0, 0];
 
-    public BitGrid GetOrientedImage(int orientation)
+    public Grid<bool> GetOrientedImage(int orientation)
     {
         return orientation switch
         {
@@ -33,7 +33,7 @@ internal class Tile
         var tile = new Tile
         {
             Id = int.Parse(lines[0]["Tile ".Length..^1]),
-            Image = lines.Skip(1).ToArray().SelectToBitGrid(character => character == '#')
+            Image = lines.Skip(1).ToArray().SelectToGrid(character => character == '#')
         };
 
         if (tile.Image.Height != tile.Image.Width)
@@ -51,7 +51,7 @@ internal class Tile
         tile.BorderBitmasks = new uint[8, 4];
 
         // Orientation 0, input
-        for (var column = 0; column <= tile.Image.LastColumnIndex; column++)
+        for (var column = 0; column <= tile.Image.LastColumn; column++)
         {
             // Top
             tile.BorderBitmasks[0, TileBorder.Top] <<= 1;
@@ -62,13 +62,13 @@ internal class Tile
 
             // Bottom
             tile.BorderBitmasks[0, TileBorder.Bottom] <<= 1;
-            if (tile.Image[tile.Image.LastRowIndex, column])
+            if (tile.Image[tile.Image.LastRow, column])
             {
                 tile.BorderBitmasks[0, TileBorder.Bottom]++;
             }
         }
 
-        for (var row = 0; row <= tile.Image.LastRowIndex; row++)
+        for (var row = 0; row <= tile.Image.LastRow; row++)
         {
             // Left
             tile.BorderBitmasks[0, TileBorder.Left] <<= 1;
@@ -79,7 +79,7 @@ internal class Tile
 
             // Right
             tile.BorderBitmasks[0, TileBorder.Right] <<= 1;
-            if (tile.Image[row, tile.Image.LastColumnIndex])
+            if (tile.Image[row, tile.Image.LastColumn])
             {
                 tile.BorderBitmasks[0, TileBorder.Right]++;
             }

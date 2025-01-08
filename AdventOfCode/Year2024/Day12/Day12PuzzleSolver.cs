@@ -18,7 +18,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var visitedMap = new BitGrid(_map.Height, _map.Width);
+        var visitedMap = new Grid<bool>(_map.Height, _map.Width);
 
         var answer = _map.Where(cell => !visitedMap[cell.Coordinate])
                          .Select(cell => GetGardenRegion(visitedMap, cell.Coordinate))
@@ -29,7 +29,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var visitedMap = new BitGrid(_map.Height, _map.Width);
+        var visitedMap = new Grid<bool>(_map.Height, _map.Width);
 
         var answer = _map.Where(cell => !visitedMap[cell.Coordinate])
                          .Select(cell => GetGardenRegion(visitedMap, cell.Coordinate))
@@ -38,7 +38,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 893676);
     }
 
-    private Dictionary<GridCoordinate, GridDirection> GetGardenRegion(BitGrid visitedMap, GridCoordinate coordinate)
+    private Dictionary<GridCoordinate, GridDirection> GetGardenRegion(Grid<bool> visitedMap, GridCoordinate coordinate)
     {
         var gridPathFinder = new GridPathFinder<char>(_map);
         var region = gridPathFinder.FloodFill(coordinate, cell => cell.Object == _map[coordinate]);

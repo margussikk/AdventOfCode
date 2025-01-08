@@ -18,9 +18,9 @@ public class Day08PuzzleSolver : IPuzzleSolver
     {
         var answer = _treeHeights.Count(gridCell =>
             gridCell.Coordinate.Row == 0 ||
-            gridCell.Coordinate.Row == _treeHeights.LastRowIndex ||
+            gridCell.Coordinate.Row == _treeHeights.LastRow ||
             gridCell.Coordinate.Column == 0 ||
-            gridCell.Coordinate.Column == _treeHeights.LastColumnIndex ||
+            gridCell.Coordinate.Column == _treeHeights.LastColumn ||
             IsVisible(gridCell.Coordinate, GridDirection.Up) ||
             IsVisible(gridCell.Coordinate, GridDirection.Down) ||
             IsVisible(gridCell.Coordinate, GridDirection.Left) ||

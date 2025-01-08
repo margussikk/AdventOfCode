@@ -7,11 +7,11 @@ namespace AdventOfCode.Year2019.Day24;
 [Puzzle(2019, 24, "Planet of Discord")]
 public class Day24PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _grid = new(0, 0);
+    private Grid<bool> _grid = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
-        _grid = inputLines.SelectToBitGrid(character => character == '#');
+        _grid = inputLines.SelectToGrid(character => character == '#');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -70,10 +70,10 @@ public class Day24PuzzleSolver : IPuzzleSolver
     {
         var centerCoordinate = new GridCoordinate(2, 2);
 
-        var grids = new BitGrid[410];
+        var grids = new Grid<bool>[410];
         for (var i = 0; i < grids.Length; i++)
         {
-            grids[i] = new BitGrid(_grid.Height, _grid.Width);
+            grids[i] = new Grid<bool>(_grid.Height, _grid.Width);
         }
 
         var zeroDepth = grids.Length / 2;
@@ -103,9 +103,9 @@ public class Day24PuzzleSolver : IPuzzleSolver
                             bugCount += direction switch
                             {
                                 GridDirection.Down => innerGrid.Row(0).Count(x => x.Object),
-                                GridDirection.Up => innerGrid.Row(innerGrid.LastRowIndex).Count(x => x.Object),
+                                GridDirection.Up => innerGrid.Row(innerGrid.LastRow).Count(x => x.Object),
                                 GridDirection.Right => innerGrid.Column(0).Count(x => x.Object),
-                                GridDirection.Left => innerGrid.Column(innerGrid.LastColumnIndex).Count(x => x.Object),
+                                GridDirection.Left => innerGrid.Column(innerGrid.LastColumn).Count(x => x.Object),
                                 _ => throw new InvalidOperationException($"Invalid direction {direction}")
                             };
                         }
@@ -162,7 +162,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 1893);
     }
 
-    private static long CalculateBiodiversityRating(BitGrid grid)
+    private static long CalculateBiodiversityRating(Grid<bool> grid)
     {
         return grid.Where(x => x.Object)
                    .Select(cell => cell.Coordinate.Row * grid.Width + cell.Coordinate.Column)

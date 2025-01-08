@@ -17,9 +17,9 @@ public class Day18PuzzleSolver : IPuzzleSolver
     {
         _part1Grid = new Grid<Tile>(inputLines.Length, inputLines[0].Length);
 
-        for (var row = 0; row <= _part1Grid.LastRowIndex; row++)
+        for (var row = 0; row <= _part1Grid.LastRow; row++)
         {
-            for (var column = 0; column <= _part1Grid.LastColumnIndex; column++)
+            for (var column = 0; column <= _part1Grid.LastColumn; column++)
             {
                 var character = inputLines[row][column];
 

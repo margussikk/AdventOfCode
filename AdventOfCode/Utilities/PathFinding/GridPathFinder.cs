@@ -5,12 +5,12 @@ using AdventOfCode.Utilities.GridSystem;
 namespace AdventOfCode.Utilities.PathFinding;
 internal class GridPathFinder<T>
 {
-    private readonly IGrid<T> _grid;
+    private readonly GridBase<T> _grid;
 
     private Func<GridPathWalker, GridCell<T>, bool> _cellFilter = DefaultCellFilter;
     private Func<GridPathWalker, GridPosition, int> _costCalculator = DefaultCostCalculator;
 
-    public GridPathFinder(IGrid<T> grid)
+    public GridPathFinder(GridBase<T> grid)
     {
         _grid = grid;
     }
@@ -252,7 +252,7 @@ internal class GridPathFinder<T>
 
     public void WalkAllPaths(bool unique, GridCoordinate startCoordinate, Func<GridPathWalker, bool> continueFunc)
     {
-        var visited = new InfiniteBitGrid();
+        var visited = new InfiniteGrid<bool>();
 
         var walker = new GridPathWalker
         {
@@ -294,7 +294,7 @@ internal class GridPathFinder<T>
 
     public Dictionary<GridCoordinate, GridDirection> FloodFill(GridCoordinate coordinate, Func<GridCell<T>, bool> predicate)
     {
-        var visitedMap = new BitGrid(_grid.Height, _grid.Width);
+        var visitedMap = new Grid<bool>(_grid.Height, _grid.Width);
 
         var regionCoordinates = new Dictionary<GridCoordinate, GridDirection>();
 

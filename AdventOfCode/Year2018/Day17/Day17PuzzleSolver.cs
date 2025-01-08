@@ -90,7 +90,7 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
 
         while (waterStack.TryPop(out waterCoordinate))
         {
-            if (waterCoordinate.Row == grid.LastRowIndex)
+            if (waterCoordinate.Row == grid.LastRow)
             {
                 grid[waterCoordinate] = Tile.WetSand;
                 continue;

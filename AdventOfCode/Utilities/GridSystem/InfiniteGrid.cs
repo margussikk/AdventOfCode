@@ -1,57 +1,35 @@
-﻿using System.Collections;
-
-namespace AdventOfCode.Utilities.GridSystem;
-
-internal class InfiniteGrid<T> : IGrid<T?>
+﻿namespace AdventOfCode.Utilities.GridSystem;
+internal class InfiniteGrid<TObject>: GridBase<TObject>
 {
-    private Grid<T?>[,] _grid;
-
-    private readonly int _subGridRowCount;
-    private readonly int _subGridColumnCount;
-
+    private const int SubGridSize = 64;
+    private Grid<TObject>[,] _grid;
+    
     public InfiniteGrid()
     {
-        _subGridRowCount = 64;
-        _subGridColumnCount = 64;
-
-        _grid = new Grid<T?>[,]
+        _grid = new Grid<TObject>[,]
         {
             {
-                new(_subGridRowCount, _subGridColumnCount)
+                new(SubGridSize, SubGridSize)
             }
         };
 
-        MinRow = 0;
-        MaxRow = MinRow + _grid.GetLength(0) * _subGridRowCount - 1;
+        FirstRow = 0;
+        LastRow = FirstRow + _grid.GetLength(0) * SubGridSize - 1;
 
-        MinColumn = 0;
-        MaxColumn = MinColumn + _grid.GetLength(1) * _subGridColumnCount - 1;
+        FirstColumn = 0;
+        LastColumn = FirstColumn + _grid.GetLength(1) * SubGridSize - 1;
     }
 
-    public int Width => int.MaxValue;
+    public override bool InBounds(int row, int column) => true; // It's infinite
 
-    public int Height => int.MaxValue;
-
-    public int LastRowIndex => MaxRow;
-
-    public int LastColumnIndex => MaxColumn;
-
-    public int MinRow { get; private set; }
-
-    public int MaxRow { get; private set; }
-
-    public int MinColumn { get; private set; }
-
-    public int MaxColumn { get; private set; }
-
-    public T? this[int row, int column]
+    public override TObject this[int row, int column]
     {
         get
         {
-            if (row < MinRow || row > MaxRow || column < MinColumn || column > MaxColumn)
+            if (row < FirstRow || row > LastRow || column < FirstColumn || column > LastColumn)
             {
-                // Out of bounds is always null
-                return default;
+                // Out of bounds is always default
+                return default!;
             }
 
             var location = GetLocation(row, column);
@@ -59,7 +37,7 @@ internal class InfiniteGrid<T> : IGrid<T?>
         }
         set
         {
-            if (value is null && (row < MinRow || row > MaxRow || column < MinColumn || column > MaxColumn))
+            if (value is null && (row < FirstRow || row > LastRow || column < FirstColumn || column > LastColumn))
             {
                 // Out of bounds is already null
                 return;
@@ -73,63 +51,31 @@ internal class InfiniteGrid<T> : IGrid<T?>
         }
     }
 
-    public bool InBounds(GridCoordinate coordinate) => true; // It's infinite
-
-    public T? this[GridCoordinate coordinate]
-    {
-        get => this[coordinate.Row, coordinate.Column];
-        set => this[coordinate.Row, coordinate.Column] = value;
-    }
-
-    public GridCell<T?> Cell(GridCoordinate coordinate)
-    {
-        return new GridCell<T?>(coordinate, this[coordinate.Row, coordinate.Column]);
-    }
-
-    public IEnumerable<GridCell<T?>> SideNeighbors(GridCoordinate coordinate)
-    {
-        foreach (var neighborCoordinate in coordinate.SideNeighbors())
-        {
-
-            yield return new GridCell<T?>(neighborCoordinate, this[neighborCoordinate]);
-        }
-    }
-
-    public IEnumerator<GridCell<T?>> GetEnumerator()
-    {
-        throw new NotImplementedException("Cannot enumerate over infinite space");
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
     private void AdjustGridSize(int row, int column)
     {
         // Row
-        if (row < MinRow || row > MaxRow)
+        if (row < FirstRow || row > LastRow)
         {
             var emptyRowsBefore = 0;
             var emptyRowsAfter = 0;
 
-            if (row < MinRow)
+            if (row < FirstRow)
             {
-                emptyRowsBefore = (MinRow - row) / _subGridRowCount + 1;
+                emptyRowsBefore = (FirstRow - row) / SubGridSize + 1;
             }
-            else if (row > MaxRow)
+            else if (row > LastRow)
             {
-                emptyRowsAfter = (row - MaxRow) / _subGridRowCount + 1;
+                emptyRowsAfter = (row - LastRow) / SubGridSize + 1;
             }
 
-            var newGrid = new Grid<T?>[emptyRowsBefore + _grid.GetLength(0) + emptyRowsAfter, _grid.GetLength(1)];
+            var newGrid = new Grid<TObject>[emptyRowsBefore + _grid.GetLength(0) + emptyRowsAfter, _grid.GetLength(1)];
 
             // Add empty subgrids before
             for (var subGridRow = 0; subGridRow < emptyRowsBefore; subGridRow++)
             {
                 for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    newGrid[subGridRow, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumn] = new Grid<TObject>(SubGridSize, SubGridSize);
                 }
             }
             var subGridRowOffset = emptyRowsBefore;
@@ -149,38 +95,38 @@ internal class InfiniteGrid<T> : IGrid<T?>
             {
                 for (var subGridColumn = 0; subGridColumn < _grid.GetLength(1); subGridColumn++)
                 {
-                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow + subGridRowOffset, subGridColumn] = new Grid<TObject>(SubGridSize, SubGridSize);
                 }
             }
 
             _grid = newGrid;
-            MinRow -= emptyRowsBefore * _subGridRowCount;
-            MaxRow += emptyRowsAfter * _subGridRowCount;
+            FirstRow -= emptyRowsBefore * SubGridSize;
+            LastRow += emptyRowsAfter * SubGridSize;
         }
 
         // Column
-        if (column < MinColumn || column > MaxColumn)
+        if (column < FirstColumn || column > LastColumn)
         {
             var emptyColumnsBefore = 0;
             var emptyColumnsAfter = 0;
 
-            if (column < MinColumn)
+            if (column < FirstColumn)
             {
-                emptyColumnsBefore = (MinColumn - column) / _subGridColumnCount + 1;
+                emptyColumnsBefore = (FirstColumn - column) / SubGridSize + 1;
             }
-            else if (column > MaxColumn)
+            else if (column > LastColumn)
             {
-                emptyColumnsAfter = (column - MaxColumn) / _subGridColumnCount + 1;
+                emptyColumnsAfter = (column - LastColumn) / SubGridSize + 1;
             }
 
-            var newGrid = new Grid<T?>[_grid.GetLength(0), emptyColumnsBefore + _grid.GetLength(1) + emptyColumnsAfter];
+            var newGrid = new Grid<TObject>[_grid.GetLength(0), emptyColumnsBefore + _grid.GetLength(1) + emptyColumnsAfter];
 
             // Add empty subgrids before
             for (var subGridColumn = 0; subGridColumn < emptyColumnsBefore; subGridColumn++)
             {
                 for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    newGrid[subGridRow, subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumn] = new Grid<TObject>(SubGridSize, SubGridSize);
                 }
             }
             var subGridColumnOffset = emptyColumnsBefore;
@@ -200,28 +146,23 @@ internal class InfiniteGrid<T> : IGrid<T?>
             {
                 for (var subGridRow = 0; subGridRow < _grid.GetLength(0); subGridRow++)
                 {
-                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = new Grid<T?>(_subGridRowCount, _subGridColumnCount);
+                    newGrid[subGridRow, subGridColumnOffset + subGridColumn] = new Grid<TObject>(SubGridSize, SubGridSize);
                 }
             }
 
             _grid = newGrid;
-            MinColumn -= emptyColumnsBefore * _subGridColumnCount;
-            MaxColumn += emptyColumnsAfter * _subGridColumnCount;
+            FirstColumn -= emptyColumnsBefore * SubGridSize;
+            LastColumn += emptyColumnsAfter * SubGridSize;
         }
     }
 
-    private InfiniteBitGridLocation GetLocation(int row, int column)
+    private InfiniteGridLocation GetLocation(int row, int column)
     {
-        var normalizedRow = row - MinRow;
-        var gridRow = normalizedRow / _subGridRowCount;
-        var subGridRow = normalizedRow % _subGridRowCount;
+        var gridRow = Math.DivRem(row - FirstRow, SubGridSize, out var subGridRow);
+        var gridColumn = Math.DivRem(column - FirstColumn, SubGridSize, out var subGridColumn);
 
-        var normalizedColumn = column - MinColumn;
-        var gridColumn = normalizedColumn / _subGridColumnCount;
-        var subGridColumn = normalizedColumn % _subGridColumnCount;
-
-        return new InfiniteBitGridLocation(gridRow, gridColumn, subGridRow, subGridColumn);
+        return new InfiniteGridLocation(gridRow, gridColumn, subGridRow, subGridColumn);
     }
 
-    private sealed record InfiniteBitGridLocation(int GridRow, int GridColumn, int SubGridRow, int SubGridColumn);
+    private sealed record InfiniteGridLocation(int GridRow, int GridColumn, int SubGridRow, int SubGridColumn);
 }

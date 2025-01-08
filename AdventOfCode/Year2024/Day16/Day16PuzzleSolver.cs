@@ -8,14 +8,14 @@ namespace AdventOfCode.Year2024.Day16;
 [Puzzle(2024, 16, "Reindeer Maze")]
 public class Day16PuzzleSolver : IPuzzleSolver
 {
-    private GridPathFinder<bool> _pathFinder = new(new BitGrid(0, 0));
+    private GridPathFinder<bool> _pathFinder = new(new Grid<bool>(0, 0));
 
     private GridPosition _startPosition = new(new(0,0), 0);
     private GridCoordinate _endCoordinate = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
-        var maze = inputLines.SelectToBitGrid((character, coordinate) =>
+        var maze = inputLines.SelectToGrid((character, coordinate) =>
         {
             if (character == 'S')
             {

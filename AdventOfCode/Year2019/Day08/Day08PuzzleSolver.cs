@@ -18,9 +18,9 @@ public class Day08PuzzleSolver : IPuzzleSolver
         {
             var layer = new Grid<Pixel>(6, 25);
 
-            for (var row = 0; row <= layer.LastRowIndex; row++)
+            for (var row = 0; row <= layer.LastRow; row++)
             {
-                for (var column = 0; column <= layer.LastColumnIndex; column++)
+                for (var column = 0; column <= layer.LastColumn; column++)
                 {
                     layer[row, column] = (Pixel)(inputLines[0][characterIndex] - '0');
                     characterIndex++;
@@ -48,9 +48,9 @@ public class Day08PuzzleSolver : IPuzzleSolver
     {
         var stringBuilder = new StringBuilder();
 
-        for (var row = 0; row <= _layers[0].LastRowIndex; row++)
+        for (var row = 0; row <= _layers[0].LastRow; row++)
         {
-            for (var column = 0; column <= _layers[0].LastColumnIndex; column++)
+            for (var column = 0; column <= _layers[0].LastColumn; column++)
             {
                 var layer = _layers.Find(l => l[row, column] != Pixel.Transparent);
                 if (layer != null)

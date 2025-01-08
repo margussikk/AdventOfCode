@@ -7,11 +7,11 @@ namespace AdventOfCode.Year2020.Day03;
 [Puzzle(2020, 3, "Toboggan Trajectory")]
 public class Day03PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _grid = new(0, 0);
+    private Grid<bool> _grid = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
-        _grid = inputLines.SelectToBitGrid(character => character == '#');
+        _grid = inputLines.SelectToGrid(character => character == '#');
     }
 
     public PuzzleAnswer GetPartOneAnswer()

@@ -160,14 +160,14 @@ public class Day24PuzzleSolver : IPuzzleSolver
         for (var column = 0; column < valley.Width; column++)
         {
             valley[0, column] = ValleyTile.Wall;
-            valley[valley.LastRowIndex, column] = ValleyTile.Wall;
+            valley[valley.LastRow, column] = ValleyTile.Wall;
         }
 
         // Vertical walls
-        for (var row = 1; row < valley.LastRowIndex; row++)
+        for (var row = 1; row < valley.LastRow; row++)
         {
             valley[row, 0] = ValleyTile.Wall;
-            valley[row, valley.LastColumnIndex] = ValleyTile.Wall;
+            valley[row, valley.LastColumn] = ValleyTile.Wall;
         }
 
         // Start and end

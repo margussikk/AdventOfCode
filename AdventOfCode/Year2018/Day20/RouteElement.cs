@@ -5,5 +5,5 @@ internal abstract class RouteElement
 {
     public List<RouteElement> Elements { get; private set; } = [];
 
-    public abstract GridCoordinate Walk(GridCoordinate coordinate, InfiniteBitGrid grid);
+    public abstract GridCoordinate Walk(GridCoordinate coordinate, InfiniteGrid<bool> grid);
 }

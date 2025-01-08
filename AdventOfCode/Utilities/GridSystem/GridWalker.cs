@@ -47,13 +47,13 @@ internal class GridWalker
 
     public void MoveLeft()
     {
-        Direction.TurnLeft();
+        TurnLeft();
         Step();
     }
 
     public void MoveRight()
     {
-        Direction.TurnRight();
+        TurnRight();
         Step();
     }
 

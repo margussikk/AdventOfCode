@@ -30,7 +30,7 @@ internal class ContainerElement : RouteElement
         return container;
     }
 
-    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteBitGrid grid)
+    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteGrid<bool> grid)
     {
         foreach (var element in Elements)
         {

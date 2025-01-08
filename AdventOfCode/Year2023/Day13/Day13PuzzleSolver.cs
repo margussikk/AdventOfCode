@@ -41,14 +41,14 @@ public class Day13PuzzleSolver : IPuzzleSolver
     {
         var count = 0;
 
-        for (var column1 = 0; column1 < grid.LastColumnIndex; column1++)
+        for (var column1 = 0; column1 < grid.LastColumn; column1++)
         {
             var column2 = column1 + 1;
 
             var differences = CountColumnDifferences(grid, column1, column2);
             if (differences <= smudgeCount) // Possible reflection
             {
-                var maxReflectionLength = Math.Min(column1, grid.LastColumnIndex - column2); // Length towards closest edge
+                var maxReflectionLength = Math.Min(column1, grid.LastColumn - column2); // Length towards closest edge
                 for (var distance = 1; distance <= maxReflectionLength; distance++)
                 {
                     differences += CountColumnDifferences(grid, column1 - distance, column2 + distance);

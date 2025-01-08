@@ -7,12 +7,12 @@ namespace AdventOfCode.Year2024.Day06;
 [Puzzle(2024, 6, "Guard Gallivant")]
 public class Day06PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _obstacleGrid = new(0, 0);
+    private Grid<bool> _obstacleGrid = new(0, 0);
     private GridPosition _initialGuardPosition = new();
 
     public void ParseInput(string[] inputLines)
     {
-        _obstacleGrid = inputLines.SelectToBitGrid((character, coordinate) =>
+        _obstacleGrid = inputLines.SelectToGrid((character, coordinate) =>
         {
             if (character.IsGridDirection())
             {
@@ -34,7 +34,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        Parallel.ForEach(GetVisitedCoordinates(), coordinate =>
+        Parallel.ForEach(GetVisitedCoordinates(), (Action<GridCoordinate>)(coordinate =>
         {
             var hitObstaclesGrid = new Grid<GridDirection>(_obstacleGrid.Height, _obstacleGrid.Width);
             var guard = new GridWalker(_initialGuardPosition);
@@ -46,7 +46,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
                     break;
                 }
 
-                if (hitObstaclesGrid[hitObstacleCoordinate].HasFlag(guard.Direction))
+                if (hitObstaclesGrid[hitObstacleCoordinate].HasFlag((Enum)guard.Direction))
                 {
                     Interlocked.Increment(ref answer);
                     break;
@@ -54,7 +54,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
 
                 hitObstaclesGrid[hitObstacleCoordinate] |= guard.Direction;
             }
-        });
+        }));
 
         return new PuzzleAnswer(answer, 1482);
     }

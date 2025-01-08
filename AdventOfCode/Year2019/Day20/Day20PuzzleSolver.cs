@@ -91,7 +91,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
             .First(cell => cell.Object == Tile.Passage)
             .Coordinate;
 
-        var visited = new BitGrid(_grid.Height, _grid.Width);
+        var visited = new Grid<bool>(_grid.Height, _grid.Width);
 
         var queue = new PriorityQueue<Part1MazeWalker, int>();
 
@@ -166,7 +166,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
             .First(cell => cell.Object == Tile.Passage)
             .Coordinate;
 
-        var visited = new List<BitGrid>();
+        var visited = new List<Grid<bool>>();
 
         var queue = new PriorityQueue<Part2MazeWalker, int>();
 
@@ -177,7 +177,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         {
             if (mazeWalker.Level >= visited.Count)
             {
-                visited.Add(new BitGrid(_grid.Height, _grid.Width));
+                visited.Add(new Grid<bool>(_grid.Height, _grid.Width));
             }
 
             if (visited[mazeWalker.Level][mazeWalker.Coordinate])

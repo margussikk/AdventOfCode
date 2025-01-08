@@ -76,9 +76,9 @@ public class Day21PuzzleSolver : IPuzzleSolver
         var gridCount = (stepCount - 65) / _tiles.Height; // Assume grids are squares
 
         const int firstRow = 0;
-        var lastRow = _tiles.LastRowIndex;
+        var lastRow = _tiles.LastRow;
         const int firstColumn = 0;
-        var lastColumn = _tiles.LastColumnIndex;
+        var lastColumn = _tiles.LastColumn;
         var middleRow = _tiles.Height / 2;
         var middleColumn = _tiles.Width / 2;
 

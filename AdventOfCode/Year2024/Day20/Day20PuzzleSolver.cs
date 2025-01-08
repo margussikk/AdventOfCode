@@ -7,13 +7,13 @@ namespace AdventOfCode.Year2024.Day20;
 [Puzzle(2024, 20, "Race Condition")]
 public class Day20PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _racetrack = new(0, 0);
+    private Grid<bool> _racetrack = new(0, 0);
     private GridCoordinate _startCoordinate;
     private GridCoordinate _endCoordinate;
 
     public void ParseInput(string[] inputLines)
     {
-        _racetrack = inputLines.SelectToBitGrid((character, coordinate) =>
+        _racetrack = inputLines.SelectToGrid((character, coordinate) =>
         {
             if (character == 'S')
             {

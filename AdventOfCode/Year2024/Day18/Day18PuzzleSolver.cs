@@ -20,7 +20,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var grid = new BitGrid(71, 71);
+        var grid = new Grid<bool>(71, 71);
 
         foreach (var coordinate in _byteCoordinates.Take(1024))
         {
@@ -43,7 +43,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
         {
             var pivot = (numberRange.Start + numberRange.End) / 2;
 
-            var grid = new BitGrid(71, 71);
+            var grid = new Grid<bool>(71, 71);
             foreach (var coordinate in _byteCoordinates.Take(pivot + 1))
             {
                 grid[coordinate] = true;

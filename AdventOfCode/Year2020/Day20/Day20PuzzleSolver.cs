@@ -111,7 +111,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
         var smallerTileSize = _tiles[0].Image.Height - 2;
 
-        var largeImage = new BitGrid(tileArrangementsGrid.Height * smallerTileSize, tileArrangementsGrid.Width * smallerTileSize);
+        var largeImage = new Grid<bool>(tileArrangementsGrid.Height * smallerTileSize, tileArrangementsGrid.Width * smallerTileSize);
         foreach (var tileCell in tileArrangementsGrid)
         {
             var orientedTileImage = tileCell.Object.Tile.GetOrientedImage(tileCell.Object.Orientation);
@@ -121,8 +121,8 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
             foreach (var tileImageCell in orientedTileImage)
             {
-                if (tileImageCell.Coordinate.Row > 0 && tileImageCell.Coordinate.Row < orientedTileImage.LastRowIndex &&
-                    tileImageCell.Coordinate.Column > 0 && tileImageCell.Coordinate.Column < orientedTileImage.LastColumnIndex)
+                if (tileImageCell.Coordinate.Row > 0 && tileImageCell.Coordinate.Row < orientedTileImage.LastRow &&
+                    tileImageCell.Coordinate.Column > 0 && tileImageCell.Coordinate.Column < orientedTileImage.LastColumn)
                 {
                     largeImage[largeImageRow + tileImageCell.Coordinate.Row, largeImageColumn + tileImageCell.Coordinate.Column] = tileImageCell.Object;
                 }
@@ -132,7 +132,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
         // Find sea monster
         var seaMonsterCoordinates = new HashSet<GridCoordinate>();
 
-        var seaMonsterPattern = _seaMonsterLines.SelectToBitGrid(character => character == '#');
+        var seaMonsterPattern = _seaMonsterLines.SelectToGrid(character => character == '#');
 
         for (var orientation = 0; orientation < 8; orientation++)
         {

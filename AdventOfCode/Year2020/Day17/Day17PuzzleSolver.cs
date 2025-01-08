@@ -8,11 +8,11 @@ namespace AdventOfCode.Year2020.Day17;
 [Puzzle(2020, 17, "Conway Cubes")]
 public class Day17PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _bitGrid = new(0, 0);
+    private Grid<bool> _bitGrid = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {
-        _bitGrid = inputLines.SelectToBitGrid(character => character == '#');
+        _bitGrid = inputLines.SelectToGrid(character => character == '#');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -21,7 +21,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
         // Initialize Aabb
         var minCoordinate = new Coordinate3D(-totalCycles, -totalCycles, -totalCycles);
-        var maxCoordinate = new Coordinate3D(_bitGrid.LastColumnIndex + totalCycles, _bitGrid.LastRowIndex + totalCycles, totalCycles);
+        var maxCoordinate = new Coordinate3D(_bitGrid.LastColumn + totalCycles, _bitGrid.LastRow + totalCycles, totalCycles);
         var aabb = new Aabb3D(minCoordinate, maxCoordinate);
 
         foreach (var cell in _bitGrid.Where(c => c.Object))
@@ -35,7 +35,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
             var updatedCells = new List<Aabb3DCell>();
 
             var windowMinCoordinate = new Coordinate3D(-cycle, -cycle, -cycle);
-            var windowMaxCoordinate = new Coordinate3D(_bitGrid.LastColumnIndex + cycle, _bitGrid.LastRowIndex + cycle, cycle);
+            var windowMaxCoordinate = new Coordinate3D(_bitGrid.LastColumn + cycle, _bitGrid.LastRow + cycle, cycle);
 
             foreach (var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
             {
@@ -75,7 +75,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
         // Initialize Aabb
         var minCoordinate = new Coordinate4D(-totalCycles, -totalCycles, -totalCycles, -totalCycles);
-        var maxCoordinate = new Coordinate4D(_bitGrid.LastColumnIndex + totalCycles, _bitGrid.LastRowIndex + totalCycles, totalCycles, totalCycles);
+        var maxCoordinate = new Coordinate4D(_bitGrid.LastColumn + totalCycles, _bitGrid.LastRow + totalCycles, totalCycles, totalCycles);
         var aabb = new Aabb4D(minCoordinate, maxCoordinate);
 
         foreach (var cell in _bitGrid.Where(c => c.Object))
@@ -89,7 +89,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
             var updatedCells = new List<Aabb4DCell>();
 
             var windowMinCoordinate = new Coordinate4D(-cycle, -cycle, -cycle, -cycle);
-            var windowMaxCoordinate = new Coordinate4D(_bitGrid.LastColumnIndex + cycle, _bitGrid.LastRowIndex + cycle, cycle, cycle);
+            var windowMaxCoordinate = new Coordinate4D(_bitGrid.LastColumn + cycle, _bitGrid.LastRow + cycle, cycle, cycle);
 
             foreach (var cell in aabb.Window(windowMinCoordinate, windowMaxCoordinate))
             {

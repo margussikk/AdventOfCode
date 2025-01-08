@@ -50,7 +50,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var queue = new PriorityQueue<CaveWalker, int>();
 
         var startCoordinate = new GridCoordinate(0, 0);
-        var endCoordinate = new GridCoordinate(grid.LastRowIndex, grid.LastColumnIndex);
+        var endCoordinate = new GridCoordinate(grid.LastRow, grid.LastColumn);
 
         var currentCaveWalker = new CaveWalker(startCoordinate, 0);
 

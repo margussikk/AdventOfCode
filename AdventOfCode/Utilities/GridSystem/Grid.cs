@@ -1,211 +1,60 @@
-﻿using System.Collections;
-using System.Text;
-
-namespace AdventOfCode.Utilities.GridSystem;
-
-internal class Grid<T> : IGrid<T>
+﻿namespace AdventOfCode.Utilities.GridSystem;
+internal class Grid<TObject> : GridBase<TObject>
 {
-    private readonly T[,] _array;
-
-    public int Width => _array.GetLength(1);
-
-    public int Height => _array.GetLength(0);
-
-    public int LastRowIndex => Height - 1;
-
-    public int LastColumnIndex => Width - 1;
-
-    public int Area => Width * Height;
+    private readonly TObject[,] _array;
 
     public Grid(int height, int width)
     {
-        _array = new T[height, width];
+        _array = new TObject[height, width];
+
+        FirstRow = 0;
+        LastRow = height - 1;
+
+        FirstColumn = 0;
+        LastColumn = width - 1;
     }
 
-    public T this[int row, int column]
+    public Grid<TObject> Clone()
     {
-        get => _array[row, column];
-        set => _array[row, column] = value;
-    }
-
-    public T this[GridCoordinate coordinate]
-    {
-        get => _array[coordinate.Row, coordinate.Column];
-        set => _array[coordinate.Row, coordinate.Column] = value;
-    }
-
-    public bool InBounds(int row, int column)
-    {
-        return row >= 0 && row < Height &&
-               column >= 0 && column < Width;
-    }
-
-    public bool InBounds(GridCoordinate coordinate)
-    {
-        return InBounds(coordinate.Row, coordinate.Column);
-    }
-
-    public GridCoordinate? FindCoordinate(Func<T, bool> predicate)
-    {
-        for (var row = 0; row < Height; row++)
-        {
-            for (var column = 0; column < Width; column++)
-            {
-                if (predicate(_array[row, column]))
-                {
-                    return new GridCoordinate(row, column);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public IEnumerable<GridCell<T>> Row(int row)
-    {
-        for (var column = 0; column < Width; column++)
-        {
-            yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
-        }
-    }
-
-    public IEnumerable<GridCell<T>> Column(int column)
-    {
-        for (var row = 0; row < Height; row++)
-        {
-            yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
-        }
-    }
-
-    public GridCell<T> Cell(GridCoordinate coordinate)
-    {
-        return new GridCell<T>(coordinate, _array[coordinate.Row, coordinate.Column]);
-    }
-
-    public IEnumerable<GridCell<T>> SideNeighbors(GridCoordinate coordinate)
-    {
-        foreach (var neighborCoordinate in coordinate.SideNeighbors().Where(InBounds))
-        {
-            yield return new GridCell<T>(neighborCoordinate, this[neighborCoordinate]);
-        }
-    }
-
-    public IEnumerable<GridCell<T>> AroundNeighbors(GridCoordinate coordinate)
-    {
-        foreach (var neighborCoordinate in coordinate.AroundNeighbors().Where(InBounds))
-        {
-            yield return new GridCell<T>(neighborCoordinate, this[neighborCoordinate]);
-        }
-    }
-
-    public Grid<T> Clone()
-    {
-        var grid = new Grid<T>(Height, Width);
+        var grid = new Grid<TObject>(Height, Width);
 
         Array.Copy(_array, grid._array, _array.Length);
 
         return grid;
     }
 
-    public Grid<T> RotateClockwise()
-    {
-        var grid = new Grid<T>(Width, Height);
-
-        for (var row = 0; row < grid.Height; row++)
-        {
-            for (var column = 0; column < grid.Width; column++)
-            {
-                grid[row, column] = _array[grid.LastColumnIndex - column, row];
-            }
-        }
-
-        return grid;
-    }
-
-    public Grid<T> RotateCounterClockwise()
-    {
-        var grid = new Grid<T>(Width, Height);
-
-        for (var row = 0; row < grid.Height; row++)
-        {
-            for (var column = 0; column < grid.Width; column++)
-            {
-                grid[row, column] = _array[column, grid.LastRowIndex - row];
-            }
-        }
-
-        return grid;
-    }
-
     public override bool Equals(object? obj)
     {
-        return obj is Grid<T> grid &&
+        return obj is Grid<TObject> grid &&
                Height == grid.Height &&
                Width == grid.Width &&
-               EqualityComparer<T[,]>.Default.Equals(_array, grid._array);
+               EqualityComparer<TObject[,]>.Default.Equals(_array, grid._array);
     }
+
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
 
-        for (var row = 0; row < Height; row++)
+        foreach (var item in _array)
         {
-            for (var column = 0; column < Width; column++)
-            {
-                hashCode.Add(_array[row, column]!.GetHashCode());
-            }
+            hashCode.Add(item!.GetHashCode());
         }
 
         return hashCode.ToHashCode();
     }
 
-    public IEnumerator<GridCell<T>> GetEnumerator()
+    public override TObject this[int row, int column]
     {
-        for (var row = 0; row < Height; row++)
-        {
-            for (var column = 0; column < Width; column++)
-            {
-                yield return new GridCell<T>(new GridCoordinate(row, column), _array[row, column]);
-            }
-        }
+        get => _array[row, column];
+        set => _array[row, column] = value;
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    public Grid<TObject> RotateClockwise() => RotateClockwise(new Grid<TObject>(Width, Height));
 
-    public void Print(Func<T, char> mapper)
-    {
-        var stringBuilder = new StringBuilder();
+    public Grid<TObject> RotateCounterClockwise() => RotateCounterClockwise(new Grid<TObject>(Width, Height));
 
-        for (var row = 0; row <= LastRowIndex; row++)
-        {
-            for (var column = 0; column <= LastColumnIndex; column++)
-            {
-                var character = mapper(_array[row, column]);
-                stringBuilder.Append(character);
-            }
-            stringBuilder.AppendLine();
-        }
+    public Grid<TObject> FlipHorizontally() => FlipHorizontally(new Grid<TObject>(Height, Width));
 
-        Console.WriteLine(stringBuilder.ToString());
-    }
+    public Grid<TObject> FlipVertically() => FlipVertically(new Grid<TObject>(Height, Width));
 
-    public void PrintToFile(string path, Func<T, char> mapper)
-    {
-        var stringBuilder = new StringBuilder();
-
-        for (var row = 0; row <= LastRowIndex; row++)
-        {
-            for (var column = 0; column <= LastColumnIndex; column++)
-            {
-                var character = mapper(_array[row, column]);
-                stringBuilder.Append(character);
-            }
-            stringBuilder.AppendLine();
-        }
-
-        File.WriteAllText(path, stringBuilder.ToString());
-    }
 }

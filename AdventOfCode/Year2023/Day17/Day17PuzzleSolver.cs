@@ -34,7 +34,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
         var crucibles = new PriorityQueue<Crucible, int>();
 
         var startCoordinate = new GridCoordinate(0, 0);
-        var endCoordinate = new GridCoordinate(_cityBlockHeatLosses.LastRowIndex, _cityBlockHeatLosses.LastColumnIndex);
+        var endCoordinate = new GridCoordinate(_cityBlockHeatLosses.LastRow, _cityBlockHeatLosses.LastColumn);
 
         var visited = new HashSet<(GridCoordinate, GridDirection, int)>();
 

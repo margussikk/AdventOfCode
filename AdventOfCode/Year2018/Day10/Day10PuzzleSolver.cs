@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Geometry;
+using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Text;
 using System.Text;
 
@@ -40,7 +41,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             var region = new Region2D(pointsOfLight.Select(p => p.Position));
             if (region.YLength == Ocr.LargeLetterHeight)
             {
-                var grid = new BitGrid((int)region.YLength, (int)region.XLength);
+                var grid = new Grid<bool>((int)region.YLength, (int)region.XLength);
 
                 foreach (var pointOfLight in pointsOfLight)
                 {
@@ -52,9 +53,9 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
                 var padding = 8 - grid.Width % 8; // 8 - large letter width
 
-                for (var row = 0; row <= grid.LastRowIndex; row++)
+                for (var row = 0; row <= grid.LastRow; row++)
                 {
-                    for (var column = 0; column <= grid.LastColumnIndex; column++)
+                    for (var column = 0; column <= grid.LastColumn; column++)
                     {
                         var character = grid[row, column] ? '#' : ' ';
                         stringBuilder.Append(character);

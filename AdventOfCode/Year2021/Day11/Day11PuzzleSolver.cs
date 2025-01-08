@@ -33,6 +33,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
     {
         int resetCount;
         var answer = 0;
+        var area = _grid.Width * _grid.Height;
         var grid = _grid.Clone();
 
         do
@@ -45,7 +46,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
             resetCount = ResetEnergyLevels(grid);
             answer++;
         }
-        while (resetCount != _grid.Area);
+        while (resetCount != area);
 
         return new PuzzleAnswer(answer, 371);
     }

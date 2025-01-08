@@ -9,13 +9,13 @@ namespace AdventOfCode.Year2018.Day15;
 [Puzzle(2018, 15, "Beverage Bandits")]
 public class Day15PuzzleSolver : IPuzzleSolver
 {
-    private BitGrid _wallGrid = new(0, 0);
+    private Grid<bool> _wallGrid = new(0, 0);
 
     private readonly List<Unit> _units = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _wallGrid = inputLines.SelectToBitGrid((character, coordinate) =>
+        _wallGrid = inputLines.SelectToGrid((character, coordinate) =>
         {
             if (character == 'E' || character == 'G')
             {

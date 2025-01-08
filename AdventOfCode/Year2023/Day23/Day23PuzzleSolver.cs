@@ -44,9 +44,9 @@ public class Day23PuzzleSolver : IPuzzleSolver
         GridCoordinate? endCoordinate = null;
         for (var column = 0; column < tiles.Width; column++)
         {
-            if (tiles[tiles.LastRowIndex, column] != Tile.Path) continue;
+            if (tiles[tiles.LastRow, column] != Tile.Path) continue;
 
-            endCoordinate = new GridCoordinate(tiles.LastRowIndex, column);
+            endCoordinate = new GridCoordinate(tiles.LastRow, column);
             break;
         }
 
@@ -134,7 +134,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             .Select(x => x.Coordinate)
             .ToHashSet();
 
-        var visitedGrid = new BitGrid(tiles.Height, tiles.Width);
+        var visitedGrid = new Grid<bool>(tiles.Height, tiles.Width);
 
         // Start walking from every vertex coordinate
         foreach (var vertexCoordinate in vertexCoordinates)

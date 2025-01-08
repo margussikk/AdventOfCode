@@ -28,7 +28,7 @@ internal class MoveElement : RouteElement
         return sequence;
     }
 
-    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteBitGrid grid)
+    public override GridCoordinate Walk(GridCoordinate coordinate, InfiniteGrid<bool> grid)
     {
         foreach (var direction in Directions)
         {

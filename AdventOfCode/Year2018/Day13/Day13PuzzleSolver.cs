@@ -93,9 +93,9 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
     private void PrintGrid(List<Cart> carts)
     {
-        for (var row = 0; row <= _grid.LastRowIndex; row++)
+        for (var row = 0; row <= _grid.LastRow; row++)
         {
-            for (var column = 0; column <= _grid.LastColumnIndex; column++)
+            for (var column = 0; column <= _grid.LastColumn; column++)
             {
                 var coordinate = new GridCoordinate(row, column);
                 char symbol = '0';

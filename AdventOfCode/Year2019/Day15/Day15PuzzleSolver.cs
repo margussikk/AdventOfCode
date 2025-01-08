@@ -203,9 +203,9 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         var grid = new Grid<Tile>(maxRow - minRow + 1, maxColumn - minColumn + 1);
 
-        for (var row = 0; row <= grid.LastRowIndex; row++)
+        for (var row = 0; row <= grid.LastRow; row++)
         {
-            for (var column = 0; column <= grid.LastColumnIndex; column++)
+            for (var column = 0; column <= grid.LastColumn; column++)
             {
                 var coordinate = new GridCoordinate(row + minRow, column + minColumn);
                 var tile = map.GetValueOrDefault(coordinate, Tile.Wall);
