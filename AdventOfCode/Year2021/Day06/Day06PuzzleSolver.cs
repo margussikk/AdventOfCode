@@ -1,18 +1,16 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2021.Day06;
 
 [Puzzle(2021, 6, "Lanternfish")]
 public class Day06PuzzleSolver : IPuzzleSolver
 {
-    private List<int> _lanternfishTimers = [];
+    private int[] _lanternfishTimers = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _lanternfishTimers = inputLines[0]
-            .Split(",")
-            .Select(int.Parse)
-            .ToList();
+        _lanternfishTimers = inputLines[0].SplitToNumbers<int>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()

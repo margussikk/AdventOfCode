@@ -1,7 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
-using AdventOfCode.Utilities.Geometry;
 using AdventOfCode.Utilities.GridSystem;
+using AdventOfCode.Utilities.PathFinding;
 
 namespace AdventOfCode.Year2021.Day15;
 
@@ -12,12 +12,15 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _riskLevelGrid = inputLines.SelectToGrid(character => Convert.ToByte(character - '0'));
+        _riskLevelGrid = inputLines.SelectToGrid(character => Convert.ToByte(character.ParseToDigit()));
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = Dijkstra(_riskLevelGrid);
+        var pathFinder = new GridPathFinder<byte>(_riskLevelGrid)
+            .SetCostCalculator((w, c) => w.Cost + _riskLevelGrid[c.Coordinate]);
+
+        var answer = pathFinder.FindShortestPathLength(GridCoordinate.Zero, new GridCoordinate(_riskLevelGrid.LastRow, _riskLevelGrid.LastColumn));
 
         return new PuzzleAnswer(answer, 717);
     }
@@ -39,50 +42,12 @@ public class Day15PuzzleSolver : IPuzzleSolver
             }
         }
 
-        var answer = Dijkstra(grid);
+        var pathFinder = new GridPathFinder<byte>(grid)
+            .SetCostCalculator((w, c) => w.Cost + grid[c.Coordinate]);
+
+        var answer = pathFinder.FindShortestPathLength(GridCoordinate.Zero, new GridCoordinate(grid.LastRow, grid.LastColumn));
+
 
         return new PuzzleAnswer(answer, 2993);
-    }
-
-    private static int Dijkstra(Grid<byte> grid)
-    {
-        var totalRiskGrid = new Grid<int?>(grid.Height, grid.Width);
-        var queue = new PriorityQueue<CaveWalker, int>();
-
-        var startCoordinate = new GridCoordinate(0, 0);
-        var endCoordinate = new GridCoordinate(grid.LastRow, grid.LastColumn);
-
-        var currentCaveWalker = new CaveWalker(startCoordinate, 0);
-
-        queue.Enqueue(currentCaveWalker, 0);
-        while (queue.TryDequeue(out currentCaveWalker, out _))
-        {
-            if (currentCaveWalker.Coordinate == endCoordinate)
-            {
-                return currentCaveWalker.Distance;
-            }
-
-            if (totalRiskGrid[currentCaveWalker.Coordinate].HasValue)
-            {
-                continue;
-            }
-
-            totalRiskGrid[currentCaveWalker.Coordinate] = currentCaveWalker.Distance;
-
-            foreach (var neighbor in grid.SideNeighbors(currentCaveWalker.Coordinate))
-            {
-                var currentLowestTotalRisk = totalRiskGrid[neighbor.Coordinate] ?? int.MaxValue;
-
-                var newTotalRisk = currentCaveWalker.Distance + neighbor.Object;
-                if (newTotalRisk >= currentLowestTotalRisk) continue;
-
-                var newCaveWalker = new CaveWalker(neighbor.Coordinate, newTotalRisk);
-
-                var manhattan = newCaveWalker.Coordinate.ManhattanDistanceTo(endCoordinate);
-                queue.Enqueue(newCaveWalker, newTotalRisk + manhattan);
-            }
-        }
-
-        return 0;
     }
 }

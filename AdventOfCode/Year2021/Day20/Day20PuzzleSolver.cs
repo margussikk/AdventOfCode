@@ -45,24 +45,7 @@ public class Day20PuzzleSolver : IPuzzleSolver
             defaultPixel = _imageEnhancementAlgorithm[defaultPixel ? 511 : 0];
         }
 
-        return CountLitPixels(grid);
-    }
-
-    private static int CountLitPixels(Grid<bool> grid)
-    {
-        var litPixelsCount = 0;
-        for (var row = 0; row < grid.Height; row++)
-        {
-            for (var column = 0; column < grid.Width; column++)
-            {
-                if (grid[row, column])
-                {
-                    litPixelsCount++;
-                }
-            }
-        }
-
-        return litPixelsCount;
+        return grid.Count(c => c.Object);
     }
 
     private static Grid<bool> Enhance(Grid<bool> grid, bool[] algorithm, bool defaultPixel)

@@ -11,7 +11,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _grid = inputLines.SelectToGrid(character => character - '0');
+        _grid = inputLines.SelectToGrid(character => character.ParseToDigit());
     }
 
     public PuzzleAnswer GetPartOneAnswer()

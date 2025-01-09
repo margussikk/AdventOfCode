@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2021.Day07;
@@ -6,14 +7,11 @@ namespace AdventOfCode.Year2021.Day07;
 [Puzzle(2021, 7, "The Treachery of Whales")]
 public class Day07PuzzleSolver : IPuzzleSolver
 {
-    private List<int> _horizontalPositions = [];
+    private int[] _horizontalPositions = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _horizontalPositions = inputLines[0]
-            .Split(',')
-            .Select(int.Parse)
-            .ToList();
+        _horizontalPositions = inputLines[0].SplitToNumbers<int>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()

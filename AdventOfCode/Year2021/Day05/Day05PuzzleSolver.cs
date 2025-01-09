@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Geometry;
 
 namespace AdventOfCode.Year2021.Day05;
@@ -14,8 +15,7 @@ public class Day05PuzzleSolver : IPuzzleSolver
         {
             var values = line
                 .Split("->")
-                .SelectMany(x => x.Split(",")
-                                  .Select(int.Parse))
+                .SelectMany(x => x.SplitToNumbers<int>(',', ' '))
                 .ToArray();
 
             var segment = new LineSegment2D(values[0], values[1], values[2], values[3]);

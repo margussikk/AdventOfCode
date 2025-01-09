@@ -1,6 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.GridSystem;
+using AdventOfCode.Utilities.PathFinding;
 
 namespace AdventOfCode.Year2021.Day09;
 
@@ -46,23 +47,8 @@ public class Day09PuzzleSolver : IPuzzleSolver
 
     private int GetBasinSize(GridCoordinate coordinate)
     {
-        var visited = new HashSet<GridCoordinate>();
-        var coordinates = new Queue<GridCoordinate>();
+        var pathFinder = new GridPathFinder<byte>(_grid);
 
-        coordinates.Enqueue(coordinate);
-        while (coordinates.TryDequeue(out coordinate))
-        {
-            if (!visited.Add(coordinate))
-            {
-                continue;
-            }
-
-            foreach (var neighbor in _grid.SideNeighbors(coordinate).Where(cell => cell.Object < 9))
-            {
-                coordinates.Enqueue(neighbor.Coordinate);
-            }
-        }
-
-        return visited.Count;
+        return pathFinder.FloodFill(coordinate, cell => cell.Object < 9).Count;
     }
 }

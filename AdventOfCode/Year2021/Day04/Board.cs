@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Utilities.GridSystem;
+﻿using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2021.Day04;
 
@@ -56,10 +57,7 @@ internal class Board
 
         for (var row = 0; row < 5; row++)
         {
-            var boardRowNumbers = lines[row]
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
-                .ToArray();
+            var boardRowNumbers = lines[row].SplitToNumbers<int>(' ');
 
             for (var column = 0; column < boardRowNumbers.Length; column++)
             {
