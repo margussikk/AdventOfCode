@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2020.Day23;
 
@@ -9,7 +10,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _cupNumbers = inputLines[0].Select(c => c - '0')
+        _cupNumbers = inputLines[0].Select(c => c.ParseToDigit())
                                    .ToList();
     }
 

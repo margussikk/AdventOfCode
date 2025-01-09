@@ -112,21 +112,6 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
     private static int CalculateResourceValue(GameOfLife<Tile> gameOfLife)
     {
-        var treesCount = 0;
-        var lumberyardCount = 0;
-
-        foreach (var cell in gameOfLife)
-        {
-            if (cell.Object == Tile.Trees)
-            {
-                treesCount++;
-            }
-            else if (cell.Object == Tile.Lumberyard)
-            {
-                lumberyardCount++;
-            }
-        }
-
-        return treesCount * lumberyardCount;
+        return gameOfLife.Count(Tile.Trees) * gameOfLife.Count(Tile.Lumberyard);
     }
 }

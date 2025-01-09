@@ -1,17 +1,16 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2020.Day15;
 
 [Puzzle(2020, 15, "Rambunctious Recitation")]
 public class Day15PuzzleSolver : IPuzzleSolver
 {
-    private List<int> _startingNumbers = [];
+    private int[] _startingNumbers = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _startingNumbers = inputLines[0].Split(',')
-                                        .Select(int.Parse)
-                                        .ToList();
+        _startingNumbers = inputLines[0].SplitToNumbers<int>(',');
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -35,11 +34,11 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var lastNumber = 0;
         for (var numberIndex = 0; numberIndex < spokenNumberIndex; numberIndex++)
         {
-            if (numberIndex < _startingNumbers.Count)
+            if (numberIndex < _startingNumbers.Length)
             {
                 lastNumber = _startingNumbers[numberIndex];
 
-                if (numberIndex < _startingNumbers.Count - 1)
+                if (numberIndex < _startingNumbers.Length - 1)
                 {
                     lastSeenNumberIndexes[lastNumber] = numberIndex;
                 }

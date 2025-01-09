@@ -24,9 +24,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             throw new InvalidOperationException("Failed to parse your ticket numbers");
         }
 
-        _yourTicketNumbers = chunks[1][1].Split(',')
-                                         .Select(int.Parse)
-                                         .ToList();
+        _yourTicketNumbers = [.. chunks[1][1].SplitToNumbers<int>(',')];
 
         // Nearby tickets
         if (chunks[2][0] != "nearby tickets:")
@@ -36,9 +34,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 
         _nearbyTicketNumbersList = chunks[2]
             .Skip(1)
-            .Select(line => line.Split(',')
-                                .Select(int.Parse)
-                                .ToList())
+            .Select(line => line.SplitToNumbers<int>(',').ToList())
             .ToList();
     }
 

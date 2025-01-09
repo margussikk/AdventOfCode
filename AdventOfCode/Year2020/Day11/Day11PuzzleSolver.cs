@@ -1,6 +1,9 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.GridSystem;
+using AdventOfCode.Utilities.Simulation;
+using Iced.Intel;
+using Spectre.Console;
 
 namespace AdventOfCode.Year2020.Day11;
 
@@ -22,48 +25,38 @@ public class Day11PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var grid = _grid.Clone();
+        var gameOfLife = new GameOfLife<Tile>(_grid.Height, _grid.Width);
 
-        var updatedGridCells = new List<GridCell<Tile>>();
+        foreach (var cell in _grid)
+        {
+            gameOfLife.SetState(cell.Coordinate, cell.Object);
+        }
 
+        bool seatChangedState;
         do
         {
-            updatedGridCells.Clear();
+            seatChangedState = false;
+            var nextGameOfLife = gameOfLife.Clone();
 
-            foreach (var gridCell in grid)
+            foreach (var cell in gameOfLife)
             {
-                switch (gridCell.Object)
+                if (cell.Object == Tile.EmptySeat && cell.AroundCount(Tile.OccupiedSeat) == 0)
                 {
-                    case Tile.EmptySeat:
-                        {
-                            if (grid.AroundNeighbors(gridCell.Coordinate).All(gc => gc.Object != Tile.OccupiedSeat))
-                            {
-                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.OccupiedSeat));
-                            }
-
-                            break;
-                        }
-                    case Tile.OccupiedSeat:
-                        {
-                            var aroundOccupied = grid.AroundNeighbors(gridCell.Coordinate).Count(gc => gc.Object == Tile.OccupiedSeat);
-                            if (aroundOccupied >= 4)
-                            {
-                                updatedGridCells.Add(new GridCell<Tile>(gridCell.Coordinate, Tile.EmptySeat));
-                            }
-
-                            break;
-                        }
+                    nextGameOfLife.SetState(cell.Coordinate, Tile.OccupiedSeat);
+                    seatChangedState = true;
+                }
+                else if (cell.Object == Tile.OccupiedSeat && cell.AroundCount(Tile.OccupiedSeat) >= 4)
+                {
+                    nextGameOfLife.SetState(cell.Coordinate, Tile.EmptySeat);
+                    seatChangedState = true;
                 }
             }
 
-            foreach (var updatedGridCell in updatedGridCells)
-            {
-                grid[updatedGridCell.Coordinate] = updatedGridCell.Object;
-            }
+            gameOfLife = nextGameOfLife;
+        }
+        while (seatChangedState);
 
-        } while (updatedGridCells.Count > 0);
-
-        var answer = grid.Count(gc => gc.Object == Tile.OccupiedSeat);
+        var answer = gameOfLife.Count(Tile.OccupiedSeat);
 
         return new PuzzleAnswer(answer, 2126);
     }

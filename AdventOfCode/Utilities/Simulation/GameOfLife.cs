@@ -6,6 +6,7 @@ namespace AdventOfCode.Utilities.Simulation;
 internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, Enum
 {
     private readonly int[,] _array;
+    private readonly int[] _counts = new int[8];
 
     public int Width => _array.GetLength(1);
 
@@ -18,6 +19,7 @@ internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, 
     public GameOfLife(int height, int width)
     {
         _array = new int[height, width];
+        _counts[0] = height * width;
     }
 
     public GameOfLife<T> Clone()
@@ -25,6 +27,7 @@ internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, 
         var grid = new GameOfLife<T>(Height, Width);
 
         Array.Copy(_array, grid._array, _array.Length);
+        Array.Copy(_counts, grid._counts, _counts.Length);
 
         return grid;
     }
@@ -70,8 +73,15 @@ internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, 
                 _array[neighborCoordinate.Row, neighborCoordinate.Column] = _array[neighborCoordinate.Row, neighborCoordinate.Column] - subtract + add;
             }
 
+            _counts[currentObjectInt]--;
+            _counts[nextObjectInt]++;
             _array[coordinate.Row, coordinate.Column] = (_array[coordinate.Row, coordinate.Column] & 0x7FFF_FFF0) + nextObjectInt;
         }
+    }
+
+    public int Count(T @object)
+    {
+        return _counts[Unsafe.BitCast<T, int>(@object)];
     }
 
     public override bool Equals(object? obj)

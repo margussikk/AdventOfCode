@@ -27,7 +27,7 @@ internal class AnswerGroup
         foreach (var line in lines)
         {
             var answer = line.Select(character => 1 << (character - 'a'))
-                                .Aggregate(0, (current, bitmask) => current | bitmask);
+                             .Aggregate(0, (current, bitmask) => current | bitmask);
 
             answerGroup.Answers.Add(answer);
         }
