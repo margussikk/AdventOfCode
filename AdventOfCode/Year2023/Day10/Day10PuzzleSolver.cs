@@ -22,21 +22,25 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _pipeDirections = inputLines.SelectToGrid(character => character switch
+        _pipeDirections = inputLines.SelectToGrid((character, coordinate) =>
         {
-            '|' => GridDirection.UpAndDown,
-            '-' => GridDirection.LeftAndRight,
-            'L' => GridDirection.UpAndRight,
-            'J' => GridDirection.UpAndLeft,
-            '7' => GridDirection.DownAndLeft,
-            'F' => GridDirection.DownAndRight,
-            '.' => GridDirection.None,
-            'S' => GridDirection.Start,
-            _ => throw new InvalidOperationException()
-        });
+            if (character == 'S')
+            {
+                _startCoordinate = coordinate;
+            }
 
-        _startCoordinate = _pipeDirections.FindCoordinate(x => x.HasFlag(GridDirection.Start))
-            ?? throw new InvalidOperationException("Start coordinate not found");
+            return character switch
+            {
+                '|' => GridDirection.UpAndDown,
+                '-' => GridDirection.LeftAndRight,
+                'L' => GridDirection.UpAndRight,
+                'J' => GridDirection.UpAndLeft,
+                '7' => GridDirection.DownAndLeft,
+                'F' => GridDirection.DownAndRight,
+                '.' or 'S' => GridDirection.None,
+                _ => throw new InvalidOperationException()
+            };
+        });
 
         _pipeDirections[_startCoordinate] |= DetermineStartPipeDirections();
     }
@@ -123,7 +127,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
             action.Invoke(currentCoordinate);
 
             // Remove an entrance direction, this leaves only the exit direction
-            direction = _pipeDirections[currentCoordinate] & ~(GridDirection.Start | direction.Flip());
+            direction = _pipeDirections[currentCoordinate] & ~direction.Flip();
 
             currentCoordinate = currentCoordinate.Move(direction);
         }

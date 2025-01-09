@@ -127,7 +127,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
         map[currentCoordinate] = Tile.Start;
 
         var stack = new Stack<GridDirection>();
-        stack.Push(GridDirection.Start);
+        stack.Push(GridDirection.None);
 
         while (stack.Count > 0)
         {
@@ -160,7 +160,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
             else
             {
                 var direction = stack.Pop();
-                if (direction == GridDirection.Start) continue;
+                if (direction == GridDirection.None) continue;
 
                 var backDirection = direction.Flip();
                 var robotDirection = GetRobotDirection(backDirection);

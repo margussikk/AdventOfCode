@@ -22,7 +22,4 @@ internal enum GridDirection
     UpAndRight = Up | Right,
     DownAndRight = Down | Right,
     AllSides = Up | Down | Left | Right,
-
-    Start = 1 << 10,
-    End = 1 << 11
 }
