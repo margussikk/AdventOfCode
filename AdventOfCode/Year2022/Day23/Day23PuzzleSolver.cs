@@ -64,7 +64,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
             maxColumn = int.Max(maxColumn, location.Column);
         }
 
-        // Use a grid that's magic times larger than input. Using InfiniteBitGrid was about 40% slower.
+        // Use a grid that's magic times larger than input. Using InfiniteGrid was about 40% slower.
         const int magicMultiplier = 4;
         var locationGrid = new Grid<bool>(maxRow * magicMultiplier, maxColumn * magicMultiplier);
 

@@ -12,10 +12,7 @@ public class Day05PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _seeds = inputLines[0]["seeds: ".Length..]
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Select(long.Parse)
-            .ToList();
+        _seeds = [.. inputLines[0]["seeds: ".Length..].SplitToNumbers<long>(' ')];
 
         _maps = inputLines
             .Skip(2)

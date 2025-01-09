@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Year2023.Day12;
+﻿using AdventOfCode.Utilities.Extensions;
+
+namespace AdventOfCode.Year2023.Day12;
 
 internal class Record
 {
@@ -16,11 +18,9 @@ internal class Record
         var splits = input.Split(' ');
 
         var springs = splits[0].Select(ParseSpringCondition)
-                                         .ToList();
+                               .ToList();
 
-        var groups = splits[1].Split(',')
-            .Select(int.Parse)
-            .ToList();
+        var groups = splits[1].SplitToNumbers<int>(',').ToList();
 
         return new Record(springs, groups);
     }

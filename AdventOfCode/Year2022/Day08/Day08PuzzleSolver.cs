@@ -11,7 +11,7 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _treeHeights = inputLines.SelectToGrid(character => character - '0');
+        _treeHeights = inputLines.SelectToGrid(character => character.ParseToDigit());
     }
 
     public PuzzleAnswer GetPartOneAnswer()

@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Year2023.Day04;
+﻿using AdventOfCode.Utilities.Extensions;
+
+namespace AdventOfCode.Year2023.Day04;
 
 internal class Card
 {
@@ -22,12 +24,8 @@ internal class Card
         var card = new Card
         {
             Id = int.Parse(splits[0]["Card ".Length..]),
-            WinningNumbers = splits[1].Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                      .Select(int.Parse)
-                                      .ToList(),
-            YourNumbers = splits[2].Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(int.Parse)
-                                   .ToList()
+            WinningNumbers = [.. splits[1].SplitToNumbers<int>(' ')],
+            YourNumbers = [.. splits[2].SplitToNumbers<int>(' ')]
         };
 
         return card;
