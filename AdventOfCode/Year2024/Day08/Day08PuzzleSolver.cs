@@ -39,10 +39,10 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
         foreach (var antenna in _antennas)
         {
-            foreach (var (first, second) in antenna.Value.Pairs())
+            foreach (var pair in antenna.Value.Pairs())
             {
-                CollectAntinode(antinodeCoordinates, first, second, true);
-                CollectAntinode(antinodeCoordinates, second, first, true);
+                CollectAntinode(antinodeCoordinates, pair.First, pair.Second, true);
+                CollectAntinode(antinodeCoordinates, pair.Second, pair.First, true);
             }
         }
 
@@ -55,13 +55,13 @@ public class Day08PuzzleSolver : IPuzzleSolver
 
         foreach (var antenna in _antennas)
         {
-            foreach (var (first, second) in antenna.Value.Pairs())
+            foreach (var pair in antenna.Value.Pairs())
             {
-                antinodeCoordinates.Add(first);
-                antinodeCoordinates.Add(second);
+                antinodeCoordinates.Add(pair.First);
+                antinodeCoordinates.Add(pair.Second);
 
-                CollectAntinode(antinodeCoordinates, first, second, false);
-                CollectAntinode(antinodeCoordinates, second, first, false);
+                CollectAntinode(antinodeCoordinates, pair.First, pair.Second, false);
+                CollectAntinode(antinodeCoordinates, pair.Second, pair.First, false);
             }
         }
 

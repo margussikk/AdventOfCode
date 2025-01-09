@@ -28,12 +28,12 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
         foreach (var vertexKvp in _vertices)
         {
-            foreach (var (First, Second) in vertexKvp.Value.AdjacentVertices().Pairs())
+            foreach (var pair in vertexKvp.Value.AdjacentVertices().Pairs())
             {
-                if (First.AdjacentVertices().Any(x => x.Name == Second.Name) &&
-                    (vertexKvp.Key[0] == 't' || First.Name[0] == 't' || Second.Name[0] == 't'))
+                if (pair.First.AdjacentVertices().Any(x => x.Name == pair.Second.Name) &&
+                    (vertexKvp.Key[0] == 't' || pair.First.Name[0] == 't' || pair.Second.Name[0] == 't'))
                 {
-                    var set = new string[] { vertexKvp.Key, First.Name, Second.Name }
+                    var set = new string[] { vertexKvp.Key, pair.First.Name, pair.Second.Name }
                         .Order(StringComparer.InvariantCulture)
                         .ToList();
 

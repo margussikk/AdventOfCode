@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Utilities.GridSystem;
+﻿using AdventOfCode.Utilities.Collections;
+using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Mathematics;
 
 namespace AdventOfCode.Utilities.Extensions;
@@ -109,7 +110,7 @@ internal static class CollectionExtensions
         return sequence;
     }
 
-    public static IEnumerable<(T First, T Second)> Pairs<T>(this IEnumerable<T> enumerable)
+    public static IEnumerable<ValuePair<T>> Pairs<T>(this IEnumerable<T> enumerable)
     {
         var array = enumerable as T[] ?? enumerable.ToArray();
 
@@ -117,12 +118,12 @@ internal static class CollectionExtensions
         {
             for (var index2 = index1 + 1; index2 < array.Length; index2++)
             {
-                yield return (array[index1], array[index2]);
+                yield return new ValuePair<T>(array[index1], array[index2]);
             }
         }
     }
 
-    public static IEnumerable<(T CurrentItem, T NextItem)> SlidingPairs<T>(this IEnumerable<T> source)
+    public static IEnumerable<ValuePair<T>> SlidingPairs<T>(this IEnumerable<T> source)
     {
         using var iter = source.GetEnumerator();
 
@@ -133,7 +134,7 @@ internal static class CollectionExtensions
         while (iter.MoveNext())
         {
             var nextItem = iter.Current;
-            yield return (currentItem, nextItem);
+            yield return new ValuePair<T>(currentItem, nextItem);
 
             currentItem = nextItem;
         }

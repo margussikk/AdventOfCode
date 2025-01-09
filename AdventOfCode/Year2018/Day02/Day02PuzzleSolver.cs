@@ -45,14 +45,14 @@ public class Day02PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        foreach (var (First, Second) in _boxIds.Pairs())
+        foreach (var pair in _boxIds.Pairs())
         {
-            var commonLetters = Enumerable.Range(0, First.Length)
-                .Where(letterIndex => First[letterIndex] == Second[letterIndex])
-                .Select(letterIndex => First[letterIndex])
+            var commonLetters = Enumerable.Range(0, pair.First.Length)
+                .Where(letterIndex => pair.First[letterIndex] == pair.Second[letterIndex])
+                .Select(letterIndex => pair.First[letterIndex])
                 .ToArray();
 
-            if (First.Length - commonLetters.Length == 1) // 1 different letter
+            if (pair.First.Length - commonLetters.Length == 1) // 1 different letter
             {
                 var answer = new string(commonLetters);
                 return new PuzzleAnswer(answer, "bvnfawcnyoeyudzrpgslimtkj");

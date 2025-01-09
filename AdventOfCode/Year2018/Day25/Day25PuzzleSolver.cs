@@ -27,10 +27,10 @@ public class Day25PuzzleSolver : IPuzzleSolver
             coordinateConstellations.Add(coordinate, list);
         }
 
-        foreach (var (First, Second) in _coordinates.Pairs().Where(p => p.First.ManhattanDistanceTo(p.Second) <= 3))
+        foreach (var pair in _coordinates.Pairs().Where(p => p.First.ManhattanDistanceTo(p.Second) <= 3))
         {
-            var firstConstellation = coordinateConstellations[First];
-            var secondConstellation = coordinateConstellations[Second];
+            var firstConstellation = coordinateConstellations[pair.First];
+            var secondConstellation = coordinateConstellations[pair.Second];
 
             if (firstConstellation != secondConstellation)
             {
