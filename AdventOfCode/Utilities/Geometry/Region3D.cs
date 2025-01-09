@@ -47,7 +47,7 @@ internal class Region3D
         YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
         ZLength = MaxCoordinate.Z - MinCoordinate.Z + 1;
     }
-    
+
     public Region3D(Coordinate3D minCoordinate, Coordinate3D maxCoordinate)
     {
         MinCoordinate = minCoordinate;

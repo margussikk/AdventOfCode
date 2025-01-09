@@ -21,9 +21,9 @@ public class Day17PuzzleSolver : IPuzzleSolver
         var grid = BuildGrid();
 
         var answer = grid.Where(cell => cell.Object == Tile.Scaffold &&
-                                           grid.SideNeighbors(cell.Coordinate)
-                                               .Count(c => c.Object == Tile.Scaffold) == 4)
-                            .Sum(cell => cell.Coordinate.Row * cell.Coordinate.Column);
+                                        grid.SideNeighbors(cell.Coordinate)
+                                            .Count(c => c.Object == Tile.Scaffold) == 4)
+                         .Sum(cell => cell.Coordinate.Row * cell.Coordinate.Column);
 
         return new PuzzleAnswer(answer, 4800);
     }

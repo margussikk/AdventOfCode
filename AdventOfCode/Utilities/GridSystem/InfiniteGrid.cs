@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode.Utilities.GridSystem;
-internal class InfiniteGrid<TObject>: GridBase<TObject>
+internal class InfiniteGrid<TObject> : GridBase<TObject>
 {
     private const int SubGridSize = 64;
     private Grid<TObject>[,] _grid;
-    
+
     public InfiniteGrid()
     {
         _grid = new Grid<TObject>[,]

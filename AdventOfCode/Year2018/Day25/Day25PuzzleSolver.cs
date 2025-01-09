@@ -35,7 +35,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
             if (firstConstellation != secondConstellation)
             {
                 // Merge second constellation to first
-                foreach(var coordinate in secondConstellation)
+                foreach (var coordinate in secondConstellation)
                 {
                     coordinateConstellations[coordinate] = firstConstellation;
                 }

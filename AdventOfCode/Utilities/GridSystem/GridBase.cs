@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace AdventOfCode.Utilities.GridSystem;
-internal abstract class GridBase<TObject>: IEnumerable<GridCell<TObject>>
+internal abstract class GridBase<TObject> : IEnumerable<GridCell<TObject>>
 {
     public int Width => LastColumn - FirstColumn + 1;
     public int Height => LastRow - FirstRow + 1;
@@ -85,7 +85,7 @@ internal abstract class GridBase<TObject>: IEnumerable<GridCell<TObject>>
         return null;
     }
 
-    protected TGrid RotateClockwise<TGrid>(TGrid grid) where TGrid: GridBase<TObject>
+    protected TGrid RotateClockwise<TGrid>(TGrid grid) where TGrid : GridBase<TObject>
     {
         for (var row = FirstRow; row <= grid.LastRow; row++)
         {

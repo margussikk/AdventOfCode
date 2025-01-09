@@ -1,6 +1,7 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.GridSystem;
+using AdventOfCode.Utilities.PathFinding;
 using AdventOfCode.Year2019.IntCode;
 
 namespace AdventOfCode.Year2019.Day15;
@@ -17,8 +18,6 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = 0L;
-
         var grid = BuildGrid();
 
         var startCoordinate = grid.FindCoordinate(tile => tile == Tile.Start)
@@ -26,33 +25,10 @@ public class Day15PuzzleSolver : IPuzzleSolver
         var oxygenSystemCoordinate = grid.FindCoordinate(tile => tile == Tile.OxygenSystem)
             ?? throw new InvalidOperationException("Oxygen system coordinate not found");
 
-        var visited = new HashSet<GridCoordinate>();
+        var gridPathFinder = new GridPathFinder<Tile>(grid)
+            .SetCellFilter((w, c) => c.Object != Tile.Wall);
 
-        var stack = new Stack<GridWalker>();
-
-        var gridWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
-        stack.Push(gridWalker);
-
-        while (stack.TryPop(out gridWalker))
-        {
-            if (gridWalker.Coordinate == oxygenSystemCoordinate)
-            {
-                answer = gridWalker.Steps;
-                break;
-            }
-
-            if (!visited.Add(gridWalker.Coordinate)) continue;
-
-            foreach (var neighbor in grid.SideNeighbors(gridWalker.Coordinate).Where(c => c.Object != Tile.Wall))
-            {
-                var nextGridWalker = gridWalker.Clone();
-
-                var direction = gridWalker.Coordinate.DirectionToward(neighbor.Coordinate);
-                nextGridWalker.Move(direction);
-
-                stack.Push(nextGridWalker);
-            }
-        }
+        var answer = gridPathFinder.FindShortestPathLength(startCoordinate, oxygenSystemCoordinate);
 
         return new PuzzleAnswer(answer, 204);
     }

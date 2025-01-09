@@ -46,7 +46,7 @@ internal class MoveElement : RouteElement
     {
         var stringBuilder = new StringBuilder();
 
-        foreach(var direction in Directions)
+        foreach (var direction in Directions)
         {
             var character = direction switch
             {

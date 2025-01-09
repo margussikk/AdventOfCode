@@ -100,7 +100,7 @@ public partial class Day17PuzzleSolver : IPuzzleSolver
                 continue;
             }
 
-            var downCoordinate = waterCoordinate.Down();           
+            var downCoordinate = waterCoordinate.Down();
             if (grid[downCoordinate] == Tile.WetSand)
             {
                 grid[waterCoordinate] = Tile.WetSand;

@@ -12,7 +12,7 @@ internal class GridPathWalker
 
     public GridPosition[] MovementPositions()
     {
-        return [ Position.Left(), Position.Up(), Position.Right(), Position.Down() ];
+        return [Position.Left(), Position.Up(), Position.Right(), Position.Down()];
     }
 
     public GridPosition[] TurningPositions()
@@ -29,7 +29,7 @@ internal class GridPathWalker
         }
         else
         {
-            return [ Position.TurnLeft(), Position.Move(1), Position.TurnRight() ];
+            return [Position.TurnLeft(), Position.Move(1), Position.TurnRight()];
         }
     }
 }

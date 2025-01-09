@@ -69,7 +69,7 @@ internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, 
             {
                 _array[neighborCoordinate.Row, neighborCoordinate.Column] = _array[neighborCoordinate.Row, neighborCoordinate.Column] - subtract + add;
             }
-        
+
             _array[coordinate.Row, coordinate.Column] = (_array[coordinate.Row, coordinate.Column] & 0x7FFF_FFF0) + nextObjectInt;
         }
     }

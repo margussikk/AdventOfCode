@@ -57,7 +57,7 @@ internal class GridPathFinder<T>
             }
 
             lowestCostGrid[walker.Position.Coordinate] = walker.Cost;
-            
+
             foreach (var nextPosition in walker.MovementPositions().Where(p => _grid.InBounds(p.Coordinate) && _cellFilter(walker, _grid.Cell(p.Coordinate))))
             {
                 var nextCost = _costCalculator(walker, nextPosition);
@@ -167,7 +167,7 @@ internal class GridPathFinder<T>
         {
             return [];
         }
-        
+
         return BuildPaths(previousPositions, startPosition, [.. endPositions]);
     }
 

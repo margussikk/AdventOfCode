@@ -14,7 +14,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
     public void ParseInput(string[] inputLines)
     {
         _grid = inputLines.SelectToGrid(x => x.ParseToDigit());
-        
+
         _gridPathFinder = new GridPathFinder<int>(_grid)
             .SetCellFilter((worker, cell) => cell.Object == worker.Cost + 1);
     }

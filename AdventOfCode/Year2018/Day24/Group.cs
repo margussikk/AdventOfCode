@@ -81,7 +81,7 @@ internal partial class Group
             const string immuneTo = "immune to";
 
             var splits = match.Groups[3].Value[1..^1].Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            foreach(var split in splits)
+            foreach (var split in splits)
             {
                 if (split[0..weakTo.Length] == weakTo)
                 {

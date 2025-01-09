@@ -29,7 +29,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
         var pathFinder = new GridPathFinder<bool>(grid)
             .SetCellFilter(GridPathFinder<bool>.DefaultBitGridCellFilter);
-        
+
         var answer = pathFinder.FindShortestPathLength(_startCoordinate, _endCoordinate);
 
         return new PuzzleAnswer(answer, 370);

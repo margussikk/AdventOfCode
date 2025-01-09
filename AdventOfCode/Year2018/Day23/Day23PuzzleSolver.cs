@@ -34,7 +34,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
         var queue = new PriorityQueue<SearchBox, SearchBoxRank>();
         queue.Enqueue(searchBox, searchBox.GetRank());
 
-        while(queue.TryDequeue(out searchBox, out var rank))
+        while (queue.TryDequeue(out searchBox, out var rank))
         {
             if (searchBox.Volume == 1)
             {

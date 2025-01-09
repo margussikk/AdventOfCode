@@ -1,4 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
+using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Graph;
 using AdventOfCode.Utilities.GridSystem;
 
@@ -15,41 +16,33 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _part1Grid = new Grid<Tile>(inputLines.Length, inputLines[0].Length);
-
-        for (var row = 0; row <= _part1Grid.LastRow; row++)
+        _part1Grid = inputLines.SelectToGrid<Tile>((character, coordinate) =>
         {
-            for (var column = 0; column <= _part1Grid.LastColumn; column++)
+            var tile = character switch
             {
-                var character = inputLines[row][column];
+                '.' => Tile.Space,
+                '#' => Tile.Wall,
+                >= 'a' and <= 'z' => Tile.Key,
+                >= 'A' and <= 'Z' => Tile.Door,
+                '@' => Tile.Entrance,
+                _ => throw new InvalidOperationException("Invalid character")
+            };
 
-                var tile = character switch
-                {
-                    '.' => Tile.Space,
-                    '#' => Tile.Wall,
-                    >= 'a' and <= 'z' => Tile.Key,
-                    >= 'A' and <= 'Z' => Tile.Door,
-                    '@' => Tile.Entrance,
-                    _ => throw new InvalidOperationException("Invalid character")
-                };
-
-
-                _part1Grid[row, column] = tile;
-
-                switch (tile)
-                {
-                    case Tile.Entrance:
-                        _part1Entrances[new GridCoordinate(row, column)] = character;
-                        break;
-                    case Tile.Key:
-                        _keys[new GridCoordinate(row, column)] = character;
-                        break;
-                    case Tile.Door:
-                        _doors[new GridCoordinate(row, column)] = character;
-                        break;
-                }
+            switch (tile)
+            {
+                case Tile.Entrance:
+                    _part1Entrances[coordinate] = character;
+                    break;
+                case Tile.Key:
+                    _keys[coordinate] = character;
+                    break;
+                case Tile.Door:
+                    _doors[coordinate] = character;
+                    break;
             }
-        }
+
+            return tile;
+        });
     }
 
     public PuzzleAnswer GetPartOneAnswer()

@@ -10,7 +10,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
 {
     private GridPathFinder<bool> _pathFinder = new(new Grid<bool>(0, 0));
 
-    private GridPosition _startPosition = new(new(0,0), 0);
+    private GridPosition _startPosition = new(new(0, 0), 0);
     private GridCoordinate _endCoordinate = new(0, 0);
 
     public void ParseInput(string[] inputLines)

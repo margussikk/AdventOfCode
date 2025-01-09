@@ -38,7 +38,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
         return new PuzzleAnswer(answer, 535522);
     }
-    
+
     public PuzzleAnswer GetPartTwoAnswer()
     {
         const int totalCycles = 1_000_000_000;

@@ -81,7 +81,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
 
                 answer++;
             }
-        } while(!found);
+        } while (!found);
 
         return new PuzzleAnswer(answer, 20333868);
     }

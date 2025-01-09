@@ -1,5 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.PathFinding;
-internal class GridPathWalkerComparer: IComparer<GridPathWalker>
+internal class GridPathWalkerComparer : IComparer<GridPathWalker>
 {
     public int Compare(GridPathWalker? first, GridPathWalker? second)
     {
