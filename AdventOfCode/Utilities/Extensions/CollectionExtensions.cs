@@ -110,6 +110,19 @@ internal static class CollectionExtensions
         return sequence;
     }
 
+    public static int GetSequenceHashCode<T>(this IEnumerable<T> lst)
+    {
+        unchecked
+        {
+            int hash = 19;
+            foreach (T item in lst)
+            {
+                hash = hash * 31 + (item != null! ? item.GetHashCode() : 1);
+            }
+            return hash;
+        }
+    }
+
     public static IEnumerable<ValuePair<T>> Pairs<T>(this IEnumerable<T> enumerable)
     {
         var array = enumerable as T[] ?? enumerable.ToArray();
