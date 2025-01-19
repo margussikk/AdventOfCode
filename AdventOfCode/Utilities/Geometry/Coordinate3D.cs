@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using AdventOfCode.Utilities.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AdventOfCode.Utilities.Geometry;
 
@@ -11,15 +12,6 @@ internal readonly struct Coordinate3D(long x, long y, long z) : IEquatable<Coord
     public long Y { get; } = y;
 
     public long Z { get; } = z;
-
-    public static Coordinate3D Parse(string input)
-    {
-        var values = input.Split(',')
-                          .Select(long.Parse)
-                          .ToList();
-
-        return new Coordinate3D(values[0], values[1], values[2]);
-    }
 
     public override int GetHashCode()
     {
@@ -142,5 +134,12 @@ internal readonly struct Coordinate3D(long x, long y, long z) : IEquatable<Coord
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
         return obj is Coordinate3D otherCoordinate && X == otherCoordinate.X && Y == otherCoordinate.Y && Z == otherCoordinate.Z;
+    }
+
+    public static Coordinate3D Parse(string input)
+    {
+        var values = input.SplitToNumbers<long>(',', ' ');
+
+        return new Coordinate3D(values[0], values[1], values[2]);
     }
 }
