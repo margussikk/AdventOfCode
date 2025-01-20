@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BenchmarkDotNet.Columns;
+using System.Collections;
 using System.Text;
 
 namespace AdventOfCode.Utilities.GridSystem;
@@ -113,9 +114,9 @@ internal abstract class GridBase<TObject> : IEnumerable<GridCell<TObject>>
 
     protected TGrid FlipHorizontally<TGrid>(TGrid grid) where TGrid : GridBase<TObject>
     {
-        for (var row = 0; row <= grid.LastRow; row++)
+        for (var row = grid.FirstRow; row <= grid.LastRow; row++)
         {
-            for (var column = 0; column <= grid.LastColumn; column++)
+            for (var column = grid.FirstColumn; column <= grid.LastColumn; column++)
             {
                 grid[row, column] = this[row, grid.LastColumn - column];
             }
@@ -126,15 +127,31 @@ internal abstract class GridBase<TObject> : IEnumerable<GridCell<TObject>>
 
     protected TGrid FlipVertically<TGrid>(TGrid grid) where TGrid : GridBase<TObject>
     {
-        for (var row = 0; row <= grid.LastRow; row++)
+        for (var row = grid.FirstRow; row <= grid.LastRow; row++)
         {
-            for (var column = 0; column <= grid.LastColumn; column++)
+            for (var column = grid.FirstColumn; column <= grid.LastColumn; column++)
             {
                 grid[row, column] = this[grid.LastRow - row, column];
             }
         }
 
         return grid;
+    }
+
+    public WindowGrid<TObject> Window(GridCoordinate topLeftCoordinate, GridCoordinate bottomRightCoordinate)
+    {
+        return new WindowGrid<TObject>(this, topLeftCoordinate, bottomRightCoordinate);
+    }
+
+    public void CopyFrom(GridBase<TObject> grid, GridCoordinate topLeftCoordinate)
+    {
+        for (var row = grid.FirstRow; row <= grid.LastRow; row++)
+        {
+            for (var column = grid.FirstColumn; column <= grid.LastColumn; column++)
+            {
+                this[topLeftCoordinate.Row + row, topLeftCoordinate.Column + column] = grid[row, column];
+            }
+        }
     }
 
     public IEnumerator<GridCell<TObject>> GetEnumerator()
