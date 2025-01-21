@@ -43,6 +43,16 @@ internal class GridWalker
         Direction = Direction.TurnLeft();
     }
 
+    public void TurnRight()
+    {
+        Direction = Direction.TurnRight();
+    }
+
+    public void Reverse()
+    {
+        Direction = Direction.Flip();
+    }
+
     public void MoveLeft()
     {
         TurnLeft();
@@ -53,11 +63,6 @@ internal class GridWalker
     {
         TurnRight();
         Step();
-    }
-
-    public void TurnRight()
-    {
-        Direction = Direction.TurnRight();
     }
 
     public GridWalker Clone()
