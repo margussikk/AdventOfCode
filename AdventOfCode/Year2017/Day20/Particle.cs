@@ -54,7 +54,7 @@ internal partial class Particle
             throw new InvalidOperationException("Failed to parse input line");
         }
 
-        var match = matches[0];        
+        var match = matches[0];
 
         var particle = new Particle
         {

@@ -28,7 +28,7 @@ public class Day07PuzzleSolver : IPuzzleSolver
             if (splits.Length > 1)
             {
                 var aboveProgramNames = splits[1].Split(',', StringSplitOptions.TrimEntries);
-                foreach(var aboveProgramName in aboveProgramNames)
+                foreach (var aboveProgramName in aboveProgramNames)
                 {
                     if (!programs.TryGetValue(aboveProgramName, out var aboveProgram))
                     {

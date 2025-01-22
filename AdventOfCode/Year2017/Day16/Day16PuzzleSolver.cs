@@ -11,7 +11,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
     {
         var splits = inputLines[0].Split(',');
 
-        foreach(var danceMoveInput in splits)
+        foreach (var danceMoveInput in splits)
         {
             if (danceMoveInput.Contains('/'))
             {
@@ -41,7 +41,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
             .Select(x => Convert.ToChar(x + 'a'))
             .ToList();
 
-        foreach(var danceMove in _danceMoves)
+        foreach (var danceMove in _danceMoves)
         {
             danceMove.DoMove(programs);
         }
@@ -73,7 +73,7 @@ public class Day16PuzzleSolver : IPuzzleSolver
                 answer = danceStarts.First(x => x.Value == reminder).Key;
                 break;
             }
-            
+
             danceStarts[key] = dance;
 
             foreach (var danceMove in _danceMoves)

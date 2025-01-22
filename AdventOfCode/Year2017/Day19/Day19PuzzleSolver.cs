@@ -36,7 +36,7 @@ public class Day19PuzzleSolver : IPuzzleSolver
 
                 var direction = GridDirection.AllSides;
 
-                foreach(var neighborCoordinate in coordinate.SideNeighbors().Where(c => inputLines[c.Row][c.Column] == ' '))
+                foreach (var neighborCoordinate in coordinate.SideNeighbors().Where(c => inputLines[c.Row][c.Column] == ' '))
                 {
                     direction = direction.Clear(coordinate.DirectionToward(neighborCoordinate));
                 }

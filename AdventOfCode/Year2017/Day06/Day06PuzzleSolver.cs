@@ -47,7 +47,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
     {
         var max = memoryBanks.Max();
         var memoryBank = Array.IndexOf(memoryBanks, max);
-     
+
         var blocks = memoryBanks[memoryBank];
         memoryBanks[memoryBank] = 0;
         while (blocks > 0)

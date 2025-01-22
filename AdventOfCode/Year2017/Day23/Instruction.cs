@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Year2017.Day18;
+﻿namespace AdventOfCode.Year2017.Day23;
 internal class Instruction
 {
     public InstructionCode Code { get; private set; }
@@ -15,13 +15,10 @@ internal class Instruction
         {
             Code = splits[0] switch
             {
-                "snd" => InstructionCode.Snd,
                 "set" => InstructionCode.Set,
-                "add" => InstructionCode.Add,
+                "sub" => InstructionCode.Sub,
                 "mul" => InstructionCode.Mul,
-                "mod" => InstructionCode.Mod,
-                "rcv" => InstructionCode.Rcv,
-                "jgz" => InstructionCode.Jgz,
+                "jnz" => InstructionCode.Jnz,
                 _ => throw new InvalidOperationException($"Invalid instruction code: {splits[0]}")
             },
             OperandA = Operand.Parse(splits[1]),

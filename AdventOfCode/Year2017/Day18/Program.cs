@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Year2017.Day18;
 internal class Program
 {
-    private readonly List<Instruction> _instructions = [];
+    private readonly List<Instruction> _instructions;
     private int _instructionPointer;
 
     public int Id { get; }
@@ -79,7 +79,7 @@ internal class Program
                     {
                         _instructionPointer++;
                     }
-                    
+
                     break;
             }
 

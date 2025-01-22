@@ -5,7 +5,7 @@ namespace AdventOfCode.Year2017.Day21;
 internal class EnhancementRule
 {
     public HashSet<int> Patterns { get; private set; } = [];
-    public Grid<bool> Output { get; private set; } = new (0, 0);
+    public Grid<bool> Output { get; private set; } = new(0, 0);
 
     public static EnhancementRule Parse(string input)
     {

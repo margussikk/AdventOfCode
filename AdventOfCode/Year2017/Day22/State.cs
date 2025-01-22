@@ -1,5 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day22;
-internal enum State: byte
+internal enum State : byte
 {
     Clean,
     Weakened,

@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2017.Day22;
 [Puzzle(2017, 22, "Sporifica Virus")]
 public class Day22PuzzleSolver : IPuzzleSolver
 {
-    private Grid<State> _grid = new (0, 0);
+    private Grid<State> _grid = new(0, 0);
 
     public void ParseInput(string[] inputLines)
     {

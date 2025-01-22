@@ -64,7 +64,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
             answer++;
 
             var floodFill = pathFinder.FloodFill(cell.Coordinate, cell => cell.Object);
-            foreach(var coordinate in floodFill.Keys)
+            foreach (var coordinate in floodFill.Keys)
             {
                 grid[coordinate] = false;
             }

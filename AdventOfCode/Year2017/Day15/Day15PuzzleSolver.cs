@@ -54,7 +54,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
     private static IEnumerable<long> GenerateB(long value)
     {
-        while(true)
+        while (true)
         {
             value = (value * 48271) % 2147483647L;
             yield return value;
