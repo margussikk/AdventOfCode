@@ -1,4 +1,7 @@
-﻿namespace AdventOfCode.Utilities.Numerics;
+﻿using System.Collections;
+using System.Numerics;
+
+namespace AdventOfCode.Utilities.Numerics;
 
 internal static class BitFunctions
 {
@@ -15,5 +18,20 @@ internal static class BitFunctions
         }
 
         return reverseNum;
+    }
+
+    public static int PopCount(this BitArray bitArray)
+    {
+        var count = 0;
+
+        uint[] ints = new uint[(bitArray.Count >> 5) + 1];
+        bitArray.CopyTo(ints, 0);
+
+        for (var i = 0; i < ints.Length; i++)
+        {
+            count += BitOperations.PopCount(ints[i]);
+        }
+
+        return count;
     }
 }
