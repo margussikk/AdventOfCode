@@ -79,6 +79,21 @@ internal static class MathFunctions
         return divisors;
     }
 
+    public static bool IsPrime(long number)
+    {
+        var s = Math.Sqrt(number);
+
+        for (var i = 2; i <= s; i++)
+        {
+            if (number % i == 0)
+            {
+                return false;
+            }
+        }
+
+        return number != 1;
+    }
+
     /// <summary>
     /// Extended Euclidean Algorithm (EEA) to obtain the modular multiplicative inverse of a mod m, m does not have to be a prime
     /// If modulus is a prime, Fermat's Little Theorem can be used and then result = BigInteger.ModPow(a, m - 2, m);

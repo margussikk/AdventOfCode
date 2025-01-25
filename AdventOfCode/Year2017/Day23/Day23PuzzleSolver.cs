@@ -42,8 +42,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
 
         for (var value = firstNumber; value <= lastNumber; value += step)
         {
-            var divisors = MathFunctions.GetDivisors(value);
-            if (divisors.Count > 2)
+            if (!MathFunctions.IsPrime(value))
             {
                 answer++;
             }

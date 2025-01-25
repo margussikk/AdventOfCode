@@ -19,7 +19,7 @@ public class Day18PuzzleSolver : IPuzzleSolver
 
         program.Run(false);
 
-        var answer = program.Outbox.Last();
+        var answer = program.Outbox[^1];
 
         return new PuzzleAnswer(answer, 3423);
     }
