@@ -19,8 +19,9 @@ public class Day06PuzzleSolver : IPuzzleSolver
                            .Select(z => new Race(z.First, z.Second))
                            .ToList();
 
-        var time = inputLines[0]["Time:".Length..].SelectToOneLong();
-        var distance = inputLines[1]["Distance:".Length..].SelectToOneLong();
+        var time = long.Parse(inputLines[0]["Time:".Length..].Replace(" ", string.Empty));
+        var distance = long.Parse(inputLines[1]["Distance:".Length..].Replace(" ", string.Empty));
+
         _part2Race = new Race(time, distance);
     }
 

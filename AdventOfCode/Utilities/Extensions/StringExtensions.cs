@@ -49,35 +49,4 @@ internal static class StringExtensions
 
         return [.. items];
     }
-
-    public static long SelectToOneLong(this string source)
-    {
-        var sign = 1;
-        long? value = null;
-
-        var span = source.AsSpan();
-
-        while (span.Length > 0)
-        {
-            switch (span[0])
-            {
-                case '-' when value.HasValue:
-                    throw new InvalidOperationException("- in the middle of the number");
-                case '-':
-                    sign = -1;
-                    break;
-                case >= '0' and <= '9':
-                    {
-                        value ??= 0;
-
-                        value = value * 10 + sign * (span[0] - '0');
-                        break;
-                    }
-            }
-
-            span = span[1..];
-        }
-
-        return value ?? 0;
-    }
 }
