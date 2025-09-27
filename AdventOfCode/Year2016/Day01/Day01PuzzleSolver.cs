@@ -1,7 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.GridSystem;
-using System.Linq;
-using System.Runtime.ExceptionServices;
 
 namespace AdventOfCode.Year2016.Day01;
 
