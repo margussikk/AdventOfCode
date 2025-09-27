@@ -44,7 +44,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var key = (port, usedBitmasks);
 
         if (!cache.TryGetValue(key, out var bridgeInfo))
-        {          
+        {
             bridgeInfo = new BridgeInfo(length, strength);
 
             var components = _componentsByPort.GetValueOrDefault(port, []);
@@ -61,7 +61,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
                 {
                     bridgeInfo = tempBridgeInfo;
                 }
-            }           
+            }
 
             cache[key] = bridgeInfo;
         }

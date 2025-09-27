@@ -17,9 +17,9 @@ public class Day25PuzzleSolver : IPuzzleSolver
     {
         var chunks = inputLines.SelectToChunks();
 
-        _beginState = chunks[0][0]["Begin in state ".Length ..][0];
+        _beginState = chunks[0][0]["Begin in state ".Length..][0];
         _steps = int.Parse(chunks[0][1].Split(' ')[5]);
-        
+
         _states = chunks.Skip(1)
                         .Select(State.Parse)
                         .ToDictionary(s => s.Name);

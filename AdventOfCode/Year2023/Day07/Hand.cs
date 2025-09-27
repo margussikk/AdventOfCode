@@ -58,12 +58,12 @@ internal class Hand
     {
         return countsList switch
         {
-        [5] => HandStrength.FiveOfAKind,
-        [1, 4] => HandStrength.FourOfAKind,
-        [2, 3] => HandStrength.FullHouse,
-        [1, 1, 3] => HandStrength.ThreeOfAKind,
-        [1, 2, 2] => HandStrength.TwoPair,
-        [1, 1, 1, 2] => HandStrength.OnePair,
+            [5] => HandStrength.FiveOfAKind,
+            [1, 4] => HandStrength.FourOfAKind,
+            [2, 3] => HandStrength.FullHouse,
+            [1, 1, 3] => HandStrength.ThreeOfAKind,
+            [1, 2, 2] => HandStrength.TwoPair,
+            [1, 1, 1, 2] => HandStrength.OnePair,
             _ => HandStrength.HighCard
         };
     }

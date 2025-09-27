@@ -20,6 +20,16 @@ internal readonly struct GridPosition : IEquatable<GridPosition>
 
     public GridPosition Move(int steps) => new(Coordinate.Move(Direction, steps), Direction);
 
+    public GridPosition Turn(GridDirection turnDirection)
+    {
+        return turnDirection switch
+        {
+            GridDirection.Left => TurnLeft(),
+            GridDirection.Right => TurnRight(),
+            _ => throw new ArgumentOutOfRangeException(nameof(turnDirection), "Turn direction must be Left or Right")
+        };
+    }
+
     public GridPosition TurnLeft() => new(Coordinate, Direction.TurnLeft());
 
     public GridPosition TurnRight() => new(Coordinate, Direction.TurnRight());

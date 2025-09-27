@@ -33,9 +33,19 @@ internal class GridWalker
         Steps += steps;
     }
 
-    public void Step()
+    public void Step(int steps = 1)
     {
-        Move(Direction);
+        Move(Direction, steps);
+    }
+
+    public void Turn(GridDirection turnDirection)
+    {
+        Direction = turnDirection switch
+        {
+            GridDirection.Left => Direction.TurnLeft(),
+            GridDirection.Right => Direction.TurnRight(),
+            _ => throw new ArgumentOutOfRangeException(nameof(turnDirection), "Turn direction must be Left or Right")
+        };
     }
 
     public void TurnLeft()
