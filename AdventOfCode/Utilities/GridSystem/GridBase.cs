@@ -180,7 +180,7 @@ internal abstract class GridBase<TObject> : IEnumerable<GridCell<TObject>>
         File.WriteAllText(path, PrintToString(mapper));
     }
 
-    private string PrintToString(Func<TObject, char> mapper)
+    public string PrintToString(Func<TObject, char> mapper)
     {
         var stringBuilder = new StringBuilder();
 
