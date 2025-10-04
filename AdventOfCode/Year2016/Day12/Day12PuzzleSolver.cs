@@ -35,7 +35,7 @@ public class Day12PuzzleSolver : IPuzzleSolver
         var fibonacci = MathFunctions.Fibonacci(fibonacciN + 2);
 
         var multiplicand = ((SetRegisterInstruction)_instructions[16]).Value;
-        var multiplier = ((SetRegisterInstruction)_instructions[17]).Value;  
+        var multiplier = ((SetRegisterInstruction)_instructions[17]).Value;
 
         return fibonacci + multiplicand * multiplier;
     }

@@ -4,7 +4,7 @@ internal class SetRegisterInstruction : Instruction
 {
     public int Value { get; }
     public int Register { get; }
-    
+
     public SetRegisterInstruction(int value, int register)
     {
         Value = value;

@@ -4,7 +4,7 @@ internal class CopyRegisterInstruction : Instruction
 {
     public int SourceRegister { get; }
     public int DestinationRegister { get; }
-    
+
     public CopyRegisterInstruction(int sourceRegister, int destinationRegister)
     {
         SourceRegister = sourceRegister;

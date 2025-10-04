@@ -4,7 +4,7 @@ internal class JumpRegisterInstruction : Instruction
 {
     public int Register { get; }
     public int Offset { get; }
-    
+
     public JumpRegisterInstruction(int conditionRegister, int offset)
     {
         Register = conditionRegister;
