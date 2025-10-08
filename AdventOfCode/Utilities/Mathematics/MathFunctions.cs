@@ -154,4 +154,9 @@ internal static class MathFunctions
         }
         return next;
     }
+
+    public static int LargestPower(int number, int power)
+    {
+        return Convert.ToInt32(Math.Pow(power, Math.Floor(Math.Log(number, power))));
+    }
 }
