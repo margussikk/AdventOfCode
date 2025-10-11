@@ -1,6 +1,4 @@
-﻿using AdventOfCode.Year2016.Day12;
-
-namespace AdventOfCode.Year2016.Assembunny;
+﻿namespace AdventOfCode.Year2016.Assembunny;
 
 internal abstract class Instruction
 {
@@ -17,6 +15,7 @@ internal abstract class Instruction
             "dec" => new DecreaseInstruction(InstructionArgument.Parse(parts[1])),
             "jnz" => new JumpInstruction(InstructionArgument.Parse(parts[1]), InstructionArgument.Parse(parts[2])),
             "tgl" => new ToggleInstruction(InstructionArgument.Parse(parts[1])),
+            "out" => new OutInstruction(InstructionArgument.Parse(parts[1])),
             _ => throw new ArgumentException($"Unknown instruction '{parts[0]}'."),
         };
     }
