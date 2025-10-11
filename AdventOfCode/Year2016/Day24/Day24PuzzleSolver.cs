@@ -2,8 +2,6 @@ using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.Graph;
 using AdventOfCode.Utilities.GridSystem;
-using AdventOfCode.Utilities.PathFinding;
-using Spectre.Console;
 
 namespace AdventOfCode.Year2016.Day24;
 
