@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Mathematics;
+using AdventOfCode.Year2016.Assembunny;
 
 namespace AdventOfCode.Year2016.Day12;
 
@@ -29,13 +30,13 @@ public class Day12PuzzleSolver : IPuzzleSolver
     {
         // Using hardcoded instruction indexes.
         // Assuming that everyone gets the same instructions just with different register values.
-        var fibonacciN = ((SetRegisterInstruction)_instructions[2]).Value
-            + (partTwo ? ((SetRegisterInstruction)_instructions[5]).Value
+        var fibonacciN = ((CopyInstruction)_instructions[2]).Argument1.Value!.Value
+            + (partTwo ? ((CopyInstruction)_instructions[5]).Argument1.Value!.Value
                        : 0);
         var fibonacci = MathFunctions.Fibonacci(fibonacciN + 2);
 
-        var multiplicand = ((SetRegisterInstruction)_instructions[16]).Value;
-        var multiplier = ((SetRegisterInstruction)_instructions[17]).Value;
+        var multiplicand = ((CopyInstruction)_instructions[16]).Argument1.Value!.Value;
+        var multiplier = ((CopyInstruction)_instructions[17]).Argument1.Value!.Value;
 
         return fibonacci + multiplicand * multiplier;
     }
