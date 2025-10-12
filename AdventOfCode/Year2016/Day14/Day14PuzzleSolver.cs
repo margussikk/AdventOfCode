@@ -46,7 +46,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
                                    .Select(index =>
                                    {
                                        var hash = $"{input}{index}";
-                                       for (var i = 0; i < 1 + stretches; i++)
+                                       for (var i = 0; i < stretches + 1; i++)
                                        {
                                            hash = ComputeHash(hash);
                                        }
@@ -60,6 +60,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
                 if (tripletChar != '\0')
                 {
                     keyInfos.Add(new KeyInfo { Character = tripletChar, Index = itemIndex });
+
                     var quintupleChar = FindSequenceChar(hash, 5);
                     if (quintupleChar != '\0')
                     {
@@ -88,40 +89,9 @@ public class Day14PuzzleSolver : IPuzzleSolver
             {
                 break;
             }
-
-
-            //var tripletChar = FindSequenceChar(hash, 3);
-            //if (tripletChar != '\0')
-            //{
-            //    keyInfos.Add(new KeyInfo { Character = tripletChar, Index = index });
-
-            //    var quintupleChar = FindSequenceChar(hash, 5);
-            //    if (quintupleChar != '\0')
-            //    {
-            //        foreach (var keyInfo in keyInfos.Where(keyInfo => keyInfo.Character == quintupleChar && keyInfo.Index < index && keyInfo.Index >= index - 1000))
-            //        {
-            //            keyInfo.IsKey = true;
-            //        }
-            //    }
-            //}
-
-            //if (keyInfos.Count != 0 && keyInfos[0].Index < index - 1000)
-            //{
-            //    if (keyInfos[0].IsKey)
-            //    {
-            //        answerKeyInfos.Add(keyInfos[0]);
-
-            //        if (answerKeyInfos.Count == 64)
-            //        {
-            //            break;
-            //        }
-            //    }
-
-            //    keyInfos.RemoveAt(0);
-            //}
         }
 
-        return answerKeyInfos[63].Index;
+        return answerKeyInfos[^1].Index;
     }
 
     private static string ComputeHash(string input)
@@ -129,7 +99,7 @@ public class Day14PuzzleSolver : IPuzzleSolver
         var inputBytes = Encoding.ASCII.GetBytes(input);
         var hashBytes = MD5.HashData(inputBytes);
 
-        return Convert.ToHexString(hashBytes).ToLower();
+        return Convert.ToHexStringLower(hashBytes);
     }
 
     private static char FindSequenceChar(ReadOnlySpan<char> span, int length)

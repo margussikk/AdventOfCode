@@ -62,7 +62,7 @@ internal class KeypadRobot
             }
             else
             {
-                coordinate = coordinate.Move(direction.ParseToGridDirection());
+                coordinate = coordinate.Move(direction.ParseArrowToGridDirection());
             }
         }
 

@@ -17,7 +17,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
     {
         var frequencyTables = BuildFrequencyTables();
 
-        var answer = new string([.. frequencyTables.Select(table => table.MaxBy(kvp => kvp.Value).Key)]);
+        var answer = frequencyTables.Select(table => table.MaxBy(kvp => kvp.Value).Key).JoinToString();
 
         return new PuzzleAnswer(answer, "qrqlznrl");
     }
@@ -26,7 +26,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
     {
         var frequencyTables = BuildFrequencyTables();
 
-        var answer = new string([.. frequencyTables.Select(table => table.MinBy(kvp => kvp.Value).Key)]);
+        var answer = frequencyTables.Select(table => table.MinBy(kvp => kvp.Value).Key).JoinToString();
 
         return new PuzzleAnswer(answer, "kgzdfaon");
     }
@@ -34,16 +34,10 @@ public class Day06PuzzleSolver : IPuzzleSolver
     private List<Dictionary<char, int>> BuildFrequencyTables()
     {
         var frequencyTables = Enumerable.Range(0, _inputLines[0].Length)
-                                        .Select(x => new Dictionary<char, int>())
+                                        .Select(column => _inputLines.Select(line => line[column])
+                                                                     .GroupBy(x => x)
+                                                                     .ToDictionary(x => x.Key, x => x.Count()))
                                         .ToList();
-
-        foreach (var line in _inputLines)
-        {
-            for (var characterIndex = 0; characterIndex < line.Length; characterIndex++)
-            {
-                frequencyTables[characterIndex].IncrementValue(line[characterIndex], 1);
-            }
-        }
 
         return frequencyTables;
     }

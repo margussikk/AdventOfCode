@@ -22,15 +22,18 @@ public class Day04PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
+        var answer = 0;
+
         foreach (var room in _rooms.Where(room => room.IsReal()))
         {
             var decryptedName = room.GetDecryptedName();
             if (decryptedName == "northpole object storage")
             {
-                return new PuzzleAnswer(room.SectorId, 548);
+                answer = room.SectorId;
+                break;
             }
         }
 
-        return new PuzzleAnswer("TODO", "TODO");
+        return new PuzzleAnswer(answer, 548);
     }
 }

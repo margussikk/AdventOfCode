@@ -49,7 +49,6 @@ internal static class Hash
             .Select(chunk => chunk.Aggregate((byte)0, (agg, current) => (byte)(agg ^ current)))
             .ToArray();
 
-        return Convert.ToHexString(denseHash)
-                      .ToLower(CultureInfo.InvariantCulture);
+        return Convert.ToHexStringLower(denseHash);
     }
 }

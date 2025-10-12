@@ -16,7 +16,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var bots = _bots.Select(bot => bot.CleanCopy()).ToList();
+        var bots = _bots.Select(bot => bot.Clone()).ToList();
 
         HandleChips(bots);
 
@@ -27,7 +27,7 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var bots = _bots.Select(b => b.CleanCopy()).ToList();
+        var bots = _bots.Select(b => b.Clone()).ToList();
 
         var outputInstructions = HandleChips(bots);
 

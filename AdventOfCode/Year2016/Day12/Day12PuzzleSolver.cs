@@ -28,7 +28,6 @@ public class Day12PuzzleSolver : IPuzzleSolver
 
     private int GetAnswer(bool partTwo)
     {
-        // Using hardcoded instruction indexes.
         // Assuming that everyone gets the same instructions just with different register values.
         var fibonacciN = ((CopyInstruction)_instructions[2]).Argument1.Value!.Value
             + (partTwo ? ((CopyInstruction)_instructions[5]).Argument1.Value!.Value

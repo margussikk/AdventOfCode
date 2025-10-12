@@ -32,7 +32,7 @@ public class Day23PuzzleSolver : IPuzzleSolver
     {
         var factorial = MathFunctions.Factorial(a);
 
-        // Assume that everyone gets the same instructions but with different values
+        // Assume that everyone gets the same instructions but with different register values
         var value1 = ((CopyInstruction)_instructions[19]).Argument1.Value!.Value;
         var value2 = ((JumpInstruction)_instructions[20]).Argument1.Value!.Value;
 

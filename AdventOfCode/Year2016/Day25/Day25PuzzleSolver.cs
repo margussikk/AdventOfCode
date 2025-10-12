@@ -15,7 +15,7 @@ public class Day25PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        // Assume that everyone gets the same instructions but with different values
+        // Assume that everyone gets the same instructions but with different register values
         var value1 = ((CopyInstruction)_instructions[1]).Argument1.Value!.Value;
         var value2 = ((CopyInstruction)_instructions[2]).Argument1.Value!.Value;
         var thresholdNumber = value1 * value2;

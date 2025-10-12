@@ -1,7 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.GridSystem;
-using System.Text;
 
 namespace AdventOfCode.Year2016.Day22;
 
@@ -48,6 +46,7 @@ public class Day22PuzzleSolver : IPuzzleSolver
     {
         var maxRow = _nodes.Max(x => x.Coordinate.Row);
         var maxColumn = _nodes.Max(x => x.Coordinate.Column);
+        var gridRegion = new GridRegion(GridCoordinate.Zero, new GridCoordinate(maxRow, maxColumn));
 
         var largeNodes = _nodes.Where(x => x.Size >= 100)
                                .Select(x => x.Coordinate)
@@ -75,10 +74,8 @@ public class Day22PuzzleSolver : IPuzzleSolver
                 break;
             }
 
-            var neighborCoordinates = state.EmptyCoordinate.SideNeighbors().Where(coordinate =>
-                coordinate.Row >= 0 && coordinate.Row <= maxRow &&
-                coordinate.Column >= 0 && coordinate.Column <= maxColumn &&
-                !largeNodes.Contains(coordinate));
+            var neighborCoordinates = state.EmptyCoordinate.SideNeighbors()
+                .Where(coordinate => gridRegion.InBounds(coordinate) && !largeNodes.Contains(coordinate));
 
             foreach (var neighborCoordinate in neighborCoordinates)
             {

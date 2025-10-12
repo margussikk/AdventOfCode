@@ -152,4 +152,9 @@ internal static class CollectionExtensions
             currentItem = nextItem;
         }
     }
+
+    public static string JoinToString(this IEnumerable<char> source)
+    {
+        return new string([.. source]);
+    }
 }

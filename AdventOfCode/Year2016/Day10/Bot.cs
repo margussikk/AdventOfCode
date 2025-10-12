@@ -5,16 +5,18 @@ internal class Bot
     public Target LowTarget { get; private set; } = new Target();
     public Target HighTarget { get; private set; } = new Target();
 
-    public List<int> Chips { get; } = [];
+    public List<int> Chips { get; private set; } = [];
     public List<int> ComparedChips { get; private set; } = [];
 
-    public Bot CleanCopy()
+    public Bot Clone()
     {
         return new Bot
         {
             Id = Id,
             LowTarget = LowTarget,
-            HighTarget = HighTarget
+            HighTarget = HighTarget,
+            Chips = [.. Chips],
+            ComparedChips = [.. ComparedChips]
         };
     }
 

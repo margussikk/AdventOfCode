@@ -50,6 +50,8 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
     private void FollowThePath(Func<Walker, bool> func)
     {
+        var gridRegion = new GridRegion(_startCoordinate, _endCoordinate);
+
         var walkerQueue = new Queue<Walker>();
 
         var walker = new Walker
@@ -75,8 +77,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
             foreach (var direction in directions)
             {
                 var nextCoordinate = walker.Coordinate.Move(direction);
-                if (nextCoordinate.Row < _startCoordinate.Row || nextCoordinate.Row > _endCoordinate.Row ||
-                    nextCoordinate.Column < _startCoordinate.Column || nextCoordinate.Column > _endCoordinate.Column)
+                if (!gridRegion.InBounds(nextCoordinate))
                 {
                     continue;
                 }
@@ -110,7 +111,7 @@ public class Day17PuzzleSolver : IPuzzleSolver
         var inputBytes = Encoding.ASCII.GetBytes(input);
         var hashBytes = MD5.HashData(inputBytes);
 
-        return Convert.ToHexString(hashBytes).ToLower();
+        return Convert.ToHexStringLower(hashBytes);
     }
 
     private static char GetDirectionCharacter(GridDirection direction)

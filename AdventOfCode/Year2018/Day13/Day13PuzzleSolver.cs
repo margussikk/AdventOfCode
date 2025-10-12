@@ -18,7 +18,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
         {
             if (character is '<' or '>' or 'v' or '^')
             {
-                _carts.Add(new Cart(coordinate, character.ParseToGridDirection()));
+                _carts.Add(new Cart(coordinate, character.ParseArrowToGridDirection()));
             }
 
             return character switch

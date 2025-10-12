@@ -16,7 +16,7 @@ public class Day06PuzzleSolver : IPuzzleSolver
         {
             if (character.IsGridDirection())
             {
-                _initialGuardPosition = new GridPosition(coordinate, character.ParseToGridDirection());
+                _initialGuardPosition = new GridPosition(coordinate, character.ParseArrowToGridDirection());
             }
 
             return character == '#';

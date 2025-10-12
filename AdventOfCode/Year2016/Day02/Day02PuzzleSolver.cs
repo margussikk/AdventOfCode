@@ -8,18 +8,11 @@ namespace AdventOfCode.Year2016.Day02;
 [Puzzle(2016, 2, "Bathroom Security")]
 public class Day02PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<GridDirection[]> _instructions = [];
+    private IReadOnlyList<GridDirection[]> _instructionSets = [];
 
     public void ParseInput(string[] inputLines)
     {
-        _instructions = [.. inputLines.Select(inputLines1 => inputLines1.Select(c => c switch
-        {
-            'U' => GridDirection.Up,
-            'D' => GridDirection.Down,
-            'L' => GridDirection.Left,
-            'R' => GridDirection.Right,
-            _ => throw new InvalidOperationException($"Invalid character '{c}' in input.")
-        }).ToArray())];
+        _instructionSets = [.. inputLines.Select(inputLines1 => inputLines1.Select(c => c.ParseLetterToGridDirection()).ToArray())];
     }
 
     public PuzzleAnswer GetPartOneAnswer()
@@ -57,9 +50,9 @@ public class Day02PuzzleSolver : IPuzzleSolver
         var answer = new StringBuilder();
 
         var keypad = keypadLines.SelectToGrid(c => c);
-        var startCoordinate = keypad.First(x => x.Object == '5').Coordinate;
+        var startCoordinate = keypad.FindCoordinate(x => x == '5') ?? throw new InvalidOperationException("Start coordinate (button 5) not found.");
 
-        foreach (var instructionSet in _instructions)
+        foreach (var instructionSet in _instructionSets)
         {
             var coordinate = startCoordinate;
             foreach (var instruction in instructionSet)

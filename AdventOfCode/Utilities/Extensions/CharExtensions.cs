@@ -8,7 +8,7 @@ internal static class CharExtensions
         return source is '<' or '^' or '>' or 'v';
     }
 
-    public static GridDirection ParseToGridDirection(this char source)
+    public static GridDirection ParseArrowToGridDirection(this char source)
     {
         return source switch
         {
@@ -16,6 +16,18 @@ internal static class CharExtensions
             '^' => GridDirection.Up,
             '>' => GridDirection.Right,
             'v' => GridDirection.Down,
+            _ => throw new InvalidOperationException($"Unexpected direction character: {source}")
+        };
+    }
+
+    public static GridDirection ParseLetterToGridDirection(this char source)
+    {
+        return source switch
+        {
+            'L' => GridDirection.Left,
+            'U' => GridDirection.Up,
+            'R' => GridDirection.Right,
+            'D' => GridDirection.Down,
             _ => throw new InvalidOperationException($"Unexpected direction character: {source}")
         };
     }

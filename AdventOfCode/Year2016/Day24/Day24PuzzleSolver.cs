@@ -76,7 +76,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         return new PuzzleAnswer(answer, 518);
     }
 
-    // This solution assumes that every number is reachable from number 0 and we don't have to passthrough other numbers
+    // This solution assumes that every number is reachable from number 0 and we don't have to pass through other numbers
     public PuzzleAnswer GetPartTwoAnswer()
     {
         var allNumbers = _graphBuilder.Vertices.Sum(x => 1 << x.Value.Id);

@@ -1,6 +1,11 @@
-﻿namespace AdventOfCode.Year2016.Day08;
+﻿using AdventOfCode.Utilities.GridSystem;
+
+namespace AdventOfCode.Year2016.Day08;
+
 internal abstract class Instruction
 {
+    public abstract void Execute(Grid<bool> grid);
+
     public static Instruction Parse(string line)
     {
         var parts = line.Split(' ');

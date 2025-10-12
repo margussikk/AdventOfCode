@@ -1,6 +1,5 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.GridSystem;
-using AdventOfCode.Utilities.Numerics;
 using System.Numerics;
 
 namespace AdventOfCode.Year2016.Day13;
@@ -9,6 +8,8 @@ namespace AdventOfCode.Year2016.Day13;
 public class Day13PuzzleSolver : IPuzzleSolver
 {
     private int _favoriteNumber;
+    private readonly GridCoordinate _startCoordinate = new GridCoordinate(1, 1);
+
     public void ParseInput(string[] inputLines)
     {
         _favoriteNumber = int.Parse(inputLines[0]);
@@ -18,10 +19,9 @@ public class Day13PuzzleSolver : IPuzzleSolver
     {
         var answer = 0;
 
-        var startCoordinate = new GridCoordinate(1, 1);
         var endCoordinate = new GridCoordinate(31, 39);
 
-        var gridWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
+        var gridWalker = new GridWalker(_startCoordinate, _startCoordinate, GridDirection.None, 0);
         var visited = new HashSet<GridCoordinate> { gridWalker.Coordinate };
 
         var queue = new Queue<GridWalker>();
@@ -38,13 +38,10 @@ public class Day13PuzzleSolver : IPuzzleSolver
                 .SideNeighbors()
                 .Where(coordinate => coordinate.Row >= 0 && coordinate.Column >= 0 && IsOpenSpace(coordinate));
 
-            foreach (var nextCoordinate in nextCoordinates)
+            foreach (var nextCoordinate in nextCoordinates.Where(visited.Add))
             {
-                if (visited.Add(nextCoordinate))
-                {
-                    var newWalker = new GridWalker(gridWalker.StartCoordinate, nextCoordinate, GridDirection.None, gridWalker.Steps + 1);
-                    queue.Enqueue(newWalker);
-                }
+                var newWalker = new GridWalker(gridWalker.StartCoordinate, nextCoordinate, GridDirection.None, gridWalker.Steps + 1);
+                queue.Enqueue(newWalker);
             }
         }
 
@@ -53,9 +50,7 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var startCoordinate = new GridCoordinate(1, 1);
-
-        var gridWalker = new GridWalker(startCoordinate, startCoordinate, GridDirection.None, 0);
+        var gridWalker = new GridWalker(_startCoordinate, _startCoordinate, GridDirection.None, 0);
         var visited = new HashSet<GridCoordinate> { gridWalker.Coordinate };
 
         var queue = new Queue<GridWalker>();
@@ -71,13 +66,10 @@ public class Day13PuzzleSolver : IPuzzleSolver
                 .SideNeighbors()
                 .Where(coordinate => coordinate.Row >= 0 && coordinate.Column >= 0 && IsOpenSpace(coordinate));
 
-            foreach (var nextCoordinate in nextCoordinates)
+            foreach (var nextCoordinate in nextCoordinates.Where(visited.Add))
             {
-                if (visited.Add(nextCoordinate))
-                {
-                    var newWalker = new GridWalker(gridWalker.StartCoordinate, nextCoordinate, GridDirection.None, gridWalker.Steps + 1);
-                    queue.Enqueue(newWalker);
-                }
+                var newWalker = new GridWalker(gridWalker.StartCoordinate, nextCoordinate, GridDirection.None, gridWalker.Steps + 1);
+                queue.Enqueue(newWalker);
             }
         }
 
@@ -88,7 +80,13 @@ public class Day13PuzzleSolver : IPuzzleSolver
 
     private bool IsOpenSpace(GridCoordinate coordinate)
     {
-        var value = coordinate.Row * coordinate.Row + 3 * coordinate.Row + 2 * coordinate.Row * coordinate.Column + coordinate.Column + coordinate.Column * coordinate.Column + _favoriteNumber;
+        var value = coordinate.Row * coordinate.Row +
+                    3 * coordinate.Row +
+                    2 * coordinate.Row * coordinate.Column +
+                    coordinate.Column +
+                    coordinate.Column * coordinate.Column +
+                    _favoriteNumber;
+
         return BitOperations.PopCount((uint)value) % 2 == 0;
     }
 }

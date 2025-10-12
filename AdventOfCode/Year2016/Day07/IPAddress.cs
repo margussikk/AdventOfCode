@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2016.Day07;
+
 internal class IPAddress
 {
     public string Address { get; private set; } = string.Empty;
@@ -66,16 +67,9 @@ internal class IPAddress
             insideBrackets = !insideBrackets;
         }
 
-        foreach (var aba in abas)
-        {
-            var bab = $"{aba[1]}{aba[0]}{aba[1]}";
-            if (babs.Contains(bab))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return abas.Select(aba => $"{aba[1]}{aba[0]}{aba[1]}")
+                   .Intersect(babs)
+                   .Any();
     }
 
     public static IPAddress Parse(string input)

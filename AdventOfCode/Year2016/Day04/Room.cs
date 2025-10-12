@@ -1,8 +1,9 @@
 ﻿using AdventOfCode.Utilities.Extensions;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2016.Day04;
-internal class Room
+
+internal partial class Room
 {
     public string Name { get; private set; } = string.Empty;
     public int SectorId { get; private set; }
@@ -10,50 +11,37 @@ internal class Room
 
     public bool IsReal()
     {
-        var letterCounts = new Dictionary<char, int>();
-        foreach (var c in Name.Where(c => c != '-'))
-        {
-            letterCounts.IncrementValue(c, 1);
-        }
-
-        var sortedLetters = letterCounts
-            .OrderByDescending(kv => kv.Value)
+        var calculatedChecksum = Name
+            .Where(c => c != '-')
+            .GroupBy(c => c)
+            .OrderByDescending(kv => kv.Count())
             .ThenBy(kv => kv.Key)
+            .Select(kv => kv.Key)
             .Take(5)
-            .Select(kv => kv.Key);
+            .JoinToString();
 
-        var calculatedChecksum = new string([.. sortedLetters]);
         return calculatedChecksum == Checksum;
     }
 
     public string GetDecryptedName()
     {
-        var stringBuilder = new StringBuilder();
-
-        foreach (var c in Name)
-        {
-            if (c == '-')
-            {
-                stringBuilder.Append(' ');
-            }
-            else
-            {
-                var shifted = Convert.ToChar(((c - 'a' + SectorId) % ('z' - 'a' + 1)) + 'a');
-                stringBuilder.Append(shifted);
-            }
-        }
-
-        return stringBuilder.ToString();
+        return Name.Select(c => c == '-' ? ' ' : Convert.ToChar((c - 'a' + SectorId) % ('z' - 'a' + 1) + 'a'))
+                   .JoinToString();
     }
 
     public static Room Parse(string line)
     {
-        var lastDashIndex = line.LastIndexOf('-');
-        var bracketOpenIndex = line.IndexOf('[');
-        var bracketCloseIndex = line.IndexOf(']');
-        var name = line[0..lastDashIndex];
-        var sectorId = int.Parse(line[(lastDashIndex + 1)..bracketOpenIndex]);
-        var checksum = line[(bracketOpenIndex + 1)..bracketCloseIndex];
+        var matches = InputLineRegex().Matches(line);
+        if (matches.Count != 1)
+        {
+            throw new InvalidOperationException("Failed to parse input line");
+        }
+
+        var match = matches[0];
+
+        var name = match.Groups["name"].Value;
+        var sectorId = int.Parse(match.Groups["sectorId"].Value);
+        var checksum = match.Groups["checksum"].Value;
 
         return new Room
         {
@@ -62,4 +50,7 @@ internal class Room
             Checksum = checksum
         };
     }
+
+    [GeneratedRegex(@"(?<name>[a-z\-]+)\-(?<sectorId>\d+)\[(?<checksum>[a-z]+)\]", RegexOptions.ExplicitCapture)]
+    private static partial Regex InputLineRegex();
 }

@@ -20,7 +20,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
         foreach (var instruction in _instructions)
         {
             gridWalker.Turn(instruction.TurnDirection);
-            gridWalker.Step(instruction.Blocks);
+            gridWalker.Step(instruction.BlockSteps);
         }
 
         var answer = gridWalker.Coordinate.ManhattanDistanceTo(gridWalker.StartCoordinate);
@@ -40,7 +40,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
 
             gridWalker.Turn(instruction.TurnDirection);
 
-            for (var i = 0; i < instruction.Blocks; i++)
+            for (var i = 0; i < instruction.BlockSteps; i++)
             {
                 gridWalker.Step();
 

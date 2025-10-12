@@ -33,7 +33,7 @@ public class Day15PuzzleSolver : IPuzzleSolver
 
         // Moves
         _moveDirections = chunks[1]
-            .SelectMany(line => line.Select(character => character.ParseToGridDirection()))
+            .SelectMany(line => line.Select(character => character.ParseArrowToGridDirection()))
             .ToList();
     }
 
