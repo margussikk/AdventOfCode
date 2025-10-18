@@ -2,7 +2,6 @@ using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
 using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Simulation;
-using System.Text;
 
 namespace AdventOfCode.Year2015.Day18;
 
