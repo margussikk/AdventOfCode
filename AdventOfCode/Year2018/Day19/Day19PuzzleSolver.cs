@@ -48,6 +48,6 @@ public class Day19PuzzleSolver : IPuzzleSolver
         var gtrrInstruction = _instructions.First(x => x.OpCode == OpCode.GtRR);
         var number = device.Registers[(int)gtrrInstruction.B];
 
-        return MathFunctions.GetDivisors(number).Sum();
+        return MathFunctions.Divisors(number).Sum();
     }
 }

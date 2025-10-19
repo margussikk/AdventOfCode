@@ -52,7 +52,7 @@ internal static class MathFunctions
         return power;
     }
 
-    public static List<long> GetDivisors(long number)
+    public static List<long> Divisors(long number)
     {
         var divisors = new List<long>();
 
@@ -92,6 +92,69 @@ internal static class MathFunctions
         }
 
         return number != 1;
+    }
+
+    public static Dictionary<long, long> PrimeFactors(long number)
+    {
+        if (number == 1)
+        {
+            return new Dictionary<long, long>
+            {
+                [1] = 1
+            };
+        }
+
+        var primeFactors = new List<long>();
+
+        // Get the number of 2s that divide n
+        while (number % 2 == 0)
+        {
+            primeFactors.Add(2);
+            number /= 2;
+        }
+
+        // n must be odd at this point. so we can skip one element
+        // (note i = i + 2)
+        for (var i = 3; i * i <= number; i += 2)
+        {
+            // while i divides n, append i and divide n
+            while (number % i == 0)
+            {
+                primeFactors.Add(i);
+                number /= i;
+            }
+        }
+
+        // This condition is to handle the case when n is a prime number
+        // greater than 2
+        if (number > 2)
+        {
+            primeFactors.Add(number);
+        }
+
+        return primeFactors
+            .GroupBy(x => x)
+            .ToDictionary(g => g.Key, g => g.LongCount());
+    }
+
+    public static long SumOfDivisors(long number)
+    {
+        var totalSum = 1L;
+
+        foreach (var item in PrimeFactors(number))
+        {
+            var sum = 1L;
+            var power = 1L;
+            for (var k = 0; k < item.Value; k++)
+            {
+                power *= item.Key;
+                sum += power;
+            }
+
+            totalSum *= sum;
+        }
+
+        return totalSum;
     }
 
     /// <summary>
@@ -155,8 +218,8 @@ internal static class MathFunctions
         return next;
     }
 
-    public static int LargestPower(int number, int power)
+    public static int LargestPower(int number, int @base)
     {
-        return Convert.ToInt32(Math.Pow(power, Math.Floor(Math.Log(number, power))));
+        return Convert.ToInt32(Math.Pow(@base, Math.Floor(Math.Log(number, @base))));
     }
 }
