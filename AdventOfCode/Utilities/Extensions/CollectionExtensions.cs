@@ -95,6 +95,30 @@ internal static class CollectionExtensions
         return clone;
     }
 
+    public static IEnumerable<IEnumerable<T>> GetCombinations<T>(this IEnumerable<T> enumerable, int combinationSize)
+    {
+        var array = enumerable as T[] ?? [.. enumerable];
+
+        var indices = Enumerable.Range(0, combinationSize).ToArray();
+        while (indices[0] <= array.Length - combinationSize)
+        {
+            yield return indices.Select(i => array[i]);
+
+            indices[combinationSize - 1]++;
+            for (var i = combinationSize - 1; i > 0; i--)
+            {
+                if (indices[i] >= array.Length - (combinationSize - 1 - i))
+                {
+                    indices[i - 1]++;
+                    for (var j = i; j < combinationSize; j++)
+                    {
+                        indices[j] = indices[j - 1] + 1;
+                    }
+                }
+            }
+        }
+    }
+
     private static int[] GenerateSequence(long number, int size, long[] factorials)
     {
         var sequence = new int[size];
