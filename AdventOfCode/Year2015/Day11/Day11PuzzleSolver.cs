@@ -63,54 +63,36 @@ public class Day11PuzzleSolver : IPuzzleSolver
             }
 
             // Validate
-            var hasStraight = false;
-            for (index = 0; index < password.Length - 3; index++)
-            {
-                if (password[index + 2] == password[index + 1] + 1 &&
-                    password[index + 1] == password[index] + 1)
-                {
-                    hasStraight = true;
-                    break;
-                }
-            }
+            var hasStraight = password.SlidingWindow(3)
+                                      .Any(window => window[2] == window[1] + 1 &&
+                                                     window[1] == window[0] + 1);
 
             if (!hasStraight)
             {
                 continue;
             }
 
-            var hasTwoDifferentPairs = false;
-            var startIndexes = new Dictionary<char, int>();
-            for (index = 0; index < password.Length - 1; index++)
-            {
-                if (password[index] != password[index + 1])
-                {
-                    continue;
-                }
+            var pairIndexes = password.SlidingWindow(2)
+                                      .Select((window, index) => new
+                                      {
+                                          Pair = window.JoinToString(),
+                                          Index = index
+                                      })
+                                      .Where(x => x.Pair[0] == x.Pair[1])
+                                      .GroupBy(x => x.Pair)
+                                      .ToDictionary(g => g.Key, g => g.Select(x => x.Index).ToList());
 
-                if (startIndexes.TryGetValue(password[index], out var startIndex))
-                {
-                    if (index > startIndex + 1)
-                    {
-                        hasTwoDifferentPairs = true;
-                        break;
-                    }
-                }
-                else
-                {
-                    if (startIndexes.Count == 1)
-                    {
-                        hasTwoDifferentPairs = true;
-                        break;
-                    }
-
-                    startIndexes.Add(password[index], index);
-                }
-            }
-
-            if (hasTwoDifferentPairs)
+            if (pairIndexes.Count == 2) // Two different pairs
             {
                 break;
+            }
+            else if (pairIndexes.Count == 1) // Single pair, check if it occurs more than twice
+            {
+                var indexes = pairIndexes.First().Value;
+                if (indexes.Max() > indexes.Min() + 1)
+                {
+                    break;
+                }
             }
         }
 
