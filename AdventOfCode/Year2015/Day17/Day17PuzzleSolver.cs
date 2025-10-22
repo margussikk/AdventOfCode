@@ -29,7 +29,8 @@ public class Day17PuzzleSolver : IPuzzleSolver
 
         FindCombinations(150, 0, [], allCombinations);
 
-        var containerCount = allCombinations.GroupBy(x => x.Count)
+        var containerCount = allCombinations
+            .GroupBy(x => x.Count)
             .ToDictionary(x => x.Key, x => x.Count());
 
         var answer = containerCount.MinBy(x => x.Key).Value;
