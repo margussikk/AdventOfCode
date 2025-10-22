@@ -38,45 +38,30 @@ public class Day05PuzzleSolver : IPuzzleSolver
         }
 
         // Rule: It contains at least one letter that appears twice in a row
-        if (!inputString.SlidingPairs().Any(x => x.First == x.Second))
+        if (!inputString.SlidingWindow(2).Any(x => x[0] == x[1]))
         {
             return false;
         }
 
         // Rule: It does not contain the disallowed strings
-        return !inputString
-            .SlidingPairs()
-            .Select(pair => $"{pair.First}{pair.Second}")
-            .Intersect(_disallowedStringsForPartTwo)
-            .Any();
+        return !inputString.SlidingWindow(2)
+                           .Select(window => window.JoinToString())
+                           .Intersect(_disallowedStringsForPartTwo)
+                           .Any();
     }
 
     private static bool IsNicePartTwo(string inputString)
     {
         // Rule: It contains a pair of any two letters that appears at least twice in the string without overlapping
-        var hasPairTwice = false;
-        var pairStartIndexes = new Dictionary<string, int>();
-
-        for (var index = 0; index < inputString.Length - 1; index++)
-        {
-            var pairString = inputString.Substring(index, 2);
-            if (pairStartIndexes.TryGetValue(pairString, out var pairStartIndex))
-            {
-                if (index > pairStartIndex + 1)
-                {
-                    hasPairTwice = true;
-                    break;
-                }
-                else
-                {
-                    // Ignore overlapping pairs
-                }
-            }
-            else
-            {
-                pairStartIndexes.Add(pairString, index);
-            }
-        }
+        var hasPairTwice = inputString.SlidingWindow(2)
+                                      .Select((window, index) => new
+                                      {
+                                          Pair = window.JoinToString(),
+                                          Index = index
+                                      })
+                                      .GroupBy(x => x.Pair)
+                                      .Where(group => group.Count() >= 2)
+                                      .Any(group => group.Max(x => x.Index) - group.Min(x => x.Index) > 1);
 
         if (!hasPairTwice)
         {
