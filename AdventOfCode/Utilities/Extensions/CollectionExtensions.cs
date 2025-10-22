@@ -160,23 +160,6 @@ internal static class CollectionExtensions
         }
     }
 
-    public static IEnumerable<ValuePair<T>> SlidingPairs<T>(this IEnumerable<T> source)
-    {
-        using var iter = source.GetEnumerator();
-
-        if (!iter.MoveNext())
-            yield break;
-
-        var currentItem = iter.Current;
-        while (iter.MoveNext())
-        {
-            var nextItem = iter.Current;
-            yield return new ValuePair<T>(currentItem, nextItem);
-
-            currentItem = nextItem;
-        }
-    }
-
     public static IEnumerable<IList<T>> SlidingWindow<T>(this IEnumerable<T> source, int windowSize)
     {
         var windows = Enumerable.Range(0, windowSize)

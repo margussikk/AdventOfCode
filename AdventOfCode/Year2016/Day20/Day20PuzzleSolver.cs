@@ -7,7 +7,7 @@ namespace AdventOfCode.Year2016.Day20;
 [Puzzle(2016, 20, "Firewall Rules")]
 public class Day20PuzzleSolver : IPuzzleSolver
 {
-    private IReadOnlyList<NumberRange<uint>> _ips;
+    private IReadOnlyList<NumberRange<uint>> _ips = [];
 
     public void ParseInput(string[] inputLines)
     {
