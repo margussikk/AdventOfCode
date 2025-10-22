@@ -11,44 +11,33 @@ public class Day03PuzzleSolver : IPuzzleSolver
 
     public void ParseInput(string[] inputLines)
     {
-        _directions = [.. inputLines[0].Select(c => c.ParseArrowToGridDirection())];
+        _directions = [.. inputLines[0].Select(CharExtensions.ParseArrowToGridDirection)];
     }
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var coordinate = GridCoordinate.Zero;
-
-        var visited = new HashSet<GridCoordinate>
-        {
-            coordinate
-        };
-
-        foreach (var direction in _directions)
-        {
-            coordinate = coordinate.Move(direction);
-            visited.Add(coordinate);
-        }
-
-        var answer = visited.Count;
+        var answer = _directions.Accumulate(GridCoordinate.Zero, (accumulation, direction) => accumulation.Move(direction))
+                                .Distinct()
+                                .Count() + 1;
 
         return new PuzzleAnswer(answer, 2081);
     }
 
     public PuzzleAnswer GetPartTwoAnswer()
     {
-        var santaCount = 2;
-
-        var coordinates = Enumerable.Range(0, santaCount).Select(x => GridCoordinate.Zero).ToArray();
+        var coordinates = new GridCoordinate[]
+        {
+            GridCoordinate.Zero,
+            GridCoordinate.Zero
+        };
 
         var visited = coordinates.ToHashSet();
 
-        foreach (var directionChunk in _directions.Chunk(santaCount))
+        for (var index = 0; index < _directions.Count; index++)
         {
-            for (var i = 0; i < santaCount; i++)
-            {
-                coordinates[i] = coordinates[i].Move(directionChunk[i]);
-                visited.Add(coordinates[i]);
-            }
+            var santaIndex = index % 2;
+            coordinates[santaIndex] = coordinates[santaIndex].Move(_directions[index]);
+            visited.Add(coordinates[santaIndex]);
         }
 
         var answer = visited.Count;

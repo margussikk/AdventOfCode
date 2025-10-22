@@ -203,6 +203,17 @@ internal static class CollectionExtensions
         }
     }
 
+    public static IEnumerable<TAccumulate> Accumulate<TAccumulate, TSource>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func)
+    {
+        var accumulation = seed;
+
+        foreach (var item in source)
+        {
+            accumulation = func(accumulation, item);
+            yield return accumulation;
+        }
+    }
+
     public static string JoinToString(this IEnumerable<char> source)
     {
         return new string([.. source]);
