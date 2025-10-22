@@ -1,5 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Year2024.Day24;
 
 namespace AdventOfCode.Year2015.Day07;
 
