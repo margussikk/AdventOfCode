@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Mathematics;
+using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2015.Day20;
 
@@ -15,8 +16,8 @@ public class Day20PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = Enumerable.Range(1, 1000000)
-                               .First(house => MathFunctions.SumOfDivisors(house) * 10 >= _input);
+        var answer = NumberGenerator.From(1)
+                                    .First(house => MathFunctions.SumOfDivisors(house) * 10 >= _input);
 
         return new PuzzleAnswer(answer, 665280);
     }
