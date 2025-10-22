@@ -1,5 +1,4 @@
 using AdventOfCode.Framework.Puzzle;
-using AdventOfCode.Year2021.Day02;
 
 namespace AdventOfCode.Year2015.Day01;
 
@@ -21,13 +20,7 @@ public class Day01PuzzleSolver : IPuzzleSolver
 
     public PuzzleAnswer GetPartOneAnswer()
     {
-        var answer = 0;
-
-        foreach (var direction in _directions)
-        {
-            var movement = direction == Direction.Up ? 1 : -1;
-            answer += movement;
-        }
+        var answer = _directions.Sum(d => d == Direction.Up ? 1 : -1);
 
         return new PuzzleAnswer(answer, 138);
     }
@@ -40,8 +33,8 @@ public class Day01PuzzleSolver : IPuzzleSolver
         for (var position = 0; position < _directions.Count; position++)
         {
             var movement = _directions[position] == Direction.Up ? 1 : -1;
-            floor += movement;
 
+            floor += movement;
             if (floor < 0)
             {
                 answer = position + 1;
