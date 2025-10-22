@@ -1,5 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.Extensions;
+using AdventOfCode.Utilities.Numerics;
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
@@ -61,7 +62,7 @@ public class Day05PuzzleSolver : IPuzzleSolver
             var queue = new ConcurrentQueue<(int Index, string Hash)>();
 
             Parallel.ForEach(
-                NumbersFrom(index),
+                NumberGenerator.From(index),
                 (currentIndex, state) =>
                 {
                     var hashString = ComputeHash($"{_input}{currentIndex}");
@@ -86,10 +87,5 @@ public class Day05PuzzleSolver : IPuzzleSolver
         var hashBytes = MD5.HashData(inputBytes);
 
         return Convert.ToHexStringLower(hashBytes);
-    }
-
-    private static IEnumerable<int> NumbersFrom(int i)
-    {
-        while (i < int.MaxValue) yield return i++;
     }
 }
