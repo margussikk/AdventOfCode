@@ -29,14 +29,9 @@ public class Day10PuzzleSolver : IPuzzleSolver
 
     private int GetAnswer(int times)
     {
-        var input = _input;
-
-        for (var i = 0; i < times; i++)
-        {
-            input = LookAndSay(input);
-        }
-
-        return input.Length;
+        return Enumerable.Range(0, times)
+                         .Aggregate(_input, (current, _) => LookAndSay(current))
+                         .Length;
     }
 
     private static string LookAndSay(string input)
