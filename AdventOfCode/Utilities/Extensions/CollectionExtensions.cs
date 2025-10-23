@@ -162,27 +162,23 @@ internal static class CollectionExtensions
 
     public static IEnumerable<IList<T>> SlidingWindow<T>(this IEnumerable<T> source, int windowSize)
     {
-        var windows = Enumerable.Range(0, windowSize)
-            .Select(_ => new List<T>())
-            .ToList();
+        var buffer = new T[windowSize];
 
-        var i = 0;
-        using var iter = source.GetEnumerator();
-        while (iter.MoveNext())
+        var count = 0;
+        foreach(var item in source)
         {
-            var c = Math.Min(i + 1, windowSize);
-            for (var j = 0; j < c; j++)
+            for (var i = 1; i < windowSize; i++)
             {
-                windows[(i - j) % windowSize].Add(iter.Current);
+                buffer[i - 1] = buffer[i];
             }
 
-            if (i >= windowSize - 1)
+            buffer[^1] = item;
+
+            count++;
+            if (count >= windowSize)
             {
-                var previous = (i + 1) % windowSize;
-                yield return windows[previous];
-                windows[previous] = [];
+                yield return [.. buffer];
             }
-            i++;
         }
     }
 
