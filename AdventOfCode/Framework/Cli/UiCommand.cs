@@ -9,7 +9,7 @@ public class UiCommand : Command<UiSettings>
     private const string ActionBenchmark = "Benchmark puzzles";
     private const string ActionSolve = "Solve puzzles";
 
-    public override int Execute(CommandContext context, UiSettings settings)
+    public override int Execute(CommandContext context, UiSettings settings, CancellationToken cancellationToken)
     {
         var action = SelectAction();
         var selectedYear = SelectYear();

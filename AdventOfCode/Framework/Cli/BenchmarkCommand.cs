@@ -5,7 +5,7 @@ namespace AdventOfCode.Framework.Cli;
 
 public class BenchmarkCommand : Command<BenchmarkSettings>
 {
-    public override int Execute(CommandContext context, BenchmarkSettings settings)
+    public override int Execute(CommandContext context, BenchmarkSettings settings, CancellationToken cancellationToken)
     {
         var puzzleDetails = settings.Day.HasValue
             ? PuzzleDetailsProvider.GetByYearAndDays(settings.Year, [settings.Day.Value])
