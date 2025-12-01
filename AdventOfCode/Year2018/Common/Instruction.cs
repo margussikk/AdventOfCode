@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2018.Common;
+
 internal class Instruction
 {
     public OpCode OpCode { get; private set; }

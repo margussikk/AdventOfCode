@@ -3,6 +3,7 @@ using AdventOfCode.Utilities.Mathematics;
 using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2024.Day07;
+
 internal class Equation
 {
     public long TestValue { get; private init; }

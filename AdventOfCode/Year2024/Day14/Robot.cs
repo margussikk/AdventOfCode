@@ -3,6 +3,7 @@ using AdventOfCode.Utilities.Mathematics;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2024.Day14;
+
 internal partial class Robot
 {
     private const long areaWidth = 101;

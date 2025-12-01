@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day13;
+
 internal class Scanner
 {
     private readonly int _period = 0;

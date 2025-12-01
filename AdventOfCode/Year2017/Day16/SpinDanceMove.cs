@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day16;
+
 internal class SpinDanceMove : IDanceMove
 {
     public int Count { get; private set; }

@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2017.Day12;
+
 internal class Pipe
 {
     public int ProgramId { get; private set; }

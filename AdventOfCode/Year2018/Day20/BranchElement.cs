@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2018.Day20;
+
 internal class BranchElement : RouteElement
 {
     public static BranchElement Parse(ref ReadOnlySpan<char> span)

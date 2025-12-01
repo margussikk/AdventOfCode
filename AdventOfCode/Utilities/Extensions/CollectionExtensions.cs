@@ -165,7 +165,7 @@ internal static class CollectionExtensions
         var buffer = new T[windowSize];
 
         var count = 0;
-        foreach(var item in source)
+        foreach (var item in source)
         {
             for (var i = 1; i < windowSize; i++)
             {

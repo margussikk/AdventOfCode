@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2017.Day21;
+
 internal static class GridUtils
 {
     public static int GetGridBitmask(GridBase<bool> grid)

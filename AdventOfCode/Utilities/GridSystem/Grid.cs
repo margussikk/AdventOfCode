@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.GridSystem;
+
 internal class Grid<TObject> : GridBase<TObject>
 {
     private readonly TObject[,] _array;

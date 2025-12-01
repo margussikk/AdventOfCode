@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2016.Assembunny;
+
 internal class CopyInstruction : Instruction
 {
     public InstructionArgument Argument1 { get; }

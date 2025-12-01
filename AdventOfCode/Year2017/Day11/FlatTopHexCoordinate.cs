@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2017.Day11;
+
 internal class FlatTopHexCoordinate
 {
     public int Q { get; }

@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Utilities.PathFinding;
+
 internal class GridPathWalker
 {
     public GridPosition Position { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2016.Day22;
+
 internal class Node
 {
     public GridCoordinate Coordinate { get; set; }

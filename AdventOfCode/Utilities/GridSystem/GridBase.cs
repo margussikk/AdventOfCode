@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 
 namespace AdventOfCode.Utilities.GridSystem;
+
 internal abstract class GridBase<TObject> : IEnumerable<GridCell<TObject>>
 {
     public int Width => LastColumn - FirstColumn + 1;

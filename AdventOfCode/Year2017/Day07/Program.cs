@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2017.Day07;
+
 internal class Program
 {
     public string Name { get; }

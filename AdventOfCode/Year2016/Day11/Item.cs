@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2016.Day11;
+
 internal class Item
 {
     public string Element { get; set; } = null!;

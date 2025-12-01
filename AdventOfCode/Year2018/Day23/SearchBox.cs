@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Geometry;
 
 namespace AdventOfCode.Year2018.Day23;
+
 internal class SearchBox
 {
     private readonly Region3D _region;

@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2017.Day20;
+
 internal partial class Particle
 {
     public Coordinate3D Position { get; private set; }

@@ -2,6 +2,7 @@
 using System.Text;
 
 namespace AdventOfCode.Year2018.Day20;
+
 internal class MoveElement : RouteElement
 {
     public List<GridDirection> Directions { get; private set; } = [];

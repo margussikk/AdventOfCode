@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2018.Common;
+
 internal class Device
 {
     public long[] Registers { get; private set; }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Utilities.Simulation;
+
 internal class GameOfLife<T> : IEnumerable<GameOfLifeCell<T>> where T : struct, Enum
 {
     private readonly int[,] _array;

@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.Extensions;
+
 internal static class LinkedListExtensions
 {
     public static LinkedListNode<T> NextCircular<T>(this LinkedListNode<T> node, int distance = 1)

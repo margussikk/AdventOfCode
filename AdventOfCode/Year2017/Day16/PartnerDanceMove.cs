@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day16;
+
 internal class PartnerDanceMove : IDanceMove
 {
     public char ProgramA { get; private set; }

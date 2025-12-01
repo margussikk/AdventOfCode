@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day16;
+
 internal class ExchangeDanceMove : IDanceMove
 {
     public int PositionA { get; private set; }

@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2016.Day11;
+
 internal class State
 {
     public int Elevator { get; set; }

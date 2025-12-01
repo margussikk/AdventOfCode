@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Utilities.Simulation;
+
 internal class GameOfLifeCell<T> where T : Enum
 {
     private const int BITMASK = 0x0F;

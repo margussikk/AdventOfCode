@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2018.Day23;
+
 internal readonly struct SearchBoxRank : IComparable<SearchBoxRank>
 {
     public readonly long NanobotsCount { get; }

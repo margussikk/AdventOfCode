@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day23;
+
 internal class Coprocessor
 {
     private readonly List<Instruction> _instructions;

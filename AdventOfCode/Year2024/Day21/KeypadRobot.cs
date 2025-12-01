@@ -4,6 +4,7 @@ using AdventOfCode.Utilities.PathFinding;
 using System.Text;
 
 namespace AdventOfCode.Year2024.Day21;
+
 internal class KeypadRobot
 {
     private readonly Dictionary<(char, char), List<string>> _sequencesCache;

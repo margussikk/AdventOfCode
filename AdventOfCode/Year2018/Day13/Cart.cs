@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2018.Day13;
+
 internal class Cart
 {
     public GridCoordinate Coordinate { get; private set; }

@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day18;
+
 internal class Program
 {
     private readonly List<Instruction> _instructions;

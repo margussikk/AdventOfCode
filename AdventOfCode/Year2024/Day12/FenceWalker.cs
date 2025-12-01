@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2024.Day12;
+
 internal class FenceWalker
 {
     private readonly GridCoordinate _startCoordinate;

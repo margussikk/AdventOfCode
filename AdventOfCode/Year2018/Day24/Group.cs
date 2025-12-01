@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2018.Day24;
+
 internal partial class Group
 {
     public ArmyType ArmyType { get; private set; }

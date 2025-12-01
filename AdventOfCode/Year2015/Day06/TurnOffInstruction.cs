@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2015.Day06;
+
 internal class TurnOffInstruction : Instruction
 {
     public TurnOffInstruction(GridCoordinate firstCoordinate, GridCoordinate lastCoordinate)

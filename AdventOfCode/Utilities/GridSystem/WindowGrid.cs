@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.GridSystem;
+
 internal class WindowGrid<TObject> : GridBase<TObject>
 {
     private readonly GridBase<TObject> _parentGrid;

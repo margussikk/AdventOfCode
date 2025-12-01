@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2016.Day10;
+
 internal class GiveInstruction
 {
     public Target Target { get; init; } = new Target();

@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2024.Day24;
+
 internal class Wire
 {
     public string Name { get; }

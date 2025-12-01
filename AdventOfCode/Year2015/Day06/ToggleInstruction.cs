@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2015.Day06;
+
 internal class ToggleInstruction : Instruction
 {
     public ToggleInstruction(GridCoordinate firstCoordinate, GridCoordinate lastCoordinate)

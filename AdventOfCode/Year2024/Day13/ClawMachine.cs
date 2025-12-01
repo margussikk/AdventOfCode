@@ -4,6 +4,7 @@ using AdventOfCode.Utilities.Numerics;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2024.Day13;
+
 internal partial class ClawMachine
 {
     public Vector2D ButtonA { get; set; }

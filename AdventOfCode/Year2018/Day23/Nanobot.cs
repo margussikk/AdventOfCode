@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Year2018.Day23;
+
 internal partial class Nanobot
 {
     public Coordinate3D Coordinate { get; private set; }

@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2024.Day17;
+
 internal class Computer
 {
     private long _registerA;

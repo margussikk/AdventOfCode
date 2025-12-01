@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Utilities.Extensions;
+
 internal static class CharExtensions
 {
     public static bool IsGridDirection(this char source)

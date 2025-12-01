@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Numerics;
 
 namespace AdventOfCode.Utilities.Numerics;
+
 internal readonly struct NumberRange<T>(T start, T end) : IEnumerable<T> where T : IBinaryNumber<T>, IParsable<T>
 {
     public T Start { get; } = start;

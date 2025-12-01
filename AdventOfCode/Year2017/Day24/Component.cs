@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.Extensions;
 
 namespace AdventOfCode.Year2017.Day24;
+
 internal class Component
 {
     public ulong Bitmask { get; private set; }

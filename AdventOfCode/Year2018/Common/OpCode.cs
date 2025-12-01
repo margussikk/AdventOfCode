@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2018.Common;
+
 internal enum OpCode
 {
     AddR,

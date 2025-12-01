@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.Collections;
+
 internal class ValuePair<T>
 {
     public T First { get; }

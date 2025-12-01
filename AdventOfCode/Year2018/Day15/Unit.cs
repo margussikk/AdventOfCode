@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2018.Day15;
+
 internal class Unit
 {
     public UnitType UnitType { get; set; }

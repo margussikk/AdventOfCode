@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2019.Day12;
+
 internal class Moon
 {
     public int X { get; set; }

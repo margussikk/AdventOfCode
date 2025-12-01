@@ -2,6 +2,7 @@
 using System.Globalization;
 
 namespace AdventOfCode.Year2017.Common;
+
 internal static class Hash
 {
     public static byte[] SparseHash(byte[] lengths, int rounds)

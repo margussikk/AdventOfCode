@@ -2,6 +2,7 @@
 using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2017.Day21;
+
 internal class EnhancementRule
 {
     public HashSet<int> Patterns { get; private set; } = [];

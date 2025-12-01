@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day25;
+
 internal class State
 {
     public char Name { get; private set; }

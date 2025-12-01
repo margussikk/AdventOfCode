@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Utilities.GridSystem;
 
 namespace AdventOfCode.Year2018.Day20;
+
 internal class RootElement : RouteElement
 {
     public static RootElement Parse(string input)

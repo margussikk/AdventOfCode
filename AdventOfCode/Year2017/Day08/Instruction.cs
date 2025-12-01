@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day08;
+
 internal class Instruction
 {
     public string OperationRegister { get; private set; } = string.Empty;

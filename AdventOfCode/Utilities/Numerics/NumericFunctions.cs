@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Utilities.Numerics;
+
 internal static class NumericFunctions
 {
     public static int DigitCount(this int number) => DigitCount(Convert.ToInt64(number));

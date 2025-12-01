@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2017.Day18;
+
 internal class Instruction
 {
     public InstructionCode Code { get; private set; }

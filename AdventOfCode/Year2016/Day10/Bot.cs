@@ -1,4 +1,5 @@
 ﻿namespace AdventOfCode.Year2016.Day10;
+
 internal class Bot
 {
     public int Id { get; private set; }
