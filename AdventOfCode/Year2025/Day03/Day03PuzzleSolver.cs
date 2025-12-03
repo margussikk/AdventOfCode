@@ -35,13 +35,15 @@ public class Day03PuzzleSolver : IPuzzleSolver
             var startIndex = joltage.Length - Math.Min(joltage.Length, bank.Length - batteryIndex);
 
             var turnOnBatteryIndex = Array.FindIndex(joltage, startIndex, c => c < bank[batteryIndex]);
-            if (turnOnBatteryIndex >= 0 && turnOnBatteryIndex < joltage.Length)
+            if (turnOnBatteryIndex < 0)
             {
-                joltage[turnOnBatteryIndex] = bank[batteryIndex];
-                for (var i = turnOnBatteryIndex + 1; i < joltage.Length; i++)
-                {
-                    joltage[i] = '0';
-                }
+                continue;
+            }
+
+            joltage[turnOnBatteryIndex] = bank[batteryIndex];
+            for (var i = turnOnBatteryIndex + 1; i < joltage.Length; i++)
+            {
+                joltage[i] = '0';
             }
         }
 
