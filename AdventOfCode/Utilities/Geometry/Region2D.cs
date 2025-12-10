@@ -61,14 +61,7 @@ internal class Region2D : IEnumerable<Coordinate2D>
         YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
     }
 
-    public Region2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate)
-    {
-        MinCoordinate = minCoordinate;
-        MaxCoordinate = maxCoordinate;
-
-        XLength = MaxCoordinate.X - MinCoordinate.X + 1;
-        YLength = MaxCoordinate.Y - MinCoordinate.Y + 1;
-    }
+    public Region2D(Coordinate2D minCoordinate, Coordinate2D maxCoordinate) : this([minCoordinate, maxCoordinate]) { }
 
     public bool InBounds(Coordinate2D coordinate)
     {
