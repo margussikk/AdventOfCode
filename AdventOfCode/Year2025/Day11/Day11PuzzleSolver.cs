@@ -3,7 +3,7 @@ using AdventOfCode.Utilities.Graph;
 
 namespace AdventOfCode.Year2025.Day11;
 
-[Puzzle(2025, 11, "")]
+[Puzzle(2025, 11, "Reactor")]
 public class Day11PuzzleSolver : IPuzzleSolver
 {
     private IReadOnlyDictionary<string, GraphVertex> _vertices = new Dictionary<string, GraphVertex>();
