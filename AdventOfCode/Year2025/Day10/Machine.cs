@@ -7,7 +7,7 @@ internal partial class Machine
 {
     public int IndicatorLightsBitmask { get; private set; }
 
-    public ButtonWiring[] ButtonWirings { get; private set; } = [];
+    public Button[] Buttons { get; private set; } = [];
 
     public int[] JoltageRequirements { get; private set; } = [];
 
@@ -25,9 +25,9 @@ internal partial class Machine
         var machine = new Machine
         {
             IndicatorLightsBitmask = indicatorLightsString.Aggregate(0, (agg, curr) => (agg << 1) + (curr == '#' ? 1 : 0)),
-            ButtonWirings = [.. matches[0].Groups[2].Value
+            Buttons = [.. matches[0].Groups[2].Value
                 .Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .Select(buttons => new ButtonWiring(indicatorLightsString.Length, buttons[1..^1].SplitToNumbers<int>(',')))],
+                .Select(buttons => new Button(indicatorLightsString.Length, buttons[1..^1].SplitToNumbers<int>(',')))],
             JoltageRequirements = matches[0].Groups[3].Value.SplitToNumbers<int>(',')
         };
 
