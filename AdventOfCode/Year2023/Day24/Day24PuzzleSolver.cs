@@ -102,7 +102,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         var solution = LinearEquationSolver.Solve(linearEquations).First();
 
         var rockHailstone = new Hailstone(solution[0].LongValue, solution[1].LongValue, solution[2].LongValue, solution[3].LongValue, solution[4].LongValue, solution[5].LongValue);
-        var answer = rockHailstone.X + rockHailstone.Y + rockHailstone.Z;               
+        var answer = rockHailstone.X + rockHailstone.Y + rockHailstone.Z;
 
         return new PuzzleAnswer(answer, 1025127405449117L);
     }
@@ -135,7 +135,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
             new(0), // DZ
 
             // Right side hand
-            new (hailstone2.X * hailstone2.DY - hailstone2.Y * hailstone2.DX - 
+            new (hailstone2.X * hailstone2.DY - hailstone2.Y * hailstone2.DX -
                  hailstone1.X * hailstone1.DY + hailstone1.Y * hailstone1.DX)
         };
 

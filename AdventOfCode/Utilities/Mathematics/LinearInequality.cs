@@ -61,7 +61,7 @@ internal class LinearInequality
         };
         stringBuilder.Append(constraintString);
         stringBuilder.Append(Expression);
-        
+
         return stringBuilder.ToString();
     }
 }

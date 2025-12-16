@@ -34,7 +34,7 @@ internal class LinearExpression
 
     public LinearExpression Clone()
     {
-        return new LinearExpression([..Terms.Select(x => x.Clone())]);
+        return new LinearExpression([.. Terms.Select(x => x.Clone())]);
     }
 
     public RationalNumber Evaluate(RationalNumber[] variables)

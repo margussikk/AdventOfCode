@@ -61,7 +61,7 @@ internal static class LinearEquationSolver
 
         foreach (var expression in modifiedExpressions)
         {
-            foreach(var freeVariableValue in freeVariableValues)
+            foreach (var freeVariableValue in freeVariableValues)
             {
                 expression.SetVariableValue(freeVariableValue.Key, freeVariableValue.Value);
             }
@@ -69,7 +69,7 @@ internal static class LinearEquationSolver
 
         var lowerBound = minVariableValue;
         var lowerBoundRationalNumber = new RationalNumber(lowerBound);
-        
+
         var upperBound = maxVariableValue;
         var upperBoundRationalNumber = new RationalNumber(upperBound);
 
@@ -99,7 +99,7 @@ internal static class LinearEquationSolver
 
         for (var value = lowerBound; value <= upperBound; value++)
         {
-            KeyValuePair<int, RationalNumber>[] nextFreeVariableValues = [..freeVariableValues, new KeyValuePair<int, RationalNumber>(currentVariable, new RationalNumber(value))];
+            KeyValuePair<int, RationalNumber>[] nextFreeVariableValues = [.. freeVariableValues, new KeyValuePair<int, RationalNumber>(currentVariable, new RationalNumber(value))];
 
             foreach (var solution in FindSolutions(equations, freeVariableExpressions, nextFreeVariableValues, constantVariableValues, minVariableValue, maxVariableValue))
             {

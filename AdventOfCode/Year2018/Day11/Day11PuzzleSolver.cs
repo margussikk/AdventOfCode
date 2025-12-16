@@ -9,7 +9,7 @@ public class Day11PuzzleSolver : IPuzzleSolver
 {
     private int _serialNumber;
 
-    private SummedAreaTable _summedAreaTable = new(new int[0,0]);
+    private SummedAreaTable _summedAreaTable = new(new int[0, 0]);
 
     public void ParseInput(string[] inputLines)
     {
