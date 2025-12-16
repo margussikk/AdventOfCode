@@ -15,11 +15,18 @@ internal partial class ClawMachine
 
     public bool TryWinThePrize(out long buttonAPushes, out long buttonBPushes)
     {
-        var matrix = new Matrix<double>(2, 3);
-        matrix.SetRow(0, [ButtonA.DX, ButtonB.DX, Prize.X]);
-        matrix.SetRow(1, [ButtonA.DY, ButtonB.DY, Prize.Y]);
+        var matrixElements = new RationalNumber[][]
+        {
+            [new(ButtonA.DX), new(ButtonB.DX), new(Prize.X)],
+            [new(ButtonA.DY), new(ButtonB.DY), new(Prize.Y)]
+        };
+        var matrix = new Matrix(matrixElements);
+        matrix.TransformToReducedRowEchelonForm();
 
-        if (!LinearEquationSolver.TrySolveLinearEquation(matrix, out var doubleValues))
+        var linearEquations = matrix.GetLinearEquations();
+        var solution = LinearEquationSolver.Solve(linearEquations).First();
+
+        if (!solution[0].IsWholeNumber || !solution[1].IsWholeNumber)
         {
             buttonAPushes = 0;
             buttonBPushes = 0;
@@ -27,19 +34,8 @@ internal partial class ClawMachine
             return false;
         }
 
-        buttonAPushes = Convert.ToInt64(doubleValues[0]);
-        buttonBPushes = Convert.ToInt64(doubleValues[1]);
-
-        var verifyA = ButtonA.DX * buttonAPushes + ButtonB.DX * buttonBPushes == Prize.X;
-        var verifyB = ButtonA.DY * buttonAPushes + ButtonB.DY * buttonBPushes == Prize.Y;
-
-        if (!verifyA || !verifyB)
-        {
-            buttonAPushes = 0;
-            buttonBPushes = 0;
-
-            return false;
-        }
+        buttonAPushes = solution[0].LongValue;
+        buttonBPushes = solution[1].LongValue;
 
         return true;
     }

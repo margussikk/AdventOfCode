@@ -1,103 +1,110 @@
 ﻿using AdventOfCode.Utilities.Numerics;
-using System.Numerics;
 
 namespace AdventOfCode.Utilities.Mathematics;
 
 internal static class LinearEquationSolver
 {
-    // Function to get matrix content
-    public static bool TrySolveLinearEquation<T>(Matrix<T> matrix, out T[] values) where T : INumber<T>
+    public static IEnumerable<RationalNumber[]> Solve(IReadOnlyList<LinearEquation> equations, long minVariableValue = 0, long maxVariableValue = 0)
     {
-        if (matrix.Height != matrix.Width - 1)
-        {
-            // Invalid matrix size
-            values = [];
-            return false;
-        }
+        var freeVariableExpressions = equations
+            .SelectMany(e => e.Expression.Terms.Where(x => x.Variable.HasValue).Select(x => x.Variable!.Value))
+            .GroupBy(x => x)
+            .Select(x => (Variable: x.Key, Count: x.Count()))
+            .OrderByDescending(x => x.Count)
+            .Select(x =>
+            {
+                var expressions = equations
+                    .Where(e => e.Expression.ContainsVariable(x.Variable))
+                    .Select(e => e.Expression)
+                    .ToArray();
+                return new KeyValuePair<int, LinearExpression[]>(x.Variable, expressions);
+            })
+            .ToArray();
 
-        var singularFlag = ForwardSubstitution(matrix);
-        if (singularFlag != -1)
-        {
-            // If singularFlag == 0 then there are infinitely many solutions.
-            // If singularFlar > 0 then the system is inconsistent
+        var constantVariableValues = equations
+            .Where(x => x.Expression.IsConstantExpression())
+            .Select(x => new KeyValuePair<int, RationalNumber>(x.Variable, x.Expression.GetConstant()))
+            .ToArray();
 
-            values = [];
-            return false;
-        }
-
-        values = BackSubstitute(matrix);
-        return true;
+        return FindSolutions(equations, freeVariableExpressions, [], constantVariableValues, minVariableValue, maxVariableValue);
     }
 
-    // Function to reduce matrix to row echelon form.
-    private static int ForwardSubstitution<T>(Matrix<T> matrix) where T : INumber<T>
+    private static IEnumerable<RationalNumber[]> FindSolutions(IReadOnlyList<LinearEquation> equations, KeyValuePair<int, LinearExpression[]>[] freeVariableExpressions, KeyValuePair<int, RationalNumber>[] freeVariableValues, KeyValuePair<int, RationalNumber>[] constantVariableValues, long minVariableValue, long maxVariableValue)
     {
-        for (var currentRow = 0; currentRow < matrix.Height; currentRow++)
+        if (freeVariableValues.Length == freeVariableExpressions.Length)
         {
-            var currentColumn = currentRow; // Use separate variables for clarity
+            var variableValues = new RationalNumber[equations.Count];
 
-            // Find pivot row
-            var pivotRow = currentRow;
-            for (var row = currentRow + 1; row < matrix.Height; row++)
+            foreach (var constantVariableValue in constantVariableValues)
             {
-                if (T.Abs(matrix[row, currentColumn]) > T.Abs(matrix[pivotRow, currentColumn]))
-                {
-                    pivotRow = row;
-                }
+                variableValues[constantVariableValue.Key] = constantVariableValue.Value;
             }
 
-            // Make sure the current row is the pivot row.
-            if (currentRow != pivotRow)
+            foreach (var freeVariableValue in freeVariableValues)
             {
-                for (var column = 0; column < matrix.Width; column++)
-                {
-                    (matrix[currentRow, column], matrix[pivotRow, column]) = (matrix[pivotRow, column], matrix[currentRow, column]);
-                }
+                variableValues[freeVariableValue.Key] = freeVariableValue.Value;
             }
 
-            // If a principal diagonal element  is zero, it denotes that the
-            // matrix is singular, and it will lead to a division-by-zero later.
-            if (matrix[currentRow, currentColumn] == T.Zero)
+            foreach (var equation in equations)
             {
-                return currentColumn; // Matrix is singular
+                variableValues[equation.Variable] = equation.Expression.Evaluate(variableValues);
             }
 
-            for (var row = currentRow + 1; row < matrix.Height; row++)
+            yield return variableValues;
+            yield break;
+        }
+
+        // Substitute free variables with selected values
+        var modifiedExpressions = freeVariableExpressions[freeVariableValues.Length].Value
+            .Select(x => x.Clone())
+            .ToList();
+
+        foreach (var expression in modifiedExpressions)
+        {
+            foreach(var freeVariableValue in freeVariableValues)
             {
-                var factor = matrix[row, currentColumn] / matrix[currentRow, currentColumn];
-
-                for (var column = currentColumn + 1; column < matrix.Width; column++)
-                {
-                    matrix[row, column] -= matrix[currentRow, column] * factor;
-                }
-
-                matrix[row, currentColumn] = T.Zero;
+                expression.SetVariableValue(freeVariableValue.Key, freeVariableValue.Value);
             }
         }
 
-        return -1;
-    }
+        var lowerBound = minVariableValue;
+        var lowerBoundRationalNumber = new RationalNumber(lowerBound);
+        
+        var upperBound = maxVariableValue;
+        var upperBoundRationalNumber = new RationalNumber(upperBound);
 
-    // Function to calculate the values of the unknowns
-    private static T[] BackSubstitute<T>(Matrix<T> matrix) where T : INumber<T>
-    {
-        // An array to store solution
-        var values = new T[matrix.Height];
+        var currentVariable = freeVariableExpressions[freeVariableValues.Length].Key;
 
-        // Start calculating from last equation up to the first
-        for (var currentRow = matrix.LastRowIndex; currentRow >= 0; currentRow--)
+        var boundExpressions = modifiedExpressions
+            .Select(e => new LinearInequality(e, currentVariable, LinearInequalityConstraint.GreaterThanOrEqual, lowerBoundRationalNumber))
+            .Concat(modifiedExpressions.Select(e => new LinearInequality(e, currentVariable, LinearInequalityConstraint.LessThanOrEqual, upperBoundRationalNumber)))
+            .ToList();
+
+        foreach (var inequality in boundExpressions)
         {
-            var currentColumn = currentRow; // Use separate variables for clarity
-            var value = matrix[currentRow, matrix.LastColumnIndex];
-
-            for (var column = currentColumn + 1; column < matrix.LastColumnIndex; column++)
+            if (inequality.Expression.IsConstantExpression())
             {
-                value -= matrix[currentRow, column] * values[column];
-            }
+                var constant = inequality.Expression.GetConstant();
 
-            values[currentColumn] = value / matrix[currentRow, currentColumn];
+                if (inequality.Constraint == LinearInequalityConstraint.GreaterThanOrEqual)
+                {
+                    lowerBound = Math.Max(lowerBound, constant.Ceiling().LongValue);
+                }
+                else if (inequality.Constraint == LinearInequalityConstraint.LessThanOrEqual)
+                {
+                    upperBound = Math.Min(upperBound, constant.Floor().LongValue);
+                }
+            }
         }
 
-        return values;
+        for (var value = lowerBound; value <= upperBound; value++)
+        {
+            KeyValuePair<int, RationalNumber>[] nextFreeVariableValues = [..freeVariableValues, new KeyValuePair<int, RationalNumber>(currentVariable, new RationalNumber(value))];
+
+            foreach (var solution in FindSolutions(equations, freeVariableExpressions, nextFreeVariableValues, constantVariableValues, minVariableValue, maxVariableValue))
+            {
+                yield return solution;
+            }
+        }
     }
 }

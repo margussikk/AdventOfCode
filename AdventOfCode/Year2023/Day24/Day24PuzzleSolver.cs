@@ -84,26 +84,25 @@ public class Day24PuzzleSolver : IPuzzleSolver
         // (h2dz - h1dz) * rx + (h1dx - h2dx) * rz + (h1z - h2z) * rdx + (h2x - h1x) * rdz = h1z * h1dz + h1x * h1dz - h2z * h2dx + h2x * h2dz
         // (h2dz - h1dz) * ry + (h1dy - h2dy) * rz + (h1z - h2z) * rdy + (h2y - h1y) * rdz = h1z * h1dz + h1y * h1dz - h2z * h2dy + h2y * h2dz
 
-        // Solve the equation with 6 unknowns using 3 hailstones and Gaussian elimination.
-
-        var matrix = new Matrix<double>(6, 7);
-        matrix.SetRow(0, BuildXYCoefficients(_hailstones[0], _hailstones[1]));
-        matrix.SetRow(1, BuildXYCoefficients(_hailstones[0], _hailstones[2]));
-        matrix.SetRow(2, BuildXZCoefficients(_hailstones[0], _hailstones[1]));
-        matrix.SetRow(3, BuildXZCoefficients(_hailstones[0], _hailstones[2]));
-        matrix.SetRow(4, BuildYZCoefficients(_hailstones[0], _hailstones[1]));
-        matrix.SetRow(5, BuildYZCoefficients(_hailstones[0], _hailstones[2]));
-
-        if (!LinearEquationSolver.TrySolveLinearEquation(matrix, out var doubleValues))
+        // Solve the equation with 6 unknowns using 3 hailstones and Gauss-Jordan elimination.
+        var matrixElements = new RationalNumber[][]
         {
-            throw new InvalidOperationException("Couldn't solve the equation");
-        }
+            BuildXYCoefficients(_hailstones[0], _hailstones[1]),
+            BuildXYCoefficients(_hailstones[0], _hailstones[2]),
+            BuildXZCoefficients(_hailstones[0], _hailstones[1]),
+            BuildXZCoefficients(_hailstones[0], _hailstones[2]),
+            BuildYZCoefficients(_hailstones[0], _hailstones[1]),
+            BuildYZCoefficients(_hailstones[0], _hailstones[2])
+        };
 
-        var longValues = doubleValues.Select(Convert.ToInt64).ToList();
+        var matrix = new Matrix(matrixElements);
+        matrix.TransformToReducedRowEchelonForm();
 
-        var rockHailstone = new Hailstone(longValues[0], longValues[1], longValues[2], longValues[3], longValues[4], longValues[5]);
+        var linearEquations = matrix.GetLinearEquations();
+        var solution = LinearEquationSolver.Solve(linearEquations).First();
 
-        var answer = rockHailstone.X + rockHailstone.Y + rockHailstone.Z;
+        var rockHailstone = new Hailstone(solution[0].LongValue, solution[1].LongValue, solution[2].LongValue, solution[3].LongValue, solution[4].LongValue, solution[5].LongValue);
+        var answer = rockHailstone.X + rockHailstone.Y + rockHailstone.Z;               
 
         return new PuzzleAnswer(answer, 1025127405449117L);
     }
@@ -116,7 +115,7 @@ public class Day24PuzzleSolver : IPuzzleSolver
         return (coordinate.X - hailstone.X) / hailstone.DX >= 0;
     }
 
-    private static double[] BuildXYCoefficients(Hailstone hailstone1, Hailstone hailstone2)
+    private static RationalNumber[] BuildXYCoefficients(Hailstone hailstone1, Hailstone hailstone2)
     {
         // (hx - rx) / (rdx - hdx) = (hy - ry) / (rdy - hdy)
         // (hx - rx) * (rdy - hdy) = (hy - ry) * (rdx - hdx)
@@ -125,25 +124,25 @@ public class Day24PuzzleSolver : IPuzzleSolver
         // h1y * rdx - h1y * h1dx + ry * h1dx - h1x * rdy + h1x * h1dy - rx * h1dy = h2y * rdx - h2y * h2dx + ry * h2dx - h2x * rdy + h2x * h2dy - rx * h2dy
         // (h2dy - h1dy) * rx + (h1dx - h2dx) * ry + (h1y - h2y) * rdx + (h2x - h1x) * rdy = h2x * h2dy - h2y * h2dx - h1x * h1dy + h1y * h1dx
 
-        var coefficients = new double[]
+        var coefficients = new RationalNumber[]
         {
             // Left side hand
-            hailstone2.DY - hailstone1.DY, // X
-            hailstone1.DX - hailstone2.DX, // Y
-            0, // Z
-            hailstone1.Y - hailstone2.Y, // DX
-            hailstone2.X - hailstone1.X, // DY
-            0, // DZ
+            new(hailstone2.DY - hailstone1.DY), // X
+            new(hailstone1.DX - hailstone2.DX), // Y
+            new(0), // Z
+            new(hailstone1.Y - hailstone2.Y), // DX
+            new(hailstone2.X - hailstone1.X), // DY
+            new(0), // DZ
 
             // Right side hand
-            hailstone2.X * hailstone2.DY - hailstone2.Y * hailstone2.DX -
-            hailstone1.X * hailstone1.DY + hailstone1.Y * hailstone1.DX
+            new (hailstone2.X * hailstone2.DY - hailstone2.Y * hailstone2.DX - 
+                 hailstone1.X * hailstone1.DY + hailstone1.Y * hailstone1.DX)
         };
 
         return coefficients;
     }
 
-    private static double[] BuildXZCoefficients(Hailstone hailstone1, Hailstone hailstone2)
+    private static RationalNumber[] BuildXZCoefficients(Hailstone hailstone1, Hailstone hailstone2)
     {
         // (hx - rx) / (rdx - hdx) = (hz - rz) / (rdz - hdz)
         // (hx - rx) * (rdz - hdz) = (hz - rz) * (rdx - hdx)
@@ -152,25 +151,25 @@ public class Day24PuzzleSolver : IPuzzleSolver
         // h1z * rdx - h1z * h1dx + rz * h1dx - h1x * rdz + h1x * h1dz - rx * h1dz = h2z * rdx - h2z * h2dx + rz * h2dx - h2x * rdz + h2x * h2dz - rx * h2dz
         // (h2dz - h1dz) * rx + (h1dx - h2dx) * rz + (h1z - h2z) * rdx + (h2x - h1x) * rdz = h1z * h1dz + h1x * h1dz - h2z * h2dx + h2x * h2dz
 
-        var coefficients = new double[]
+        var coefficients = new RationalNumber[]
         {
             // Left side hand
-            hailstone2.DZ - hailstone1.DZ, // X
-            0, // Y
-            hailstone1.DX - hailstone2.DX, // Z
-            hailstone1.Z - hailstone2.Z, // DX
-            0, // DY
-            hailstone2.X - hailstone1.X, // DZ
+            new(hailstone2.DZ - hailstone1.DZ), // X
+            new(0), // Y
+            new(hailstone1.DX - hailstone2.DX), // Z
+            new(hailstone1.Z - hailstone2.Z), // DX
+            new(0), // DY
+            new(hailstone2.X - hailstone1.X), // DZ
 
             // Right side hand
-            hailstone2.X * hailstone2.DZ - hailstone2.Z * hailstone2.DX -
-            hailstone1.X * hailstone1.DZ + hailstone1.Z * hailstone1.DX
+            new(hailstone2.X * hailstone2.DZ - hailstone2.Z * hailstone2.DX -
+                hailstone1.X * hailstone1.DZ + hailstone1.Z * hailstone1.DX)
         };
 
         return coefficients;
     }
 
-    private static double[] BuildYZCoefficients(Hailstone hailstone1, Hailstone hailstone2)
+    private static RationalNumber[] BuildYZCoefficients(Hailstone hailstone1, Hailstone hailstone2)
     {
         // (hy - ry) / (rdy - hdy) = (hz - rz) / (rdz - hdz)
         // (hy - ry) * (rdz - hdz) = (hz - rz) * (rdy - hdy)
@@ -179,19 +178,19 @@ public class Day24PuzzleSolver : IPuzzleSolver
         // h1z * rdy - h1z * h1dy + rz * h1dy - h1y * rdz + h1y * h1dz - ry * h1dz = h2z * rdy - h2z * h2dy + rz * h2dy - h2y * rdz + h2y * h2dz - ry * h2dz
         // (h2dz - h1dz) * ry + (h1dy - h2dy) * rz + (h1z - h2z) * rdy + (h2y - h1y) * rdz = h1z * h1dz + h1y * h1dz - h2z * h2dy + h2y * h2dz
 
-        var coefficients = new double[]
+        var coefficients = new RationalNumber[]
         {
             // Left side hand
-            0, // X
-            hailstone2.DZ - hailstone1.DZ, // Y
-            hailstone1.DY - hailstone2.DY, // Z
-            0, // DX
-            hailstone1.Z - hailstone2.Z, // DY
-            hailstone2.Y - hailstone1.Y, // DZ
+            new(0), // X
+            new(hailstone2.DZ - hailstone1.DZ), // Y
+            new(hailstone1.DY - hailstone2.DY), // Z
+            new(0), // DX
+            new(hailstone1.Z - hailstone2.Z), // DY
+            new(hailstone2.Y - hailstone1.Y), // DZ
 
             // Right side hand
-            hailstone2.Y * hailstone2.DZ - hailstone2.Z * hailstone2.DY -
-            hailstone1.Y * hailstone1.DZ + hailstone1.Z * hailstone1.DY
+            new(hailstone2.Y * hailstone2.DZ - hailstone2.Z * hailstone2.DY -
+                hailstone1.Y * hailstone1.DZ + hailstone1.Z * hailstone1.DY)
         };
 
         return coefficients;

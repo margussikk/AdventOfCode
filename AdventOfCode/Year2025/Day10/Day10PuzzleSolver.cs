@@ -29,26 +29,23 @@ public class Day10PuzzleSolver : IPuzzleSolver
         foreach (var machine in _machines)
         {
             // Build matrix
-            var matrix = new Matrix2(machine.JoltageRequirements.Length, machine.Buttons.Length + 1);
-            for (int buttonIndex = 0; buttonIndex < machine.Buttons.Length; buttonIndex++)
-            {
-                foreach(var wiring in machine.Buttons[buttonIndex].Wirings)
-                {
-                    matrix[wiring, buttonIndex] = RationalNumber.One;
-                }
-            }
-            
-            for (var joltageIndex = 0; joltageIndex < machine.JoltageRequirements.Length; joltageIndex++)
-            {
-                matrix[joltageIndex, matrix.LastColumnIndex] = new RationalNumber(machine.JoltageRequirements[joltageIndex]);
-            }
+            var matrixElements = Enumerable
+                .Range(0, machine.JoltageRequirements.Length)
+                .Select(joltageIndex => Enumerable
+                    .Range(0, machine.Buttons.Length)
+                    .Select(buttonIndex => machine.Buttons[buttonIndex].Wirings.Contains(joltageIndex) ? 1L : 0)
+                    .Append(machine.JoltageRequirements[joltageIndex])
+                    .Select(x => new RationalNumber(x))
+                    .ToArray())
+                .ToArray();
 
+            var matrix = new Matrix(matrixElements);
             matrix.TransformToReducedRowEchelonForm();
 
             // Solve linear equations
             var equations = matrix.GetLinearEquations();
 
-            answer += LinearEquationSolver2
+            answer += LinearEquationSolver
                 .Solve(equations, 0, machine.JoltageRequirements.Max())
                 .Where(x => x.All(x => x.IsWholeNumber))
                 .Min(x => x.Aggregate((curr, agg) => curr + agg).LongValue);

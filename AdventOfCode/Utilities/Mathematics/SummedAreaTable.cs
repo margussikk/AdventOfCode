@@ -1,6 +1,4 @@
-﻿using AdventOfCode.Utilities.Numerics;
-
-namespace AdventOfCode.Utilities.Mathematics;
+﻿namespace AdventOfCode.Utilities.Mathematics;
 
 // https://en.wikipedia.org/wiki/Summed-area_table
 internal class SummedAreaTable
@@ -15,9 +13,9 @@ internal class SummedAreaTable
 
     public int LastColumnIndex => Width - 1;
 
-    public SummedAreaTable(Matrix<int> matrix)
+    public SummedAreaTable(int[,] matrix)
     {
-        _array = new int[matrix.Height, matrix.Width];
+        _array = new int[matrix.GetLength(0), matrix.GetLength(1)];
 
         // Create summed area table
         // I(x, y) = i(x, y) + I(x, y - 1) + I(x - 1, y) - I(x - 1, y - 1)

@@ -1,7 +1,6 @@
 using AdventOfCode.Framework.Puzzle;
 using AdventOfCode.Utilities.GridSystem;
 using AdventOfCode.Utilities.Mathematics;
-using AdventOfCode.Utilities.Numerics;
 
 namespace AdventOfCode.Year2018.Day11;
 
@@ -10,17 +9,17 @@ public class Day11PuzzleSolver : IPuzzleSolver
 {
     private int _serialNumber;
 
-    private SummedAreaTable _summedAreaTable = new(new(0, 0));
+    private SummedAreaTable _summedAreaTable = new(new int[0,0]);
 
     public void ParseInput(string[] inputLines)
     {
         _serialNumber = int.Parse(inputLines[0]);
 
-        var matrix = new Matrix<int>(300, 300);
+        var matrix = new int[300, 300];
 
-        for (var row = 0; row <= matrix.LastRowIndex; row++)
+        for (var row = 0; row < matrix.GetLength(0); row++)
         {
-            for (var column = 0; column <= matrix.LastColumnIndex; column++)
+            for (var column = 0; column < matrix.GetLength(0); column++)
             {
                 matrix[row, column] = CalculatePowerLevel(row, column);
             }
