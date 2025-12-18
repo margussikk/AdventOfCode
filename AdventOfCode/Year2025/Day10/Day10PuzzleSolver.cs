@@ -45,8 +45,13 @@ public class Day10PuzzleSolver : IPuzzleSolver
             // Solve linear equations
             var equations = matrix.GetLinearEquations();
 
+            var variableLimits = Enumerable
+                .Range(0, machine.Buttons.Length)
+                .Select(x => new NumberRange<long>(0, machine.Buttons[x].Wirings.Min(y => machine.JoltageRequirements[y])))
+                .ToArray();
+
             answer += LinearEquationSolver
-                .Solve(equations, 0, machine.JoltageRequirements.Max())
+                .Solve(equations, variableLimits)
                 .Where(x => x.All(x => x.IsWholeNumber))
                 .Min(x => x.Aggregate((curr, agg) => curr + agg).LongValue);
         }

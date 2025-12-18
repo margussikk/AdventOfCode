@@ -4,20 +4,32 @@ namespace AdventOfCode.Utilities.Mathematics;
 
 internal static class LinearEquationSolver
 {
-    public static IEnumerable<RationalNumber[]> Solve(IReadOnlyList<LinearEquation> equations, long minVariableValue = 0, long maxVariableValue = 0)
+
+
+    public static RationalNumber[][] Solve(IReadOnlyList<LinearEquation> equations)
     {
-        var freeVariableExpressions = equations
+        var variableValueLimits = Enumerable.Range(0, equations.Count)
+                                            .Select(x => new NumberRange<long>(0, 0))
+                                            .ToArray();
+
+        return [.. Solve(equations, variableValueLimits)];
+    }
+
+    public static RationalNumber[][] Solve(IReadOnlyList<LinearEquation> equations, NumberRange<long>[] variableValueLimits)
+    {
+        var freeVariableEquationIndexes = equations
             .SelectMany(e => e.Expression.Terms.Where(x => x.Variable.HasValue).Select(x => x.Variable!.Value))
             .GroupBy(x => x)
             .Select(x => (Variable: x.Key, Count: x.Count()))
             .OrderByDescending(x => x.Count)
             .Select(x =>
             {
-                var expressions = equations
-                    .Where(e => e.Expression.ContainsVariable(x.Variable))
-                    .Select(e => e.Expression)
+                var equationIndexes = Enumerable
+                    .Range(0, equations.Count)
+                    .Where(i => equations[i].Expression.ContainsVariable(x.Variable))
                     .ToArray();
-                return new KeyValuePair<int, LinearExpression[]>(x.Variable, expressions);
+
+                return new KeyValuePair<int, int[]>(x.Variable, equationIndexes);
             })
             .ToArray();
 
@@ -26,12 +38,12 @@ internal static class LinearEquationSolver
             .Select(x => new KeyValuePair<int, RationalNumber>(x.Variable, x.Expression.GetConstant()))
             .ToArray();
 
-        return FindSolutions(equations, freeVariableExpressions, [], constantVariableValues, minVariableValue, maxVariableValue);
+        return [.. FindSolutions(equations, freeVariableEquationIndexes, [], constantVariableValues, variableValueLimits)];
     }
 
-    private static IEnumerable<RationalNumber[]> FindSolutions(IReadOnlyList<LinearEquation> equations, KeyValuePair<int, LinearExpression[]>[] freeVariableExpressions, KeyValuePair<int, RationalNumber>[] freeVariableValues, KeyValuePair<int, RationalNumber>[] constantVariableValues, long minVariableValue, long maxVariableValue)
+    private static IEnumerable<RationalNumber[]> FindSolutions(IReadOnlyList<LinearEquation> equations, KeyValuePair<int, int[]>[] freeVariableEquationIndexes, KeyValuePair<int, RationalNumber>[] freeVariableValues, KeyValuePair<int, RationalNumber>[] constantVariableValues, NumberRange<long>[] variableValueLimits)
     {
-        if (freeVariableValues.Length == freeVariableExpressions.Length)
+        if (freeVariableValues.Length == freeVariableEquationIndexes.Length)
         {
             var variableValues = new RationalNumber[equations.Count];
 
@@ -54,33 +66,29 @@ internal static class LinearEquationSolver
             yield break;
         }
 
-        // Substitute free variables with selected values
-        var modifiedExpressions = freeVariableExpressions[freeVariableValues.Length].Value
-            .Select(x => x.Clone())
-            .ToList();
+        var currentVariable = freeVariableEquationIndexes[freeVariableValues.Length].Key;
 
-        foreach (var expression in modifiedExpressions)
+        var inequalities = new List<LinearInequality>();
+
+        foreach (var equationIndex in freeVariableEquationIndexes[freeVariableValues.Length].Value)
         {
+            var equation = equations[equationIndex];
+
+            var modifiedExpression = equation.Expression.Clone();
             foreach (var freeVariableValue in freeVariableValues)
             {
-                expression.SetVariableValue(freeVariableValue.Key, freeVariableValue.Value);
+                modifiedExpression.SetVariableValue(freeVariableValue.Key, freeVariableValue.Value);
             }
+
+            var limits = variableValueLimits[equationIndex];
+            inequalities.Add(new LinearInequality(modifiedExpression, currentVariable, LinearInequalityConstraint.GreaterThanOrEqual, new RationalNumber(limits.Start)));
+            inequalities.Add(new LinearInequality(modifiedExpression, currentVariable, LinearInequalityConstraint.LessThanOrEqual, new RationalNumber(limits.End)));
         }
 
-        var lowerBound = minVariableValue;
-        var lowerBoundRationalNumber = new RationalNumber(lowerBound);
+        var lowerBound = long.MinValue;
+        var upperBound = long.MaxValue;
 
-        var upperBound = maxVariableValue;
-        var upperBoundRationalNumber = new RationalNumber(upperBound);
-
-        var currentVariable = freeVariableExpressions[freeVariableValues.Length].Key;
-
-        var boundExpressions = modifiedExpressions
-            .Select(e => new LinearInequality(e, currentVariable, LinearInequalityConstraint.GreaterThanOrEqual, lowerBoundRationalNumber))
-            .Concat(modifiedExpressions.Select(e => new LinearInequality(e, currentVariable, LinearInequalityConstraint.LessThanOrEqual, upperBoundRationalNumber)))
-            .ToList();
-
-        foreach (var inequality in boundExpressions)
+        foreach (var inequality in inequalities)
         {
             if (inequality.Expression.IsConstantExpression())
             {
@@ -101,7 +109,7 @@ internal static class LinearEquationSolver
         {
             KeyValuePair<int, RationalNumber>[] nextFreeVariableValues = [.. freeVariableValues, new KeyValuePair<int, RationalNumber>(currentVariable, new RationalNumber(value))];
 
-            foreach (var solution in FindSolutions(equations, freeVariableExpressions, nextFreeVariableValues, constantVariableValues, minVariableValue, maxVariableValue))
+            foreach (var solution in FindSolutions(equations, freeVariableEquationIndexes, nextFreeVariableValues, constantVariableValues, variableValueLimits))
             {
                 yield return solution;
             }

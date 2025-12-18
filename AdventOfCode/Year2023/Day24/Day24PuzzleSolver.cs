@@ -99,7 +99,8 @@ public class Day24PuzzleSolver : IPuzzleSolver
         matrix.TransformToReducedRowEchelonForm();
 
         var linearEquations = matrix.GetLinearEquations();
-        var solution = LinearEquationSolver.Solve(linearEquations).First();
+        var solution = LinearEquationSolver.Solve(linearEquations).FirstOrDefault()
+            ?? throw new InvalidOperationException("Solution not found");
 
         var rockHailstone = new Hailstone(solution[0].LongValue, solution[1].LongValue, solution[2].LongValue, solution[3].LongValue, solution[4].LongValue, solution[5].LongValue);
         var answer = rockHailstone.X + rockHailstone.Y + rockHailstone.Z;

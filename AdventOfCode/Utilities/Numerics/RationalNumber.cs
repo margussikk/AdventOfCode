@@ -202,11 +202,11 @@ internal struct RationalNumber
         {
             return "1";
         }
-        else if (Denominator == 1)
+        else if (BigInteger.Abs(Denominator) == 1)
         {
             return string.Format("{0}", Numerator);
         }
-        else if (Numerator < Denominator)
+        else if (BigInteger.Abs(Numerator) < BigInteger.Abs(Denominator))
         {
             if (Numerator == 0)
                 return "0";
@@ -215,7 +215,7 @@ internal struct RationalNumber
         }
         else
         {
-            return string.Format("{0} {1}/{2}", Numerator / Denominator, Numerator % Denominator, Denominator);
+            return string.Format("{0} {1}/{2}", Numerator / Denominator, BigInteger.Abs(Numerator) % Denominator, Denominator);
         }
     }
 }

@@ -24,7 +24,8 @@ internal partial class ClawMachine
         matrix.TransformToReducedRowEchelonForm();
 
         var linearEquations = matrix.GetLinearEquations();
-        var solution = LinearEquationSolver.Solve(linearEquations).First();
+        var solution = LinearEquationSolver.Solve(linearEquations).FirstOrDefault()
+            ?? throw new InvalidOperationException("Solution not found");
 
         if (!solution[0].IsWholeNumber || !solution[1].IsWholeNumber)
         {
